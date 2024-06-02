@@ -24,7 +24,8 @@ const LoginEmployee = () => {
           const info = {
             name: result?.user?.displayName,
             email: result?.user?.email,
-            role: "employee"
+            role: "employee",
+            affiliate: false,
           }
 
           axiosPublic.post("/users", info)
@@ -51,7 +52,8 @@ const LoginEmployee = () => {
         const info = {
           name: result?.user?.displayName,
           email: result?.user?.email,
-          role: "employee"
+          role: "employee",
+          affiliate: false,
         }
 
         axiosPublic.post("/users", info)

@@ -4,8 +4,10 @@ import useAuth from "../../Hooks/useAuth";
 // import { useEffect, useState } from "react";
 // import { Tooltip } from "react-tooltip";
 
-const Nav = () => {
+const Nav = ({ navHide }) => {
     const { logout, user, logOut } = useAuth();
+
+    console.log(navHide)
 
 
     const normal = <>
@@ -56,8 +58,8 @@ const Nav = () => {
 
     const HR_Manager = (
         <>
-            <li>
-                <NavLink to="/" className={({ isActive }) => isActive ? 'border-b-4 border-primary text-primary rounded-none  bg-secondary  font-bold my-anchor-element-classHome' : 'font-bold my-anchor-element-classHome'}>
+            <li className="bg-[rgb(204,138,0)]">
+                <NavLink to="/" className={({ isActive }) => isActive ? 'border-b-4 border-primary text-primary rounded-none  bg-[rgb(204,138,0)]  font-bold my-anchor-element-classHome' : 'font-bold my-anchor-element-classHome'}>
                     Home
                 </NavLink>
             </li>
@@ -190,6 +192,7 @@ const Nav = () => {
             </div>
 
             {/* for employee */}
+
             <div className="navbar  bg-white  py-2 rounded-lg">
                 <div className="navbar-start">
                     <div className="dropdown">
@@ -234,20 +237,21 @@ const Nav = () => {
                             </div>
                         </div>
 
-                        <button className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center">Logout</button>
+                        <button onClick={logout}  className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center">Logout</button>
 
                     </div>
                 </div>
             </div>
 
+
             {/* HR manager */}
-            <div className="navbar  bg-white  py-2 rounded-lg">
+            <div className="navbar  bg-[rgb(204,138,0)]  py-2 rounded-lg">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <label tabIndex={0} className="btn btn-ghost lg:hidden pr-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
                         </label>
-                        <ul tabIndex={0} className=" menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow  rounded-box w-52 dark:text-gray-800 bg-white">
+                        <ul tabIndex={0} className=" menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow  rounded-box w-52 dark:text-gray-800 bg-[rgb(204,138,0)]">
                             {HR_Manager}
                         </ul>
                     </div>
@@ -258,7 +262,7 @@ const Nav = () => {
                     </Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">
-                    <ul className="menu menu-horizontal px-1 dark:text-gray-800 ">
+                    <ul className="menu menu-horizontal px-1 dark:text-gray-800 bg-[rgb(204,138,0)]">
                         {HR_Manager}
                     </ul>
                 </div>
@@ -285,7 +289,7 @@ const Nav = () => {
                             </div>
                         </div>
 
-                        <button className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center">Logout</button>
+                        <button onClick={logout} className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center">Logout</button>
 
                     </div>
                 </div>

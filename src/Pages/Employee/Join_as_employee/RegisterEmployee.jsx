@@ -29,6 +29,7 @@ const RegisterEmployee = () => {
                     name,
                     email,
                     role: "employee",
+                    affiliate: false,
                     
                 }
                 // updateUserProfile(name, PhotoURL)
@@ -86,7 +87,8 @@ const RegisterEmployee = () => {
                 const info = {
                     name: result?.user?.displayName,
                     email: result?.user?.email,
-                    role: "employee"
+                    role: "employee",
+                    affiliate: false,
                 }
 
                 axiosPublic.post("/users", info)

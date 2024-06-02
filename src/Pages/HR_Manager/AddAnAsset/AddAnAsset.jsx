@@ -9,7 +9,7 @@ const AddAnAsset = () => {
     // const { user } = useAuth()
     const [startDate, setStartDate] = useState(new Date());
 
-    const handleFormSubmit = async(e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault()
         console.log("submit")
 
@@ -48,9 +48,10 @@ const AddAnAsset = () => {
     }
     return (
         <div>
-
-            <div className='  flex justify-center items-start min-h-[calc(100vh-306px)] w-full '>
-                <section className='mt-6 w-full border-primary border-2 p-2 md:p-6 mx-auto  rounded-md shadow-md bg-secondary'>
+            <h2 className="text-3xl mt-12 mb-10 text-center text-primary">Add an Assets</h2>
+            <div className='flex justify-center items-start min-h-[calc(100vh-306px)] w-full '>
+                <section className='mb-24 w-full border-primary border-2 p-2 md:p-6 mx-auto  rounded-md shadow-md bg-secondary'>
+                    
 
                     <form onSubmit={handleFormSubmit}>
                         <div className='grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2'>

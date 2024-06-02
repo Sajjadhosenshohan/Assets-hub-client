@@ -50,7 +50,9 @@ const RegisterHR = () => {
                         category,
                         companyName,
                         image,
-                        role: "admin"
+                        role: "admin",
+                        
+                        
                     }
 
                      axiosPublic.post("/users", info)
@@ -78,7 +80,8 @@ const RegisterHR = () => {
                 const info = {
                     name: result?.user?.displayName,
                     email: result?.user?.email,
-                    role: "admin"
+                    role: "admin",
+                    
                 }
 
                 axiosPublic.post("/users", info)

@@ -14,6 +14,8 @@ import RegisterEmployee from "../Pages/Employee/Join_as_employee/RegisterEmploye
 import LoginEmployee from "../Pages/Employee/Join_as_employee/LoginEmployee";
 import LoginHR from "../Pages/HR_Manager/LoginHR";
 import RegisterHR from "../Pages/HR_Manager/RegisterHR";
+import Payment from "../Pages/HR_Manager/Payment/Payment";
+import UpdateProfile from "../Pages/UpdateProfile/UpdateProfile";
 
 
 const router = createBrowserRouter([
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home></Home>
+            },
+            {
+                path: "/profile",
+                element: <UpdateProfile></UpdateProfile>
             },
 
             // normal employee
@@ -66,6 +72,10 @@ const router = createBrowserRouter([
             {
                 path: "/addAnEmployee",
                 element: <AddAnEmployee></AddAnEmployee>
+            },
+            {
+                path: "/payment",
+                element: <Payment></Payment>
             },
 
             // for employee
