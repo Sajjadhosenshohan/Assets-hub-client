@@ -16,6 +16,7 @@ import LoginHR from "../Pages/HR_Manager/LoginHR";
 import RegisterHR from "../Pages/HR_Manager/RegisterHR";
 import Payment from "../Pages/HR_Manager/Payment/Payment";
 import UpdateProfile from "../Pages/UpdateProfile/UpdateProfile";
+import UpdateAsset from "../Pages/HR_Manager/AssetList/UpdateAsset";
 
 
 const router = createBrowserRouter([
@@ -76,6 +77,11 @@ const router = createBrowserRouter([
             {
                 path: "/payment",
                 element: <Payment></Payment>
+            },
+            {
+                path: "/update/:id",
+                element: <UpdateAsset></UpdateAsset>,
+                loader: async ({ params }) => await fetch(`http://localhost:7000/assetOne/${params.id}`)
             },
 
             // for employee

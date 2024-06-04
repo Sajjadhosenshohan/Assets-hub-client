@@ -1,10 +1,14 @@
 import { RiArrowDropDownLine } from "react-icons/ri";
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
-import { useQuery } from "@tanstack/react-query";
+import {  useQuery } from "@tanstack/react-query";
 import useAuth from "../../../Hooks/useAuth";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const AssetList = () => {
     const axiosPublic = useAxiosPublic()
+    const axiosSecure = useAxiosSecure()
     const { user, loading } = useAuth();
     const mail = user?.email;
 
@@ -16,7 +20,7 @@ const AssetList = () => {
         console.log("filter")
     }
 
-    const { data: assets = [] } = useQuery({
+    const { data: assets = [] , refetch } = useQuery({
         queryKey: ["assets"],
         // enabled: !loading && !!mail && !!localStorage.getItem("access-token"),
         queryFn: async () => {
@@ -26,7 +30,41 @@ const AssetList = () => {
 
     });
 
-    console.log(assets)
+
+
+    // delete items
+    const handleDelete = (id,name) => {
+        // console.log(id)
+        
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const res =  await axiosSecure.delete(`/asset/delete/${id}`)
+                // console.log(res.data);
+                if (res.data.deletedCount > 0) {
+                    // refetch to update the ui
+                    refetch();
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: `${name} has been deleted`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+
+
+            }
+        });
+    }
+    // console.log(assets)
 
     return (
         <div className="mt-12 mb-24">
@@ -104,17 +142,19 @@ const AssetList = () => {
                     </thead>
                     <tbody>
                         {/* row 1 */}
-                        
+
                         {
                             assets?.map((asset, index) => (
-                                <tr key={index}>
+                                <tr key={asset._id}>
                                     <th>{index + 1}</th>
                                     <td>{asset.product_name}</td>
                                     <td>{asset.product_quantity}</td>
-                                    <td>{asset.product_quantity}</td>
+                                    
                                     <td>{new Date(asset.date_added).toLocaleDateString()}</td>
-                                    <td><button className="btn btn-error">Delete</button></td>
-                                    <td><button className="btn bg-primary btn-success">Update</button></td>
+                                    <td><button className="btn btn-error" onClick={() => handleDelete(asset._id, asset.product_name)}>Delete</button></td>
+                                    <td><Link to={`/update/${asset._id}`}>
+                                    <button className="btn bg-primary btn-success" >Update</button>
+                                    </Link></td>
                                 </tr>
                             ))
                         }

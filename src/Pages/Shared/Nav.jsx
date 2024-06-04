@@ -4,6 +4,7 @@ import useAuth from "../../Hooks/useAuth";
 import useHR from "../../Hooks/useHR";
 import Spinner from "../../Components/Spinner";
 import useEmployee from "../../Hooks/useEmployee";
+// import useUserData from "../../Hooks/useUserData";
 // import { useEffect, useState } from "react";
 // import { Tooltip } from "react-tooltip";
 
@@ -12,6 +13,8 @@ const Nav = () => {
 
     const { isHr, isHRLoading } = useHR();
     // console.log("nav", isHr)
+    // const {userData} = useUserData()
+    // console.log("nav vai", userData)
 
     // console.log("nav",user?.displayName)
 
@@ -170,7 +173,7 @@ const Nav = () => {
                                 <div className="btn btn-ghost btn-circle avatar">
                                     <div className="w-10 rounded-full">
 
-                                        <img className="my-anchor-element-class" src={user?.photoURL || "https://i.ibb.co/fYRGNg6/profile.jpg"}
+                                        <img className="my-anchor-element-class" src={user?.photoURL ||  "https://i.ibb.co/fYRGNg6/profile.jpg"}
 
                                             alt="User avatar"
                                         />
