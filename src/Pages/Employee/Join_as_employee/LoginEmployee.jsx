@@ -53,7 +53,7 @@ const LoginEmployee = () => {
           name: result?.user?.displayName,
           email: result?.user?.email,
           role: "employee",
-          affiliate: false,
+          affiliate: "no",
         }
 
         axiosPublic.post("/users", info)

@@ -1,6 +1,12 @@
 import { RiArrowDropDownLine } from "react-icons/ri";
+import useAxiosPublic from "../../../Hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
+import useAuth from "../../../Hooks/useAuth";
 
 const AssetList = () => {
+    const axiosPublic = useAxiosPublic()
+    const { user, loading } = useAuth();
+    const mail = user?.email;
 
     const handleFilter = () => {
         console.log("filter")
@@ -9,6 +15,18 @@ const AssetList = () => {
     const handleSearch = () => {
         console.log("filter")
     }
+
+    const { data: assets = [] } = useQuery({
+        queryKey: ["assets"],
+        // enabled: !loading && !!mail && !!localStorage.getItem("access-token"),
+        queryFn: async () => {
+            const { data } = await axiosPublic.get(`/assets`);
+            return data;
+        },
+
+    });
+
+    console.log(assets)
 
     return (
         <div className="mt-12 mb-24">
@@ -86,16 +104,21 @@ const AssetList = () => {
                     </thead>
                     <tbody>
                         {/* row 1 */}
-                        <tr>
-                            <th>1</th>
-                            <td>Laptop</td>
-                            <td>Returnable</td>
-                            <td>20</td>
-                            <td>2031/2/25</td>
-                            <td><button className="btn btn-error">Delete</button></td>
-                            <td><button className="btn bg-primary btn-success">Update</button></td>
-                        </tr>
                         
+                        {
+                            assets?.map((asset, index) => (
+                                <tr key={index}>
+                                    <th>{index + 1}</th>
+                                    <td>{asset.product_name}</td>
+                                    <td>{asset.product_quantity}</td>
+                                    <td>{asset.product_quantity}</td>
+                                    <td>{new Date(asset.date_added).toLocaleDateString()}</td>
+                                    <td><button className="btn btn-error">Delete</button></td>
+                                    <td><button className="btn bg-primary btn-success">Update</button></td>
+                                </tr>
+                            ))
+                        }
+
                     </tbody>
                 </table>
             </div>

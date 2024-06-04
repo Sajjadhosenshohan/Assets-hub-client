@@ -21,12 +21,19 @@ const RegisterHR = () => {
         const category = form.category.value
         const date_of_birth = form.date_of_birth.value
         const companyName = form.companyName.value
+        const profileImage = form.profileImage.value
         
-        const image = form.image.files[0]
+        // for company logo
+        const companyLogo = form.image.files[0]
         const formData = new FormData()
-        formData.append('image', image)
+        formData.append('image', companyLogo)
 
-        console.log(email, password, fullName, date_of_birth, category, companyName, image)
+        // for profile pic
+        // const profileImage = form.profileImage.files[0]
+        // const formData2 = new FormData()
+        // formData.append('image', profileImage)
+
+        console.log(email, password, fullName, date_of_birth, category, companyName, companyLogo, profileImage)
 
         // console.log(import.meta.env.VITE_IMGBB_API_KEY)
 
@@ -36,7 +43,12 @@ const RegisterHR = () => {
                 `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
                 formData
             )
-            console.log(data.data.display_url)
+
+            // const { data2 } = await axios.post(
+            //     `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY_TWO}`,
+            //     formData2
+            // )
+            // console.log(data.data.display_url)
 
             // create user
             await createUser(email, password)
@@ -49,10 +61,10 @@ const RegisterHR = () => {
                         date_of_birth,
                         category,
                         companyName,
-                        image,
-                        role: "admin",
-                        
-                        
+                        companyLogo: data?.data.display_url,
+                        profileImage,
+                        role: "hr",
+                    
                     }
 
                      axiosPublic.post("/users", info)
@@ -73,32 +85,32 @@ const RegisterHR = () => {
         }
     }
 
-    const googleSignUp = async () => {
-        await signInWithGoogle()
-            .then(result => {
-                console.log(result.user);
-                const info = {
-                    name: result?.user?.displayName,
-                    email: result?.user?.email,
-                    role: "admin",
+    // const googleSignUp = async () => {
+    //     await signInWithGoogle()
+    //         .then(result => {
+    //             console.log(result.user);
+    //             const info = {
+    //                 name: result?.user?.displayName,
+    //                 email: result?.user?.email,
+    //                 role: "admin",
                     
-                }
+    //             }
 
-                axiosPublic.post("/users", info)
-                    .then(res => {
-                        // console.log(res.data)
-                        if (res.data.insertedId) {
-                            toast.success('user added to db successfully')
-                            navigate('/')
-                        }
-                    })
-            })
-            .catch(error => {
-                // console.error(error)
-                toast.error(error.message)
-            })
+    //             axiosPublic.post("/users", info)
+    //                 .then(res => {
+    //                     // console.log(res.data)
+    //                     if (res.data.insertedId) {
+    //                         toast.success('user added to db successfully')
+    //                         navigate('/')
+    //                     }
+    //                 })
+    //         })
+    //         .catch(error => {
+    //             // console.error(error)
+    //             toast.error(error.message)
+    //         })
 
-    }
+    // }
 
     //     Full Name
     // ● Company Name
@@ -154,6 +166,19 @@ const RegisterHR = () => {
                                 type='file'
                                 name='image'
                                 placeholder='Enter Your Company logo Here'
+                                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
+                                data-temp-mail-org='0'
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor='profileImage' className='block mb-2 text-sm'>
+                                Profile picture
+                            </label>
+                            <input
+                                type='url'
+                                name='profileImage'
+                                placeholder='Enter Your Profile picture Here'
                                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
                                 data-temp-mail-org='0'
                             />
@@ -239,7 +264,7 @@ const RegisterHR = () => {
                     </p>
                     <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
                 </div>
-                <div onClick={googleSignUp} className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
+                <div  className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
                     <FcGoogle size={32} />
 
                     <p>Continue with Google</p>

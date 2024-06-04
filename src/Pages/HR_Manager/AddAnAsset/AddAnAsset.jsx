@@ -121,7 +121,6 @@ const AddAnAsset = () => {
                 </section>
             </div>
         </div>
-
     );
 };
 
