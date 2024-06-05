@@ -5,11 +5,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import useEmployeeData from "../../../Hooks/useEmployeeData";
 import toast from "react-hot-toast";
+import Spinner from "../../../Components/Spinner";
+import useAuth from "../../../Hooks/useAuth";
 
 const RequestForAnAssets = () => {
     const axiosPublic = useAxiosPublic()
+    const { loading} = useAuth()
     const { userDataEmployee, isLoading } = useEmployeeData()
     console.log(userDataEmployee)
+
     const [currentDate] = useState(new Date().toLocaleDateString());
     const [selectedAsset, setSelectedAsset] = useState(null);
 
@@ -20,6 +24,10 @@ const RequestForAnAssets = () => {
             return data;
         },
     });
+
+    if(isLoading) return <Spinner></Spinner>
+
+    // console.log(assets)
 
     const handleRequest = (id) => {
         setSelectedAsset(id);
@@ -56,6 +64,7 @@ const RequestForAnAssets = () => {
     const handleFilter = () => {
         console.log("filter")
     }
+    
 
     return (
         <div className="mt-12 mb-24">
@@ -130,7 +139,21 @@ const RequestForAnAssets = () => {
                                     <td>{asset?.product_type}</td>
                                     {/* asset.availability === "out_of_stock" */}
                                     <td>{asset?.availability}</td>
-                                    <td><button onClick={() => handleRequest(asset._id)} className="btn btn-error" >Request</button></td>
+                                    <td>
+                                        <button
+                                            onClick={() => handleRequest(asset._id)}
+                                            className="btn btn-error"
+                                            disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By}
+                                            
+                                        >
+                                            {/* Request */}
+                                            {
+                                                asset?.Item_Added_By !== userDataEmployee?.Added_By
+                                                ? "Team member only"
+                                                : "Request now"
+                                            }
+                                        </button>
+                                    </td>
                                 </tr>
                             ))
                         }

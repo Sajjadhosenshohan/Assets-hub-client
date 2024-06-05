@@ -4,7 +4,10 @@ import DatePicker from "react-datepicker";
 // import useAuth from "../../../Hooks/useAuth";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import useUserData from "../../../Hooks/useHRData";
 const AddAnAsset = () => {
+    const {userData,isLoading} = useUserData()
+    console.log(userData?.email)
     const axiosSecure = useAxiosSecure()
     const [startDate, setStartDate] = useState(new Date());
 
@@ -23,7 +26,8 @@ const AddAnAsset = () => {
             product_quantity,
             product_type,
             date_added,
-            availability: "available"
+            availability: "available",
+            Item_Added_By: userData?.email
         }
 
         console.log(createData)

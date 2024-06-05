@@ -3,7 +3,8 @@ import { Link, NavLink } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import useHR from "../../Hooks/useHR";
 import Spinner from "../../Components/Spinner";
-import useEmployee from "../../Hooks/useEmployee";
+import useEmployeeData from "../../Hooks/useEmployeeData";
+import useUserData from "../../Hooks/useHRData";
 // import useUserData from "../../Hooks/useUserData";
 // import { useEffect, useState } from "react";
 // import { Tooltip } from "react-tooltip";
@@ -11,15 +12,12 @@ import useEmployee from "../../Hooks/useEmployee";
 const Nav = () => {
     const { loading, user, logOut } = useAuth();
 
-    const { isHr, isHRLoading } = useHR();
-    // console.log("nav", isHr)
-    // const {userData} = useUserData()
-    // console.log("nav vai", userData)
+    // const { isHr, isHRLoading } = useHR();
+    const { userData: Hr_data, isLoading: isHRLoading } = useUserData()
 
-    // console.log("nav",user?.displayName)
+    // const { isEmployee, isEmployeeLoading } = useEmployee();
+    const { userDataEmployee, isLoading: isEmployeeLoading } = useEmployeeData()
 
-    const { isEmployee, isEmployeeLoading } = useEmployee();
-    // console.log("nav", isHr)
 
 
     const normal = <>
@@ -122,19 +120,27 @@ const Nav = () => {
                                 !user && normal
                             }
                             {
-                                isEmployee && Employee
+                                userDataEmployee && Employee
                             }
                             {
-                                isHr && HR_Manager
+                                Hr_data && HR_Manager
                             }
                         </ul>
                     </div>
                     <Link to='/' className="justify-center flex items-center ">
                         <div>
-                            <img className="w-8 h-8 md:w-16 md:h-16 " src={'https://i.ibb.co/kytcV01/360-F-505617309-NN1-CW7di-Nm-GXJf-Micp-Y9e-XHKV4sqz-O5-H-removebg-preview-1.png'} alt="" />
+                            {/* <img className="w-8 h-8 md:w-16 md:h-16 " src={userDataEmployee? userDataEmployee?.companyLogo : 'https://i.ibb.co/kytcV01/360-F-505617309-NN1-CW7di-Nm-GXJf-Micp-Y9e-XHKV4sqz-O5-H-removebg-preview-1.png'} alt="" /> */}
+                            {
+                                userDataEmployee &&
+                                <img className="w-8 h-8 md:w-16 md:h-16 " src={userDataEmployee?.companyLogo || 'https://i.ibb.co/kytcV01/360-F-505617309-NN1-CW7di-Nm-GXJf-Micp-Y9e-XHKV4sqz-O5-H-removebg-preview-1.png'} alt="" />
+                            }
+                            {
+                                Hr_data &&
+                                <img className="w-8 h-8 md:w-16 md:h-16 " src={Hr_data?.companyLogo || 'https://i.ibb.co/kytcV01/360-F-505617309-NN1-CW7di-Nm-GXJf-Micp-Y9e-XHKV4sqz-O5-H-removebg-preview-1.png'} alt="" />
+                            }
                         </div>
 
-                        <span className=" dark:text-primary uppercase">my-assets</span>
+                        <span className=" dark:text-primary uppercase ml-1">my-assets</span>
                     </Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">
@@ -143,10 +149,10 @@ const Nav = () => {
                             !user && normal
                         }
                         {
-                            isEmployee && Employee
+                            userDataEmployee && Employee
                         }
                         {
-                            isHr && HR_Manager
+                            Hr_data && HR_Manager
                         }
                     </ul>
                 </div>
@@ -168,7 +174,7 @@ const Nav = () => {
                                 <div className="btn btn-ghost btn-circle avatar">
                                     <div className="w-10 rounded-full">
 
-                                        <img className="my-anchor-element-class" src={user?.photoURL ||  "https://i.ibb.co/fYRGNg6/profile.jpg"}
+                                        <img className="my-anchor-element-class" src={user?.photoURL || "https://i.ibb.co/fYRGNg6/profile.jpg"}
 
                                             alt="User avatar"
                                         />
