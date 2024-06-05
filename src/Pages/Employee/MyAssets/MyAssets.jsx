@@ -1,11 +1,32 @@
 import { RiArrowDropDownLine } from "react-icons/ri";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import useEmployeeData from "../../../Hooks/useEmployeeData";
+import { useQuery } from "@tanstack/react-query";
+import useAuth from "../../../Hooks/useAuth";
 
 const MyAssets = () => {
+    const axiosSecure = useAxiosSecure()
+    const { userDataEmployee, isLoading } = useEmployeeData()
+    const { user, loading } = useAuth()
+
+    const { data: assetByEmail = [], refetch } = useQuery({
+        queryKey: ["assetByEmail", userDataEmployee?.email],
+        // enabled: !loading && !!isLoading,
+        queryFn: async () => {
+            const { data } = await axiosSecure.get(`/assetByEmail/${userDataEmployee?.email}`);
+            return data;
+        },
+    });
+
+    console.log(assetByEmail)
+
+
+
+
 
     const handleFilter = () => {
         console.log("filter")
     }
-
     const handleSearch = () => {
         console.log("filter")
     }
@@ -80,16 +101,28 @@ const MyAssets = () => {
                             </td>
                         </tr>
                         {/* row 1 */}
-                        <tr>
-                            <th>1</th>
-                            <td>Laptop</td>
-                            <td>Returnable</td>
-                            <td>2023-7-15</td>
-                            <td>2031/2/25</td>
-                            <td>Pending</td>
-                            <td><button className="btn btn-error">Delete</button></td>
+                        {
+                            assetByEmail?.map((asset, index) => (
+                                <tr key={asset._id}>
+                                    <th>{index + 1}</th>
+                                    <td>{asset.product_name}</td>
+                                    <td>{asset.product_type}</td>
+                                    <td>{asset.requestDate}</td>
+                                    <td>Approve date</td>
+                                    <td>{asset.status}</td>
+                                    {
+                                        asset?.status === "pending" && <td><button className="btn btn-error">Delete</button></td>
+                                    }
+                                    {
+                                        asset?.status === "approved" && <td className="flex gap-2">
+                                            <button className="btn  bg-primary btn-success">Print</button>
+                                            <button className="btn btn-info">Return</button>
+                                        </td>
+                                    }
 
-                        </tr>
+                                </tr>
+                            ))
+                        }
 
                     </tbody>
                 </table>

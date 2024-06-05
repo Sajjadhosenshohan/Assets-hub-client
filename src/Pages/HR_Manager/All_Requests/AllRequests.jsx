@@ -1,6 +1,38 @@
+import { useQuery } from "@tanstack/react-query";
+import useUserData from "../../../Hooks/useHRData";
+import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 
 const AllRequests = () => {
+    const axiosPublic = useAxiosPublic()
+    // hr data
+    const { userData, isLoading } = useUserData()
 
+    const { data: allRequest = [], refetch } = useQuery({
+        queryKey: ["allRequest"],
+        enabled: !isLoading,
+        queryFn: async () => {
+            const { data } = await axiosPublic.get(`/allRequest/${userData?.email}`);
+            return data;
+        },
+    });
+
+
+    // const requestData = {
+    //     requestDate: currentDate,
+    //     requesterEmail: userDataEmployee?.email,
+    //     requesterName: userDataEmployee?.name,
+    //     notes,
+    //     status: "pending"
+    // };
+
+    // try {
+    //     await axiosPublic.put(`/assets/${selectedAsset}`, requestData);
+    //     toast.success('Request submitted successfully');
+    //     document.getElementById('my_modal_5').close();
+    //     refetch(); // To refresh the assets list
+    // } catch (error) {
+    //     console.error('Error submitting request', error);
+    // }
 
     const handleSearch = () => {
         console.log("filter")

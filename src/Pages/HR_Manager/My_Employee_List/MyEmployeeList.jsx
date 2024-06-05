@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import useUserData from "../../../Hooks/useUserData";
+import useUserData from "../../../Hooks/useHRData";
 import Swal from "sweetalert2";
 
 const MyEmployeeList = () => {
@@ -96,7 +96,7 @@ const MyEmployeeList = () => {
 
                                         </div>
                                     </td>
-                                    <td>{employee?.fullName}</td>
+                                    <td>{employee?.name}</td>
                                     <td>{employee?.companyName}</td>
                                     <td>{employee?.role}</td>
                                     <td><button onClick={() => handleRemove(employee._id)} className="btn btn-error">Remove</button></td>

@@ -16,7 +16,7 @@ const RegisterHR = () => {
         e.preventDefault();
         const form = e.target
         const email = form.email.value
-        const fullName = form.fullName.value
+        const name = form.fullName.value
         const password = form.password.value
         const category = form.category.value
         const date_of_birth = form.date_of_birth.value
@@ -33,7 +33,7 @@ const RegisterHR = () => {
         // const formData2 = new FormData()
         // formData.append('image', profileImage)
 
-        console.log(email, password, fullName, date_of_birth, category, companyName, companyLogo, profileImage)
+        console.log(email, password, name, date_of_birth, category, companyName, companyLogo, profileImage)
 
         // console.log(import.meta.env.VITE_IMGBB_API_KEY)
 
@@ -56,7 +56,7 @@ const RegisterHR = () => {
                     console.log(res.user)
 
                     const info = {
-                        fullName,
+                        name,
                         email,
                         date_of_birth,
                         category,

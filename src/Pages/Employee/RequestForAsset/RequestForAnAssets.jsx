@@ -1,8 +1,55 @@
 import { RiArrowDropDownLine } from "react-icons/ri";
+import useAxiosPublic from "../../../Hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
+import "react-datepicker/dist/react-datepicker.css";
+import { useState } from "react";
+import useEmployeeData from "../../../Hooks/useEmployeeData";
+import toast from "react-hot-toast";
 
 const RequestForAnAssets = () => {
+    const axiosPublic = useAxiosPublic()
+    const { userDataEmployee, isLoading } = useEmployeeData()
+    console.log(userDataEmployee)
+    const [currentDate] = useState(new Date().toLocaleDateString());
+    const [selectedAsset, setSelectedAsset] = useState(null);
 
+    const { data: assets = [], refetch } = useQuery({
+        queryKey: ["assets"],
+        queryFn: async () => {
+            const { data } = await axiosPublic.get(`/assets`);
+            return data;
+        },
+    });
 
+    const handleRequest = (id) => {
+        setSelectedAsset(id);
+        setTimeout(() => {
+            document.getElementById('my_modal_5').showModal();
+        }, 1000);
+    };
+
+    const handleForm = async (e) => {
+        e.preventDefault();
+        const notes = e.target.notes.value;
+        const requestData = {
+            requestDate: currentDate,
+            requesterEmail: userDataEmployee?.email,
+            requesterName: userDataEmployee?.name,
+            notes,
+            status: "pending"
+        };
+
+        try {
+            await axiosPublic.put(`/assets/${selectedAsset}`, requestData);
+            toast.success('Request submitted successfully');
+            document.getElementById('my_modal_5').close();
+            refetch(); // To refresh the assets list
+        } catch (error) {
+            console.error('Error submitting request', error);
+        }
+    };
+
+    // Todo add request status
     const handleSearch = () => {
         console.log("filter")
     }
@@ -60,19 +107,68 @@ const RequestForAnAssets = () => {
                             <th>Asset Type</th>
                             <th>Availability</th>
                             <th>Action</th>
-                           
+
                         </tr>
                     </thead>
                     <tbody>
                         {/* row 1 */}
-                        <tr>
+                        {/* <tr>
                             <th>1</th>
                             <th>brush</th>
                             <th>non-returnable</th>
                             <td>out-of-stock</td>
-                    
+
                             <td><button className="btn btn-error">Request</button></td>
-                        </tr>
+                        </tr> */}
+
+
+                        {
+                            assets?.map((asset, index) => (
+                                <tr key={asset._id}>
+                                    <th>{index + 1}</th>
+                                    <td>{asset?.product_name}</td>
+                                    <td>{asset?.product_type}</td>
+                                    {/* asset.availability === "out_of_stock" */}
+                                    <td>{asset?.availability}</td>
+                                    <td><button onClick={() => handleRequest(asset._id)} className="btn btn-error" >Request</button></td>
+                                </tr>
+                            ))
+                        }
+                        {/* 
+                        ● Asset Name
+                        ● Asset Type
+                        ● Email of requester
+                        ● Name of requester
+                        ● Request Date
+                        ● Additional note
+                        ● Status */}
+
+                        {/* Modal */}
+
+                        <dialog id="my_modal_5" className="mt-12 rounded-lg bg-secondary modal modal-bottom sm:modal-middle border-2 border-red-500 w-[70%] mx-auto">
+                            <h1 className="text-2xl dark:text-primary lg:text-3xl font-bold text-center  ">PDF Preview!</h1>
+                            <div className="h-full w-full md:p-5">
+
+                                {/* <iframe src={pdf} style={{ minHeight: '300px', width: '100%' }} title="PDF Preview" allow="autoplay" className="mb-12"></iframe> */}
+
+                                <form onSubmit={handleForm} style={{ minHeight: '300px', width: '100%', border: "2px solid blue" }}>
+                                    <div>
+
+                                        <h2>{currentDate}</h2>
+                                        <label className="font-bold" >Quick Notes:</label>
+                                        <textarea name="notes" type="email" className="min-h-[200px] border-primary block w-full px-4 py-2 mt-2  bg-white border-2 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring " />
+                                    </div>
+
+                                    <button type="submit" className=" font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg hover:bg-blue-900 bg-primary text-center">Request</button>
+                                </form>
+
+                                <div className="modal-action flex justify-center">
+                                    <form method="dialog" className="w-full flex justify-center">
+                                        <button className=" font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg hover:bg-blue-900 bg-primary text-center">Close</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </dialog>
 
                     </tbody>
                 </table>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import useAuth from "../../../Hooks/useAuth";
-import useUserData from "../../../Hooks/useUserData";
+import useUserData from "../../../Hooks/useHRData";
 
 const AddAnEmployee = () => {
     const axiosSecure = useAxiosSecure()
@@ -25,14 +25,15 @@ const AddAnEmployee = () => {
 
 
     const handleAdd = async(id) => {
-        console.log(id)
+        // console.log(id)
 
         const createData = {
             companyName: userData?.companyName,
             companyLogo: userData?.companyLogo,
+            affiliate: "yes"
         }
 
-        console.log("43",createData)
+        // console.log("43",createData)
         try {
 
             // 
@@ -48,6 +49,7 @@ const AddAnEmployee = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                refetch()
             }
             // form.reset()
         } catch (err) {
@@ -119,7 +121,7 @@ const AddAnEmployee = () => {
 
                                         </div>
                                     </td>
-                                    <td>{employee.fullName}</td>
+                                    <td>{employee.name}</td>
                                     <td>{employee.role}</td>
                                     <td><button onClick={() => handleAdd(employee._id)} className="btn bg-primary btn-success" disabled={employee?.role === "hr" || employee.companyName}>Add to Team</button></td>
                                 </tr>

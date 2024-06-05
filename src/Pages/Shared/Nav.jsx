@@ -92,11 +92,6 @@ const Nav = () => {
                 </NavLink>
             </li>
             <li>
-                <NavLink to="/customRequestList" className={({ isActive }) => isActive && 'border-b-4 border-primary text-primary rounded-none'}>
-                    Custom Request List
-                </NavLink>
-            </li>
-            <li>
                 <NavLink to="/myEmployeeList" className={({ isActive }) => isActive && 'border-b-4 border-primary text-primary rounded-none'}>
                     My Employee List
                 </NavLink>

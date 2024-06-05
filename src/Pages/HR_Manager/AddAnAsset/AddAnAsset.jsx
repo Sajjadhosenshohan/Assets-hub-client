@@ -22,7 +22,8 @@ const AddAnAsset = () => {
             product_name,
             product_quantity,
             product_type,
-            date_added
+            date_added,
+            availability: "available"
         }
 
         console.log(createData)
