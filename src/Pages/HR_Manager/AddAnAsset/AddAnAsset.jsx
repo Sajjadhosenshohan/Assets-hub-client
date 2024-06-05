@@ -17,7 +17,8 @@ const AddAnAsset = () => {
 
         const form = e.target;
         const product_name = form.product_name.value;
-        const product_quantity = form.product_quantity.value;
+        const product_quantityString = form.product_quantity.value;
+        const product_quantity = parseInt(product_quantityString)
         const product_type = form.product_type.value;
         const date_added = startDate;
 

@@ -17,6 +17,7 @@ import RegisterHR from "../Pages/HR_Manager/RegisterHR";
 import Payment from "../Pages/HR_Manager/Payment/Payment";
 import UpdateProfile from "../Pages/UpdateProfile/UpdateProfile";
 import UpdateAsset from "../Pages/HR_Manager/AssetList/UpdateAsset";
+import AssetDetails from "../Pages/Employee/Pdf/AssetDetails";
 
 
 const router = createBrowserRouter([
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
                 path: "/requestForAssets",
                 element: <RequestForAnAssets></RequestForAnAssets>
             },
+            {
+                path: '/asset/:id',
+                element: <AssetDetails></AssetDetails>,
+              },
 
             // for hr manager
 

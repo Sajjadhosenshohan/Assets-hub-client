@@ -12,7 +12,7 @@ const RequestForAnAssets = () => {
     const axiosPublic = useAxiosPublic()
     const { loading} = useAuth()
     const { userDataEmployee, isLoading } = useEmployeeData()
-    console.log(userDataEmployee)
+    // console.log(userDataEmployee)
 
     const [currentDate] = useState(new Date().toLocaleDateString());
     const [selectedAsset, setSelectedAsset] = useState(null);
@@ -25,7 +25,7 @@ const RequestForAnAssets = () => {
         },
     });
 
-    if(isLoading) return <Spinner></Spinner>
+    if(isLoading && loading) return <Spinner></Spinner>
 
     // console.log(assets)
 
@@ -142,8 +142,9 @@ const RequestForAnAssets = () => {
                                     <td>
                                         <button
                                             onClick={() => handleRequest(asset._id)}
-                                            className="btn btn-error"
+                                            className={`btn btn-error ${asset?.status === "pending" && "cursor-not-allowed"}`}
                                             disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By}
+                                           
                                             
                                         >
                                             {/* Request */}
