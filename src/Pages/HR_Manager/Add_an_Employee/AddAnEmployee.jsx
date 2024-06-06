@@ -9,6 +9,7 @@ import useUserData from "../../../Hooks/useHRData";
 const AddAnEmployee = () => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
+
     const { userData } = useUserData();
     const [selectedEmployees, setSelectedEmployees] = useState([]);
 
@@ -20,7 +21,17 @@ const AddAnEmployee = () => {
         },
     });
 
-    const handleAdd = async (id) => {
+    console.log(AddEmployee)
+
+
+    const handleAdd = async (id, employeeRole, employeeCompanyName) => {
+
+        if (employeeRole === "hr") {
+            return alert("you can't add an Hr_manager")
+        }
+        if (employeeCompanyName) {
+            return alert("Already join in another company")
+        }
         const createData = {
             companyName: userData?.companyName,
             companyLogo: userData?.companyLogo,
@@ -89,24 +100,31 @@ const AddAnEmployee = () => {
             <div className="mb-10 space-y-2">
                 <h2 className="text-2xl text-left font-bold">
                     Your Employees are <span className="text-primary">{AddEmployee.length}</span>
-                    <br />
-                    You are Using <span className="text-primary">5 members for $5</span> Package!
+                    
+                   
                 </h2>
 
-                <button className="text-2xl p-2 rounded-lg text-left font-bold bg-orange-500">
-                    <Link to="/payment">
+                {AddEmployee.length ? (<Link to="/payment">
+                    <button  className="text-2xl p-2 rounded-lg text-left font-bold bg-orange-500">
                         increase the limit
-                    </Link>
-                </button>
+                    </button>
+                </Link>) : (<button disabled className="text-2xl p-2 rounded-lg text-left font-bold bg-orange-500">
+                        increase the limit
+                    </button>)
+                }
+
             </div>
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     <thead>
                         <tr>
+                            <th>Select</th>
                             <th>#</th>
                             <th>Member Image</th>
                             <th>Member Name</th>
+                            {/* for test */}
+                            <th>package</th>
                             <th>Member Type</th>
                             <th>Action</th>
                         </tr>
@@ -135,10 +153,11 @@ const AddAnEmployee = () => {
                                     </div>
                                 </td>
                                 <td>{employee.name}</td>
+                                <td>{employee?.category}</td>
                                 <td>{employee.role}</td>
                                 <td>
                                     <button
-                                        onClick={() => handleAdd(employee._id)}
+                                        onClick={() => handleAdd(employee._id, employee?.role, employee?.companyName)}
                                         className="btn bg-primary btn-success"
                                         disabled={employee?.role === "hr" || employee?.companyName}
                                     >

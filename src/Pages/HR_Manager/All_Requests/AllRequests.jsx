@@ -3,13 +3,14 @@ import useUserData from "../../../Hooks/useHRData";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import Spinner from "../../../Components/Spinner";
+import Swal from "sweetalert2";
 
 const AllRequests = () => {
     const axiosSecure = useAxiosSecure();
     const { loading: authLoading } = useAuth();
     const { userData, isLoading: userDataLoading } = useUserData();
 
-    const { data: requests = [], isLoading: requestsLoading, isError, error } = useQuery({
+    const { data: requests = [], isLoading: requestsLoading, isError, error, refetch } = useQuery({
         queryKey: ["allRequest", userData?.email],
         enabled: !authLoading && !userDataLoading,
         queryFn: async () => {
@@ -20,6 +21,34 @@ const AllRequests = () => {
 
     if (authLoading || userDataLoading || requestsLoading) return <Spinner />;
     if (isError) return <div>Error: {error.message}</div>;
+
+    // approved and reject button functionality
+    const handleStatus = async (assetId, asset_status) => {
+        console.log(asset_status)
+        if (asset_status) {
+
+            const asset_data = {
+                approvedDate: new Date().toLocaleDateString(),
+                status: asset_status
+            }
+            const asset_update = await axiosSecure.put(`/asset_status_change/${assetId}`, asset_data);
+
+            // console.log(data)
+            if (asset_update.data.modifiedCount > 0) {
+
+                // reset();
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: `updated successfully`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+            refetch();
+        }
+    };
+
 
     const handleSearch = () => {
         console.log("filter");
@@ -69,8 +98,10 @@ const AllRequests = () => {
                                 <td>{assetReq.requestDate}</td>
                                 <td>{assetReq.notes}</td>
                                 <td>{assetReq.status}</td>
-                                <td><button className="btn btn-error">Approve</button></td>
-                                <td><button className="btn bg-primary btn-success">Reject</button></td>
+
+                                <td><button onClick={() => handleStatus(assetReq._id, "approved")} className="btn btn-error" disabled={assetReq.status === "approved"}>Approve</button></td>
+
+                                <td><button onClick={() => handleStatus(assetReq._id, "rejected")} disabled={assetReq.status === "rejected"} className="btn bg-primary btn-success">Reject</button></td>
                             </tr>
                         ))}
                     </tbody>

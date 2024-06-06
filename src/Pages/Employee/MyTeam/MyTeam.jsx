@@ -8,23 +8,7 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useEmployeeData from "../../../Hooks/useEmployeeData";
 
 const MyTeam = () => {
-    // const axiosSecure = useAxiosSecure()
-    // const {userData,isLoading} = useUserData()
-    // const { user, loading } = useAuth();
-
-    // const { data: my_team = [], refetch } = useQuery({
-    //     queryKey: ["my_team"],
-    //     // enabled: !isLoading,
-    //     enabled: !loading && !isLoading,
-    //     queryFn: async () => {
-    //         const { data } = await axiosSecure.get(`/users/company/${userData?.companyName}`);
-    //         return data;
-    //     },
-    // });
-
-    // console.log("my team", my_team)
-    // // return {userData,isLoading}
-
+   
     const axiosSecure = useAxiosSecure()
     const {userDataEmployee,isLoading} = useEmployeeData()
 

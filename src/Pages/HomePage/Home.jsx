@@ -1,5 +1,7 @@
 import About from "../../Components/About";
+import MyAssets from "../Employee/MyAssets/MyAssets";
 import Banner from "./Banner";
+import MyMonthlyRequests from "./MyMonthlyRequests";
 import PackageSection from "./PackageSection";
 
 const Home = () => {
@@ -10,6 +12,9 @@ const Home = () => {
             </div>
             <About></About>
             <PackageSection></PackageSection>
+            {/* my pending assets */}
+            <MyAssets heading="My pending requests"></MyAssets>
+            <MyMonthlyRequests></MyMonthlyRequests>
         </div>
     );
 };

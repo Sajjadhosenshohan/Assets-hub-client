@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
-import Spinner from "../../Components/Spinner";
+// import Spinner from "../../Components/Spinner";
 import useEmployeeData from "../../Hooks/useEmployeeData";
 import useUserData from "../../Hooks/useHRData";
 
@@ -91,9 +91,9 @@ const Nav = () => {
         </>
     );
 
-    if (isHRLoading || isEmployeeLoading || loading) {
-        return <Spinner />;
-    }
+    // if (isHRLoading || isEmployeeLoading || loading) {
+    //     return <Spinner />;
+    // }
 
     const renderLinks = () => {
         if (user) {

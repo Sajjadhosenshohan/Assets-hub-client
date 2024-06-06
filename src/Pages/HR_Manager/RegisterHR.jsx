@@ -5,6 +5,7 @@ import useAxiosPublic from '../../Hooks/useAxiosPublic'
 import useAuth from '../../Hooks/useAuth'
 // import Spinner from '../../Components/Spinner'
 import axios from 'axios'
+import Spinner from '../../Components/Spinner'
 
 const RegisterHR = () => {
     const axiosPublic = useAxiosPublic()
@@ -18,7 +19,8 @@ const RegisterHR = () => {
         const email = form.email.value
         const name = form.fullName.value
         const password = form.password.value
-        const category = form.category.value
+        const Member_category = form.category.value
+        const category = parseInt(Member_category);
         const date_of_birth = form.date_of_birth.value
         const companyName = form.companyName.value
         const profileImage = form.profileImage.value
@@ -119,7 +121,7 @@ const RegisterHR = () => {
     // ● Password
     // ● Date of Birth
     // ● Select a package(there will be three packages, details below)
-    // if (loading) return <Spinner></Spinner>
+    if (loading) return <Spinner></Spinner>
 
     return (
         <div className='flex justify-center items-center my-24'>

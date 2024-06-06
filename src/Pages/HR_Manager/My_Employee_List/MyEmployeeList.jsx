@@ -64,23 +64,7 @@ const MyEmployeeList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* row 1 */}
-                        {/* <tr>
-                            <th>1</th>
-                            <td>
-                                <div className="flex items-center ">
-                                    <div className="avatar">
-                                        <div className="mask mask-squircle w-12 h-12">
-                                            <img src="https://img.daisyui.com/tailwind-css-component-profile-2@56w.png" alt="Avatar Tailwind CSS Component" />
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </td>
-                            <td>mia_maruf</td>
-                            <td>admin</td>
-                            <td><button className="btn btn-error">Remove</button></td>
-                        </tr> */}
+                        
 
                         {
                             myEmployee?.map((employee, index) => (
@@ -99,7 +83,7 @@ const MyEmployeeList = () => {
                                     <td>{employee?.name}</td>
                                     <td>{employee?.companyName}</td>
                                     <td>{employee?.role}</td>
-                                    <td><button onClick={() => handleRemove(employee._id)} className="btn btn-error">Remove</button></td>
+                                    <td><button onClick={() => handleRemove(employee._id)} className="btn btn-error" disabled={employee?.role === 'hr'}>Remove</button></td>
                                 </tr>
                             ))
                         }

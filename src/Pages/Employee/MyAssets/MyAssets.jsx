@@ -6,7 +6,7 @@ import useAuth from "../../../Hooks/useAuth";
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 
-const MyAssets = () => {
+const MyAssets = ({heading}) => {
     const axiosSecure = useAxiosSecure();
     const { userDataEmployee, isLoading } = useEmployeeData();
     const { loading } = useAuth();
@@ -55,7 +55,7 @@ const MyAssets = () => {
 
     return (
         <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">My Requested Assets</h2>
+            <h2 className="text-3xl mb-10 text-center text-primary">{heading? heading: "My Requested Assets"}</h2>
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
@@ -77,7 +77,7 @@ const MyAssets = () => {
                                 <td>{asset.product_name}</td>
                                 <td>{asset.product_type}</td>
                                 <td>{asset.requestDate}</td>
-                                <td>{asset.status === 'approved' ? asset.approvalDate : ''}</td>
+                                <td>{asset.status === 'approved' ? asset?.approvedDate : ''}</td>
                                 <td>{asset.status}</td>
                                 <td>
                                     {asset.status === "pending" && (
