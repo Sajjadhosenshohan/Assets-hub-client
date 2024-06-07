@@ -9,14 +9,13 @@ import Spinner from "../../../Components/Spinner";
 import useAuth from "../../../Hooks/useAuth";
 
 const RequestForAnAssets = () => {
-    const axiosPublic = useAxiosPublic()
-    const { loading} = useAuth()
-    const { userDataEmployee, isLoading } = useEmployeeData()
-    // console.log(userDataEmployee)
-
+    const axiosPublic = useAxiosPublic();
+    const { loading } = useAuth();
+    const { userDataEmployee, isLoading } = useEmployeeData();
     const [currentDate] = useState(new Date().toLocaleDateString());
     const [selectedAsset, setSelectedAsset] = useState(null);
-
+    const [selectedAsset2, setSelectedAsset2] = useState(null);
+    console.log(userDataEmployee)
     const { data: assets = [], refetch } = useQuery({
         queryKey: ["assets"],
         queryFn: async () => {
@@ -24,19 +23,35 @@ const RequestForAnAssets = () => {
             return data;
         },
     });
-
-    if(isLoading && loading) return <Spinner></Spinner>
-
     // console.log(assets)
 
-    const handleRequest = (id) => {
+    if (isLoading && loading) return <Spinner />;
+
+    const handleRequest = (id, asset_product_name,
+        asset_product_quantity,
+        asset_product_type,
+        asset_date_added,
+        asset_availability,
+        asset_Item_Added_By,) => {
+
+        const data2 = {
+            product_name: asset_product_name,
+            product_quantity: asset_product_quantity,
+            product_type: asset_product_type,
+            date_added: asset_date_added,
+            availability: asset_availability,
+            Item_Added_By: asset_Item_Added_By,
+        }
+
+        setSelectedAsset2(data2)
+
         setSelectedAsset(id);
         setTimeout(() => {
             document.getElementById('my_modal_5').showModal();
         }, 1000);
     };
 
-    const handleForm = async (e) => {
+    const handleForm = async (e,) => {
         e.preventDefault();
         const notes = e.target.notes.value;
         const requestData = {
@@ -46,11 +61,28 @@ const RequestForAnAssets = () => {
             notes,
             status: "pending"
         };
+        const requestData2 = {
+            ...selectedAsset2,
+            requestDate: currentDate,
+            requesterEmail: userDataEmployee?.email,
+            requesterName: userDataEmployee?.name,
+            notes,
+            status: "pending"
+        };
 
         try {
-            await axiosPublic.put(`/assets/${selectedAsset}`, requestData);
-            toast.success('Request submitted successfully');
-            document.getElementById('my_modal_5').close();
+            const matchingAsset = assets.find(asset => asset?.requesterEmail === userDataEmployee?.email);
+            if (matchingAsset) {
+                // Update existing asset
+                await axiosPublic.put(`/assets/${matchingAsset._id}`, requestData);
+                toast.success('Request submitted successfully');
+                document.getElementById('my_modal_5').close();
+            } else {
+                // Create a new asset
+                await axiosPublic.post(`/addAssets`, requestData2);
+                toast.success('New asset created successfully');
+                document.getElementById('my_modal_5').close();
+            }
             refetch(); // To refresh the assets list
         } catch (error) {
             console.error('Error submitting request', error);
@@ -64,7 +96,7 @@ const RequestForAnAssets = () => {
     const handleFilter = () => {
         console.log("filter")
     }
-    
+
 
     return (
         <div className="mt-12 mb-24">
@@ -141,17 +173,25 @@ const RequestForAnAssets = () => {
                                     <td>{asset?.availability}</td>
                                     <td>
                                         <button
-                                            onClick={() => handleRequest(asset._id)}
+                                            onClick={() => handleRequest(
+                                                asset._id,
+                                                asset.product_name,
+                                                asset.product_quantity,
+                                                asset.product_type,
+                                                asset.date_added,
+                                                asset.availability,
+                                                asset.Item_Added_By,
+                                            )}
                                             className={`btn btn-error ${asset?.status === "pending" && "cursor-not-allowed"}`}
                                             disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By}
-                                           
-                                            
+
+
                                         >
                                             {/* Request */}
                                             {
                                                 asset?.Item_Added_By !== userDataEmployee?.Added_By
-                                                ? "Team member only"
-                                                : "Request now"
+                                                    ? "Team member only"
+                                                    : "Request now"
                                             }
                                         </button>
                                     </td>
