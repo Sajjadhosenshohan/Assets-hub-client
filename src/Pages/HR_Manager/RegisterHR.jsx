@@ -14,6 +14,7 @@ const RegisterHR = () => {
     const { createUser, signInWithGoogle, setLoading, loading } = useAuth()
 
     const handleSignUp = async (e) => {
+        setLoading(true)
         e.preventDefault();
         const form = e.target
         const email = form.email.value
@@ -83,7 +84,7 @@ const RegisterHR = () => {
         }
         catch (err) {
             toast.error(err.message)
-            // setLoading(false)
+            setLoading(false)
         }
     }
 

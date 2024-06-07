@@ -11,7 +11,7 @@ const axiosSecure = axios.create({
 const useAxiosSecure = () => {
     const navigate = useNavigate();
     const { logOut } = useAuth();
-    const [error, setError] = useState(null); // State to capture error
+    const [error, setError] = useState(null);
 
     axiosSecure.interceptors.request.use(function (config) {
         const token = localStorage.getItem('access-token');
@@ -28,7 +28,7 @@ const useAxiosSecure = () => {
 
         if (status === 401 || status === 403) {
             await logOut();
-            setError(error); // Set error state
+            setError(error);
             toast.error("Unauthorized access detected. Redirecting to login.");
         }
         return Promise.reject(error);
@@ -36,9 +36,9 @@ const useAxiosSecure = () => {
 
     useEffect(() => {
         if (error) {
-            navigate('/login');
+            navigate('/loginHR');
         }
-    }, [error, navigate]); // Navigate only when there's an error
+    }, [error, navigate]);
 
     return axiosSecure;
 };

@@ -44,17 +44,14 @@ const AuthProvider = ({ children }) => {
 
     const logOut = async () => {
         setLoading(true)
-        // await axios.get(`${import.meta.env.VITE_API_URL}/logout`, {
-        //   withCredentials: true,
-        // })
-        setLoading(null)
+        setUser(null)
         return signOut(auth)
     }
 
-    const updateUserProfile = (name, photo) => {
+    const updateUserProfile = (name) => {
         return updateProfile(auth.currentUser, {
             displayName: name,
-            photoURL: photo,
+            // photoURL: photo,
         })
     }
 
@@ -68,14 +65,13 @@ const AuthProvider = ({ children }) => {
                 const userInfo = { email: currentUser.email };
                 axiosPublic.post('/jwt', userInfo)
                     .then(res => {
-                        if (res.data.token) {
-                            localStorage.setItem('access-token', res.data.token);
+                        if (res?.data.token) {
+                            localStorage.setItem('access-token', res?.data.token);
                             setLoading(false);
                         }
                     })
             }
             else {
-                // TODO: remove token (if token stored in the client side: Local storage, caching, in memory)
                 localStorage.removeItem('access-token');
                 setLoading(false);
             }
@@ -88,6 +84,7 @@ const AuthProvider = ({ children }) => {
     const authInfo = {
         user,
         loading,
+        setUser,
         setLoading,
         createUser,
         signIn,

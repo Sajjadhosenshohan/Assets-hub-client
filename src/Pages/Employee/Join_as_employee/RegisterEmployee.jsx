@@ -3,6 +3,7 @@ import useAxiosPublic from '../../../Hooks/useAxiosPublic'
 import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../../Hooks/useAuth'
 import toast from 'react-hot-toast'
+import axios from 'axios'
 
 const RegisterEmployee = () => {
 
@@ -11,7 +12,7 @@ const RegisterEmployee = () => {
 
     const { createUser, signInWithGoogle } = useAuth()
 
-    const handleSignUp = e => {
+    const handleSignUp = async(e) => {
         e.preventDefault();
         const form = e.target
         const email = form.email.value
@@ -19,18 +20,32 @@ const RegisterEmployee = () => {
         const password = form.password.value
         const date_of_birth = form.date_of_birth.value
 
-        console.log(email, password, name, date_of_birth)
+        // const profileImage = form.Profile_picture.value
 
-        createUser(email, password)
+        // for company logo
+        const profile_Image = form.Profile_picture.files[0]
+        const formData3 = new FormData()
+        formData3.append('image', profile_Image)
+
+        console.log(email, password, name, date_of_birth, profile_Image)
+
+        const { data } = await axios.post(
+                `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY_TWO}`,
+                formData3
+        )
+
+        await createUser(email, password)
             .then(res => {
                 console.log(res.user)
 
                 const info = {
                     name,
                     email,
+                    date_of_birth,
                     role: "employee",
                     affiliate: "no",
-                    
+                    profileImage: data?.data.display_url,
+
                 }
                 // updateUserProfile(name, PhotoURL)
                 //     .then(() => {
@@ -141,6 +156,19 @@ const RegisterEmployee = () => {
 
                                 required
                                 placeholder='Enter Your Email Here'
+                                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
+                                data-temp-mail-org='0'
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor='Profile_picture' className='block mb-2 text-sm'>
+                                Profile picture
+                            </label>
+                            <input
+                                type='file'
+                                name='Profile_picture'
+                                placeholder='Enter Your Profile picture Here'
                                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
                                 data-temp-mail-org='0'
                             />

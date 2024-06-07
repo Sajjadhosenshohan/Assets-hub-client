@@ -12,7 +12,7 @@ const MyMonthlyRequests = () => {
     const { data: monthlyRequests = [], isLoading,} = useQuery({
 
         queryKey: ["monthlyRequests", userDataEmployee?.email],
-        enabled: !authLoading && !userDataLoading,
+        enabled: !authLoading &&  !!localStorage.getItem("access-token"),
 
         queryFn: async () => {
             const currentMonth = new Date().getMonth() + 1;

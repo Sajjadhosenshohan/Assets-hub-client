@@ -3,6 +3,7 @@ import useAuth from "../../Hooks/useAuth";
 // import Spinner from "../../Components/Spinner";
 import useEmployeeData from "../../Hooks/useEmployeeData";
 import useUserData from "../../Hooks/useHRData";
+// import Spinner from "../../Components/Spinner";
 
 const Nav = () => {
     const { loading, user, logOut } = useAuth();
@@ -113,11 +114,11 @@ const Nav = () => {
                         </NavLink>
                     </div>
                     
-                    <h2>{user?.displayName || "Name not found"}</h2>
+                    <h2>{user?.displayName || userDataEmployee?.name || Hr_data?.name || "Name not found"}</h2>
 
                     <div className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
-                            <img src={user?.photoURL || "https://i.ibb.co/fYRGNg6/profile.jpg"} alt="User avatar" />
+                            <img src={user?.photoURL || Hr_data?.profileImage || userDataEmployee?.profileImage || "https://i.ibb.co/fYRGNg6/profile.jpg"} alt="User avatar" />
                         </div>
                     </div>
                     <button onClick={logOut} className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center">

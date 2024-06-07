@@ -5,7 +5,7 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import useAuth from "../../../Hooks/useAuth";
 import useUserData from "../../../Hooks/useHRData";
-
+// todo donot show hr in this page
 const AddAnEmployee = () => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();

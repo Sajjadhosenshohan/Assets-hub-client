@@ -27,12 +27,9 @@ const LoginHR = () => {
                     const info = {
                         name: result?.user?.displayName,
                         email: result?.user?.email,
-                        profile_image: result.user?.photoURL,
+                        profileImage: result.user?.photoURL,
                         role: "employee"
                     }
-
-                    
-
                     axiosPublic.post("/users", info)
                         .then(res => {
                             // console.log(res.data)
@@ -57,9 +54,11 @@ const LoginHR = () => {
                 const info = {
                     name: result?.user?.displayName,
                     email: result?.user?.email,
-                    profile_image: result.user?.photoURL,
+                    profileImage: result.user?.photoURL,
                     role: "employee"
                 }
+
+                console.log(info)
 
                 axiosPublic.post("/users", info)
                     .then(res => {
