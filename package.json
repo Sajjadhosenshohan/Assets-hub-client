@@ -26,6 +26,7 @@
     "react-loader-spinner": "^6.1.6",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.23.1",
+    "recharts": "^2.12.7",
     "sort-by": "^1.2.0",
     "sweetalert2": "^11.11.0",
     "uninstall": "^0.0.0"

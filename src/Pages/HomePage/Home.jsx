@@ -1,6 +1,8 @@
 import About from "../../Components/About";
 import MyAssets from "../Employee/MyAssets/MyAssets";
 import Top_five_pending_request from "../HR_Manager/All_Requests/Top_five_pending_request";
+import Limited_stock_items from "../HR_Manager/Limited_stock_items/Limited_stock_items";
+import Stats_chart from "../HR_Manager/Stats_chart/Stats_chart";
 import TopRequestedItems from "../HR_Manager/TopRequestedItems/TopRequestedItems";
 import Banner from "./Banner";
 import MyMonthlyRequests from "./MyMonthlyRequests";
@@ -21,6 +23,8 @@ const Home = () => {
             {/* for HR  */}
             <Top_five_pending_request></Top_five_pending_request>
             <TopRequestedItems></TopRequestedItems>
+            <Limited_stock_items></Limited_stock_items>
+            <Stats_chart></Stats_chart>
         </div>
     );
 };

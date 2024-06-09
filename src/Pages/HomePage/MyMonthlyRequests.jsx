@@ -9,11 +9,9 @@ const MyMonthlyRequests = () => {
     const { userDataEmployee, isLoading: userDataLoading } = useEmployeeData();
     const { loading: authLoading } = useAuth();
 
-    const { data: monthlyRequests = [], isLoading,} = useQuery({
-
+    const { data: monthlyRequests = [], isLoading } = useQuery({
         queryKey: ["monthlyRequests", userDataEmployee?.email],
-        enabled: !authLoading &&  !!localStorage.getItem("access-token"),
-
+        enabled: !authLoading && !!userDataEmployee?.email,
         queryFn: async () => {
             const currentMonth = new Date().getMonth() + 1;
             const currentYear = new Date().getFullYear();
@@ -24,14 +22,11 @@ const MyMonthlyRequests = () => {
 
     if (authLoading || userDataLoading || isLoading) return <Spinner />;
 
-
-    // const sortedRequests = monthlyRequests.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
-    // console.log(monthlyRequests)
+    console.log(monthlyRequests);
 
     return (
         <div className="mt-12 mb-24">
             <h2 className="text-3xl mb-10 text-center text-primary">My Monthly Requests</h2>
-
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     <thead>
@@ -50,8 +45,8 @@ const MyMonthlyRequests = () => {
                                 <th>{index + 1}</th>
                                 <td>{request.product_name}</td>
                                 <td>{request.product_type}</td>
-                                <td>{request.requestDate}</td>
-                                <td>{request.status === 'approved' ? request?.approvedDate : ''}</td>
+                                <td>{new Date(request.requestDate).toLocaleDateString()}</td>
+                                <td>{request.status === 'approved' ? new Date(request.approvedDate).toLocaleDateString() : ''}</td>
                                 <td>{request.status}</td>
                             </tr>
                         ))}

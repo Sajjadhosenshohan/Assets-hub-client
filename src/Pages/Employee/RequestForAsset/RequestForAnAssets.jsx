@@ -12,10 +12,13 @@ const RequestForAnAssets = () => {
     const axiosPublic = useAxiosPublic();
     const { loading } = useAuth();
     const { userDataEmployee, isLoading } = useEmployeeData();
+
+    // const [currentDate] = useState(new Date().toLocaleDateString);
     const [currentDate] = useState(new Date().toLocaleDateString());
+
     const [selectedAsset, setSelectedAsset] = useState(null);
     const [selectedAsset2, setSelectedAsset2] = useState(null);
-    console.log(userDataEmployee)
+    // console.log(userDataEmployee)
     const { data: assets = [], refetch } = useQuery({
         queryKey: ["assets"],
         queryFn: async () => {
@@ -23,7 +26,7 @@ const RequestForAnAssets = () => {
             return data;
         },
     });
-    // console.log(assets)
+    console.log(currentDate)
 
     if (isLoading && loading) return <Spinner />;
 
@@ -183,7 +186,7 @@ const RequestForAnAssets = () => {
                                                 asset.Item_Added_By,
                                             )}
                                             className={`btn btn-error ${asset?.status === "pending" && "cursor-not-allowed"}`}
-                                            disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By}
+                                            disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By || asset?.notes}
 
 
                                         >
@@ -213,12 +216,11 @@ const RequestForAnAssets = () => {
                             <h1 className="text-2xl dark:text-primary lg:text-3xl font-bold text-center  ">PDF Preview!</h1>
                             <div className="h-full w-full md:p-5">
 
-                                {/* <iframe src={pdf} style={{ minHeight: '300px', width: '100%' }} title="PDF Preview" allow="autoplay" className="mb-12"></iframe> */}
 
                                 <form onSubmit={handleForm} style={{ minHeight: '300px', width: '100%', border: "2px solid blue" }}>
                                     <div>
 
-                                        <h2>{currentDate}</h2>
+                                        <h2>{new Date()?.toLocaleDateString}</h2>
                                         <label className="font-bold" >Quick Notes:</label>
                                         <textarea name="notes" type="email" className="min-h-[200px] border-primary block w-full px-4 py-2 mt-2  bg-white border-2 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring " />
                                     </div>

@@ -139,11 +139,15 @@ const Nav = () => {
 
     const renderLogo = () => {
         const logoUrl = Hr_data?.companyLogo || userDataEmployee?.companyLogo || 'https://i.ibb.co/kytcV01/360-F-505617309-NN1-CW7di-Nm-GXJf-Micp-Y9e-XHKV4sqz-O5-H-removebg-preview-1.png';
-        return <img className="w-8 h-8 md:w-16 md:h-16" src={logoUrl} alt="Company Logo" />;
+        return <div className="btn btn-ghost btn-circle avatar">
+        <div className="w-10 rounded-full">
+            <img src={logoUrl} alt="User avatar" />
+        </div>
+    </div>;
     };
 
     return (
-        <div className="navbar bg-white py-2 rounded-lg">
+        <div className="navbar bg-[#c7d9ff] py-2 rounded-lg">
             <div className="navbar-start">
                 <div className="dropdown">
                     <label tabIndex={0} className="btn btn-ghost lg:hidden pr-1">

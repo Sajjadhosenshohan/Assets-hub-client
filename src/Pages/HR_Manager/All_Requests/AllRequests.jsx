@@ -50,15 +50,15 @@ const AllRequests = () => {
     };
 
 
-    const handleSearch = () => {
-        console.log("filter");
-    };
+    // const handleSearch = () => {
+    //     console.log("filter");
+    // };
 
     return (
         <div className="mt-12 mb-24">
             <h2 className="text-3xl mb-10 text-center text-primary">All Requests</h2>
 
-            <div className="mt-8 mb-10 flex items-center gap-10 justify-center">
+            {/* <div className="mt-8 mb-10 flex items-center gap-10 justify-center">
                 <form onSubmit={handleSearch} className="flex">
                     <label className="input border-2 border-green-500 flex items-center gap-2">
                         <input type="text" name="search" className="grow" placeholder="Search items by its names" />
@@ -69,7 +69,7 @@ const AllRequests = () => {
                         </svg>
                     </button>
                 </form>
-            </div>
+            </div> */}
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">

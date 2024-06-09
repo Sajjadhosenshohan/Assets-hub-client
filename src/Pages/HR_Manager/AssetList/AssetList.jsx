@@ -148,8 +148,8 @@ const AssetList = () => {
                                 <tr key={asset._id}>
                                     <th>{index + 1}</th>
                                     <td>{asset.product_name}</td>
+                                    <td>{asset.product_type}</td>
                                     <td>{asset.product_quantity}</td>
-                                    
                                     <td>{new Date(asset.date_added).toLocaleDateString()}</td>
                                     <td><button className="btn btn-error" onClick={() => handleDelete(asset._id, asset.product_name)}>Delete</button></td>
                                     <td><Link to={`/update/${asset._id}`}>
