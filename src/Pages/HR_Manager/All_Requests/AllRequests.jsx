@@ -3,73 +3,83 @@ import useUserData from "../../../Hooks/useHRData";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import Spinner from "../../../Components/Spinner";
+import { useState } from "react";
 import Swal from "sweetalert2";
-
+import "../../../Components/pagination.css"
+import Pagination from "../../../Components/Pagination";
+// import Pagination from "../../../Components/pagination";
 const AllRequests = () => {
     const axiosSecure = useAxiosSecure();
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [numberOfPages, setNumberOfPages] = useState(0);
+
+    const pages = []
+    for (let i = 0; i < numberOfPages; i++) {
+        pages.push(i)
+    }
+
     const { loading: authLoading } = useAuth();
     const { userData, isLoading: userDataLoading } = useUserData();
 
-    const { data: requests = [], isLoading: requestsLoading, isError, error, refetch } = useQuery({
-        queryKey: ["allRequest", userData?.email],
+    const { data, isLoading: requestsLoading, isError, error, refetch } = useQuery({
+        queryKey: ["allRequest", userData?.email, currentPage, itemsPerPage],
         enabled: !authLoading && !userDataLoading,
         queryFn: async () => {
-            const { data } = await axiosSecure.get(`/allRequestByEmail/${userData?.email}`);
+            const { data } = await axiosSecure.get(`/allRequestByEmail/${userData?.email}?page=${currentPage}&size=${itemsPerPage}`);
             return data;
         },
     });
 
-    if (authLoading || userDataLoading || requestsLoading) return <Spinner />;
-    if (isError) return <div>Error: {error.message}</div>;
+    // Update the numberOfPages whenever data changes
+    const { requests = [], count = 0 } = data || {};
+    const newNumberOfPages = Math.ceil(count / itemsPerPage);
 
-    // approved and reject button functionality
+    // Update the numberOfPages state when data is fetched
+    if (newNumberOfPages !== numberOfPages) {
+        setNumberOfPages(newNumberOfPages);
+    }
+
+
+    const handleItemPerPage = (e) => {
+        setItemsPerPage(parseInt(e.target.value));
+        setCurrentPage(0);
+    };
+
+    const handlePrevious = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+    const handleNext = () => {
+        if (currentPage < pages.length - 1) {
+            setCurrentPage(currentPage + 1)
+        }
+    }
+
     const handleStatus = async (assetId, asset_status) => {
-        console.log(asset_status)
-        if (asset_status) {
+        const asset_data = {
+            approvedDate: new Date().toLocaleDateString(),
+            status: asset_status,
+        };
+        const asset_update = await axiosSecure.put(`/asset_status_change/${assetId}`, asset_data);
 
-            const asset_data = {
-                approvedDate: new Date().toLocaleDateString(),
-                status: asset_status
-            }
-            const asset_update = await axiosSecure.put(`/asset_status_change/${assetId}`, asset_data);
-
-            // console.log(data)
-            if (asset_update.data.modifiedCount > 0) {
-
-                // reset();
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: `updated successfully`,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
+        if (asset_update.data.modifiedCount > 0) {
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: `Updated successfully`,
+                showConfirmButton: false,
+                timer: 1500,
+            });
             refetch();
         }
     };
-
-
-    // const handleSearch = () => {
-    //     console.log("filter");
-    // };
-
+    if (authLoading || userDataLoading || requestsLoading) return <Spinner />;
+    if (isError) return <div>Error: {error.message}</div>;
     return (
         <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">All Requests</h2>
-
-            {/* <div className="mt-8 mb-10 flex items-center gap-10 justify-center">
-                <form onSubmit={handleSearch} className="flex">
-                    <label className="input border-2 border-green-500 flex items-center gap-2">
-                        <input type="text" name="search" className="grow" placeholder="Search items by its names" />
-                    </label>
-                    <button type="submit" className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 bg-green-500 rounded-md -ml-1 hover:bg-green-800 focus:outline-none focus:bg-green-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
-                            <path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" />
-                        </svg>
-                    </button>
-                </form>
-            </div> */}
+            <h2 className="text-3xl mb-10 text-center text-primary">All Requests: {count}</h2>
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
@@ -98,14 +108,64 @@ const AllRequests = () => {
                                 <td>{assetReq.requestDate}</td>
                                 <td>{assetReq.notes}</td>
                                 <td>{assetReq.status}</td>
-
-                                <td><button onClick={() => handleStatus(assetReq._id, "approved")} className="btn btn-error" disabled={assetReq.status === "approved"}>Approve</button></td>
-
-                                <td><button onClick={() => handleStatus(assetReq._id, "rejected")} disabled={assetReq.status === "rejected"} className="btn bg-primary btn-success">Reject</button></td>
+                                <td>
+                                    <button
+                                        onClick={() => handleStatus(assetReq._id, "approved")}
+                                        className="btn btn-error"
+                                        disabled={assetReq.status === "approved"}
+                                    >
+                                        Approve
+                                    </button>
+                                </td>
+                                <td>
+                                    <button
+                                        onClick={() => handleStatus(assetReq._id, "rejected")}
+                                        disabled={assetReq.status === "rejected"}
+                                        className="btn bg-primary btn-success"
+                                    >
+                                        Reject
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+
+                <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage}setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage ={itemsPerPage} handleNext={handleNext}></Pagination>
+
+                {/* <div className="flex w-full">
+                    <div className="pagination justify-center items-center shadow-lg   w-full  inline-flex  rounded-md ">
+                        <button type="button" onClick={handlePrevious} className="inline-flex items-center px-2 py-2 text-sm font-semibold  rounded-l-md ">
+                            <span className="bg-primary px-2 py-2 rounded-md text-white">Previous</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="w-5 h-5">
+                                <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                            </svg>
+                        </button>
+
+
+                        {
+                            pages.map((page, index) => <button
+                                className={currentPage === page && 'selected inline-flex items-center px-4 py-2 text-sm font-semibold border'}
+                                onClick={() => setCurrentPage(page)}
+                                key={index}
+                            >{page}</button>)
+                        }
+
+                        <select className="px-2 py-2  text-black capitalize border-primary border-2 rounded-md" onChange={handleItemPerPage} value={itemsPerPage}>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+
+                        <button type="button" onClick={handleNext} className="inline-flex items-center px-2 py-2 text-sm font-semibold rounded-r-md ">
+                            <span className="bg-primary px-2 py-2 rounded-md text-white">Next</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="w-5 h-5">
+                                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div> */}
             </div>
         </div>
     );

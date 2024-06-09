@@ -7,29 +7,81 @@ import useEmployeeData from "../../../Hooks/useEmployeeData";
 import toast from "react-hot-toast";
 import Spinner from "../../../Components/Spinner";
 import useAuth from "../../../Hooks/useAuth";
+import Pagination from "../../../Components/Pagination";
 
 const RequestForAnAssets = () => {
     const axiosPublic = useAxiosPublic();
     const { loading } = useAuth();
     const { userDataEmployee, isLoading } = useEmployeeData();
+    // pagination
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [numberOfPages, setNumberOfPages] = useState(0);
 
-    // const [currentDate] = useState(new Date().toLocaleDateString);
+    // search
+    const [search, setSearch] = useState('');
+
+    // filter
+    const [availabilityCheck, setAvailability] = useState('');
+
+    // pagination pages array
+    const pages = Array.from({ length: numberOfPages }, (_, i) => i);
+
+    // current date
     const [currentDate] = useState(new Date().toLocaleDateString());
 
-    const [selectedAsset, setSelectedAsset] = useState(null);
+    // selected asset state
     const [selectedAsset2, setSelectedAsset2] = useState(null);
-    // console.log(userDataEmployee)
-    const { data: assets = [], refetch } = useQuery({
-        queryKey: ["assets"],
+
+    // fetch data with react-query
+    const { data, refetch } = useQuery({
+        queryKey: ["assets", currentPage, itemsPerPage, search, availabilityCheck],
         queryFn: async () => {
-            const { data } = await axiosPublic.get(`/assets`);
+            const { data } = await axiosPublic.get(`/assets`, {
+                params: {
+                    page: currentPage,
+                    size: itemsPerPage,
+                    search: search,
+                    availabilityCheck: availabilityCheck,
+                }
+            });
             return data;
         },
     });
-    console.log(currentDate)
+
+
+    // pagination function
+    // Update the numberOfPages whenever data changes
+    const { allAssets = [], count = 0 } = data || {};
+    const newNumberOfPages = Math.ceil(count / itemsPerPage);
+
+    // Update the numberOfPages state when data is fetched
+    if (newNumberOfPages !== numberOfPages) {
+        setNumberOfPages(newNumberOfPages);
+    }
+
+
+    const handleItemPerPage = (e) => {
+        setItemsPerPage(parseInt(e.target.value));
+        setCurrentPage(0);
+    };
+
+    const handlePrevious = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+    const handleNext = () => {
+        if (currentPage < pages.length - 1) {
+            setCurrentPage(currentPage + 1)
+        }
+    }
+
+    // search 
+
+
 
     if (isLoading && loading) return <Spinner />;
-
     const handleRequest = (id, asset_product_name,
         asset_product_quantity,
         asset_product_type,
@@ -48,13 +100,13 @@ const RequestForAnAssets = () => {
 
         setSelectedAsset2(data2)
 
-        setSelectedAsset(id);
+        // setSelectedAsset(id);
         setTimeout(() => {
             document.getElementById('my_modal_5').showModal();
         }, 1000);
     };
 
-    const handleForm = async (e,) => {
+    const handleForm = async (e) => {
         e.preventDefault();
         const notes = e.target.notes.value;
         const requestData = {
@@ -74,7 +126,7 @@ const RequestForAnAssets = () => {
         };
 
         try {
-            const matchingAsset = assets.find(asset => asset?.requesterEmail === userDataEmployee?.email);
+            const matchingAsset = allAssets.find(asset => asset?.requesterEmail === userDataEmployee?.email);
             if (matchingAsset) {
                 // Update existing asset
                 await axiosPublic.put(`/assets/${matchingAsset._id}`, requestData);
@@ -92,13 +144,22 @@ const RequestForAnAssets = () => {
         }
     };
 
-    // Todo add request status
-    const handleSearch = () => {
-        console.log("filter")
-    }
-    const handleFilter = () => {
-        console.log("filter")
-    }
+    // // Todo add request status
+    // const handleSearch = (e) => {
+    //     e.preventDefault()
+    //     const search = e.target.search.value;
+    //     setSearch(search)
+
+    // }
+    const handleFilter = (filterType, value) => {
+        if (filterType === "availability") {
+            setAvailability(value);
+        }
+        if(filterType === "type"){
+            setAvailability(value);
+        }
+        // You can add more filters here if needed
+    };
 
 
     return (
@@ -110,9 +171,9 @@ const RequestForAnAssets = () => {
             <div className="mt-8 mb-10 flex items-center gap-10 justify-center">
 
 
-                <form onSubmit={handleSearch} className="flex">
+                <form className="flex">
                     <label className="input border-2 border-green-500 flex items-center gap-2">
-                        <input type="text" name="search" className="grow" placeholder="Search items by it’s names" />
+                        <input onChange={(e) => setSearch(e.target.value)} type="text" name="search" className="grow" placeholder="Search items by it’s names" />
 
                     </label>
                     <button type="submit" className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transhtmlForm bg-green-500 rounded-md -ml-1 hover:bg-green-800 focus:outline-none focus:bg-green-800">
@@ -127,15 +188,11 @@ const RequestForAnAssets = () => {
                     </div>
 
 
-                    <ul
-                        tabIndex={0}
-                        className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-                    >
-
-                        <li onClick={() => handleFilter('Available')}><a>Available</a></li>
-                        <li onClick={() => handleFilter('Out-of-stock')}><a>Out-of-stock</a></li>
-                        <li onClick={() => handleFilter('Returnable')}><a>Returnable</a></li>
-                        <li onClick={() => handleFilter('Non-returnable')}><a>Non-returnable</a></li>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li onClick={() => handleFilter('availability', 'available')}><a>Available</a></li>
+                        <li onClick={() => handleFilter('availability', 'out_of_stock')}><a>Out-of-stock</a></li>
+                        <li onClick={() => handleFilter('type', 'Returnable')}><a>Returnable</a></li>
+                        <li onClick={() => handleFilter('type', 'Non-returnable')}><a>Non-returnable</a></li>
                     </ul>
 
                 </div>
@@ -155,19 +212,9 @@ const RequestForAnAssets = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* row 1 */}
-                        {/* <tr>
-                            <th>1</th>
-                            <th>brush</th>
-                            <th>non-returnable</th>
-                            <td>out-of-stock</td>
-
-                            <td><button className="btn btn-error">Request</button></td>
-                        </tr> */}
-
 
                         {
-                            assets?.map((asset, index) => (
+                            allAssets?.map((asset, index) => (
                                 <tr key={asset._id}>
                                     <th>{index + 1}</th>
                                     <td>{asset?.product_name}</td>
@@ -202,13 +249,6 @@ const RequestForAnAssets = () => {
                             ))
                         }
                         {/* 
-                        ● Asset Name
-                        ● Asset Type
-                        ● Email of requester
-                        ● Name of requester
-                        ● Request Date
-                        ● Additional note
-                        ● Status */}
 
                         {/* Modal */}
 
@@ -238,6 +278,8 @@ const RequestForAnAssets = () => {
 
                     </tbody>
                 </table>
+                {/* pagination */}
+                <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage={itemsPerPage} handleNext={handleNext}></Pagination>
             </div>
         </div>
     );
