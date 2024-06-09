@@ -9,12 +9,14 @@ const MyMonthlyRequests = () => {
     const { userDataEmployee, isLoading: userDataLoading } = useEmployeeData();
     const { loading: authLoading } = useAuth();
 
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+
+    console.log(currentMonth,currentYear)
     const { data: monthlyRequests = [], isLoading } = useQuery({
-        queryKey: ["monthlyRequests", userDataEmployee?.email],
+        queryKey: ["monthlyRequests", userDataEmployee?.email, currentMonth,currentYear],
         enabled: !authLoading && !!userDataEmployee?.email,
         queryFn: async () => {
-            const currentMonth = new Date().getMonth() + 1;
-            const currentYear = new Date().getFullYear();
             const { data } = await axiosSecure.get(`/requestsByEmail/${userDataEmployee?.email}?month=${currentMonth}&year=${currentYear}`);
             return data;
         },
@@ -22,7 +24,7 @@ const MyMonthlyRequests = () => {
 
     if (authLoading || userDataLoading || isLoading) return <Spinner />;
 
-    console.log(monthlyRequests);
+    console.log("my month", monthlyRequests);
 
     return (
         <div className="mt-12 mb-24">
@@ -45,7 +47,7 @@ const MyMonthlyRequests = () => {
                                 <th>{index + 1}</th>
                                 <td>{request.product_name}</td>
                                 <td>{request.product_type}</td>
-                                <td>{new Date(request.requestDate).toLocaleDateString()}</td>
+                                <td>{request.requestDate}</td>
                                 <td>{request.status === 'approved' ? new Date(request.approvedDate).toLocaleDateString() : ''}</td>
                                 <td>{request.status}</td>
                             </tr>

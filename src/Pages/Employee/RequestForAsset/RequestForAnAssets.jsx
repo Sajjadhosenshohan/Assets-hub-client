@@ -28,7 +28,7 @@ const RequestForAnAssets = () => {
     const pages = Array.from({ length: numberOfPages }, (_, i) => i);
 
     // current date
-    const [currentDate] = useState(new Date().toLocaleDateString());
+    const [currentDate] = useState(new Date());
 
     // selected asset state
     const [selectedAsset2, setSelectedAsset2] = useState(null);
@@ -48,7 +48,6 @@ const RequestForAnAssets = () => {
             return data;
         },
     });
-
 
     // pagination function
     // Update the numberOfPages whenever data changes
