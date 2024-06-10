@@ -8,11 +8,13 @@ import toast from "react-hot-toast";
 import Spinner from "../../../Components/Spinner";
 import useAuth from "../../../Hooks/useAuth";
 import Pagination from "../../../Components/Pagination";
+import Heading from "../../../Components/Heading";
 
 const RequestForAnAssets = () => {
     const axiosPublic = useAxiosPublic();
     const { loading } = useAuth();
     const { userDataEmployee, isLoading } = useEmployeeData();
+    console.log(userDataEmployee)
     // pagination
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -20,22 +22,20 @@ const RequestForAnAssets = () => {
 
     // search
     const [search, setSearch] = useState('');
-
     // filter
     const [availabilityCheck, setAvailability] = useState('');
-
     // pagination pages array
     const pages = Array.from({ length: numberOfPages }, (_, i) => i);
-
     // current date
     const [currentDate] = useState(new Date());
-
     // selected asset state
     const [selectedAsset2, setSelectedAsset2] = useState(null);
+    const [selectedAsset, setSelectedAsset] = useState(null);
 
     // fetch data with react-query
     const { data, refetch } = useQuery({
-        queryKey: ["assets", currentPage, itemsPerPage, search, availabilityCheck],
+        queryKey: ["assets", userDataEmployee, currentPage, itemsPerPage, search, availabilityCheck],
+        enabled: !loading && !!userDataEmployee?.email,
         queryFn: async () => {
             const { data } = await axiosPublic.get(`/assets`, {
                 params: {
@@ -44,10 +44,12 @@ const RequestForAnAssets = () => {
                     search: search,
                     availabilityCheck: availabilityCheck,
                 }
-            });
+            } || "/all_assets");
             return data;
         },
     });
+
+
 
     // pagination function
     // Update the numberOfPages whenever data changes
@@ -58,7 +60,7 @@ const RequestForAnAssets = () => {
     if (newNumberOfPages !== numberOfPages) {
         setNumberOfPages(newNumberOfPages);
     }
-
+    console.log(allAssets)
 
     const handleItemPerPage = (e) => {
         setItemsPerPage(parseInt(e.target.value));
@@ -75,8 +77,15 @@ const RequestForAnAssets = () => {
             setCurrentPage(currentPage + 1)
         }
     }
+    const handleFilter = (filterType, value) => {
+        if (filterType === "availability") {
+            setAvailability(value);
+        }
+        if (filterType === "type") {
+            setAvailability(value);
+        }
 
-    // search 
+    };
 
 
 
@@ -96,10 +105,9 @@ const RequestForAnAssets = () => {
             availability: asset_availability,
             Item_Added_By: asset_Item_Added_By,
         }
-
+        setSelectedAsset(id)
         setSelectedAsset2(data2)
 
-        // setSelectedAsset(id);
         setTimeout(() => {
             document.getElementById('my_modal_5').showModal();
         }, 1000);
@@ -124,16 +132,20 @@ const RequestForAnAssets = () => {
             status: "pending"
         };
 
+        // console.log("req1", requestData)
+
         try {
             const matchingAsset = allAssets.find(asset => asset?.requesterEmail === userDataEmployee?.email);
+
+            console.log("hi", matchingAsset)
             if (matchingAsset) {
                 // Update existing asset
-                await axiosPublic.put(`/assets/${matchingAsset._id}`, requestData);
+                await axiosPublic.put(`/assets/${selectedAsset}`, requestData);
                 toast.success('Request submitted successfully');
                 document.getElementById('my_modal_5').close();
             } else {
                 // Create a new asset
-                await axiosPublic.post(`/addAssets`, requestData2);
+                await axiosPublic.post(`/addAssetsByEmployee`, requestData2);
                 toast.success('New asset created successfully');
                 document.getElementById('my_modal_5').close();
             }
@@ -143,49 +155,23 @@ const RequestForAnAssets = () => {
         }
     };
 
-    // // Todo add request status
-    // const handleSearch = (e) => {
-    //     e.preventDefault()
-    //     const search = e.target.search.value;
-    //     setSearch(search)
-
-    // }
-    const handleFilter = (filterType, value) => {
-        if (filterType === "availability") {
-            setAvailability(value);
-        }
-        if(filterType === "type"){
-            setAvailability(value);
-        }
-        // You can add more filters here if needed
-    };
-
 
     return (
-        <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">Request For An Asset</h2>
+        <div className="my-24">
+            <Heading heading={'Request For An Asset'}></Heading>
 
-            {/* button  */}
-
-            <div className="mt-8 mb-10 flex items-center gap-10 justify-center">
-
-
-                <form className="flex">
-                    <label className="input border-2 border-green-500 flex items-center gap-2">
-                        <input onChange={(e) => setSearch(e.target.value)} type="text" name="search" className="grow" placeholder="Search items by it’s names" />
-
-                    </label>
-                    <button type="submit" className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transhtmlForm bg-green-500 rounded-md -ml-1 hover:bg-green-800 focus:outline-none focus:bg-green-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className=" w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
-                    </button>
+            <div className="mb-10 flex items-center gap-8 justify-start">
+                {/* search */}
+                <form className="flex gap-2">
+                    <input onChange={(e) => setSearch(e.target.value)} type="text" name="search" className="grow border-primary  border-2 input input-bordered input-success" placeholder="Search items by it’s names" />
                 </form>
 
+                {/* button */}
                 <div className="dropdown">
-                    <div tabIndex={0} role="button" className="btn m-1 font-bold text-white  bg-[#23BE0A]">
+                    <div tabIndex={0} role="button" className="btn hover:bg-green-800 m-1 font-bold text-white  bg-[#23BE0A]">
                         <h2>Filter Assets:</h2>
                         <RiArrowDropDownLine />
                     </div>
-
 
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                         <li onClick={() => handleFilter('availability', 'available')}><a>Available</a></li>
@@ -204,6 +190,7 @@ const RequestForAnAssets = () => {
                         <tr>
                             <th>#</th>
                             <th>Asset Name</th>
+                            <th>requester email</th>
                             <th>Asset Type</th>
                             <th>Availability</th>
                             <th>Action</th>
@@ -217,9 +204,22 @@ const RequestForAnAssets = () => {
                                 <tr key={asset._id}>
                                     <th>{index + 1}</th>
                                     <td>{asset?.product_name}</td>
-                                    <td>{asset?.product_type}</td>
+                                    <td>{asset?.requesterEmail}</td>
+                                    <td>
+                                        <span className={`text-white p-1  rounded-xl ${asset?.product_type === 'Non-returnable' && 'bg-cyan-400'}
+                                        ${asset?.product_type === 'Returnable' && 'bg-pink-400'}`}>
+                                            {asset?.product_type}
+                                        </span>
+                                    </td>
+
                                     {/* asset.availability === "out_of_stock" */}
-                                    <td>{asset?.availability}</td>
+
+                                    <td>
+                                        <span className={`text-white p-1  rounded-xl ${asset.availability === 'available' && 'bg-green-400'}
+                                        ${asset.availability === 'out_of_stock' && 'bg-red-400'}`}>
+                                            {asset?.availability}
+                                        </span>
+                                    </td>
                                     <td>
                                         <button
                                             onClick={() => handleRequest(
@@ -231,7 +231,7 @@ const RequestForAnAssets = () => {
                                                 asset.availability,
                                                 asset.Item_Added_By,
                                             )}
-                                            className={`btn btn-error ${asset?.status === "pending" && "cursor-not-allowed"}`}
+                                            className={`className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-orange-400 text-center "  ${asset?.status === "pending" && "cursor-not-allowed"}`}
                                             disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By || asset?.notes}
 
 
@@ -241,6 +241,7 @@ const RequestForAnAssets = () => {
                                                 asset?.Item_Added_By !== userDataEmployee?.Added_By
                                                     ? "Team member only"
                                                     : "Request now"
+
                                             }
                                         </button>
                                     </td>

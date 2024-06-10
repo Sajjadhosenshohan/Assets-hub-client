@@ -5,27 +5,93 @@ import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../Hooks/useAuth";
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
+import Spinner from "../../../Components/Spinner";
+import { RiArrowDropDownLine } from "react-icons/ri";
+import Heading from "../../../Components/Heading";
+import Pagination from "../../../Components/Pagination";
+import { useState } from "react";
 
-const MyAssets = ({heading}) => {
+const MyAssets = () => {
     const axiosSecure = useAxiosSecure();
-    const { userDataEmployee, isLoading } = useEmployeeData();
-    const { loading } = useAuth();
+    const { userDataEmployee, isLoading: EmployeeLoading } = useEmployeeData();
+    const { loading: authLoading } = useAuth();
 
-    const { data: assetByEmail = [], refetch } = useQuery({
-        queryKey: ["assetByEmail", userDataEmployee?.email],
-        enabled: !loading,
+    // pagination
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [numberOfPages, setNumberOfPages] = useState(0);
+
+    // search
+    const [search, setSearch] = useState('');
+    // filter
+    const [availabilityCheck, setAvailability] = useState('');
+    // pagination pages array
+    const pages = Array.from({ length: numberOfPages }, (_, i) => i);
+
+
+    const { data, refetch } = useQuery({
+        queryKey: ["assetByEmail", userDataEmployee?.email, currentPage, itemsPerPage, search, availabilityCheck],
+        enabled: !authLoading && !!userDataEmployee?.email,
         queryFn: async () => {
-            const { data } = await axiosSecure.get(`/assetByEmail/${userDataEmployee?.email}`);
+            const { data } = await axiosSecure.get(`/assetByEmail/${userDataEmployee?.email}`, 
+                {
+                    params: {
+                        page: currentPage,
+                        size: itemsPerPage,
+                        search: search,
+                        availabilityCheck: availabilityCheck,
+                    }
+                }
+            );
             return data;
         },
     });
+
+
+    // pagination function
+    // Update the numberOfPages whenever data changes
+    const { assetByEmail = [], count = 0 } = data || {};
+    const newNumberOfPages = Math.ceil(count / itemsPerPage);
+    console.log(assetByEmail)
+    // Update the numberOfPages state when data is fetched
+    if (newNumberOfPages !== numberOfPages) {
+        setNumberOfPages(newNumberOfPages);
+    }
+
+
+    const handleItemPerPage = (e) => {
+        setItemsPerPage(parseInt(e.target.value));
+        setCurrentPage(0);
+    };
+
+    const handlePrevious = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+    const handleNext = () => {
+        if (currentPage < pages.length - 1) {
+            setCurrentPage(currentPage + 1)
+        }
+    }
+    const handleFilter = (filterType, value) => {
+        if (filterType === "status") {
+            setAvailability(value);
+        }
+        if (filterType === "type") {
+            setAvailability(value);
+        }
+
+    };
+
+
 
     const handleCancel = async (assetId) => {
 
         const asset_update = await axiosSecure.patch(`/asset_rejected/${assetId}`);
         // console.log(data)
         if (asset_update.data.modifiedCount > 0) {
-            
+
             // reset();
             Swal.fire({
                 position: "center",
@@ -52,11 +118,34 @@ const MyAssets = ({heading}) => {
         }
     };
 
-
+    if (authLoading || EmployeeLoading) return <Spinner />;
     return (
         <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">{heading? heading: "My Requested Assets"}</h2>
+            <Heading heading={"My Requested Assets"}></Heading>
 
+            <div className="mb-10 flex items-center gap-8 justify-start">
+                {/* search */}
+                <form className="flex gap-2">
+                    <input onChange={(e) => setSearch(e.target.value)} type="text" name="search" className="grow border-primary  border-2 input input-bordered input-success" placeholder="Search items by it’s names" />
+                </form>
+
+                {/* button */}
+                <div className="dropdown">
+                    <div tabIndex={0} role="button" className="btn hover:bg-green-800 m-1 font-bold text-white  bg-[#23BE0A]">
+                        <h2>Filter Assets:</h2>
+                        <RiArrowDropDownLine />
+                    </div>
+
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li onClick={() => handleFilter('status', 'pending')}><a>Pending</a></li>
+                        <li onClick={() => handleFilter('status', 'approved')}><a>Approved</a></li>
+                        <li onClick={() => handleFilter('type', 'Returnable')}><a>Returnable</a></li>
+                        <li onClick={() => handleFilter('type', 'Non-returnable')}><a>Non-returnable</a></li>
+                    </ul>
+
+                </div>
+            </div>
+            {/* search filter */}
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     <thead>
@@ -76,7 +165,7 @@ const MyAssets = ({heading}) => {
                                 <th>{index + 1}</th>
                                 <td>{asset.product_name}</td>
                                 <td>{asset.product_type}</td>
-                                <td>{asset.requestDate}</td>
+                                <td>{new Date(asset.requestDate).toLocaleDateString()}</td>
                                 <td>{asset.status === 'approved' ? asset?.approvedDate : ''}</td>
                                 <td>{asset.status}</td>
                                 <td>
@@ -91,7 +180,7 @@ const MyAssets = ({heading}) => {
                                             </Link>
 
                                             {asset.product_type === "Returnable" && (
-                                                <button onClick={()=>handleReturn(asset)} className="btn btn-info">
+                                                <button onClick={() => handleReturn(asset)} className="btn btn-info">
                                                     Return
                                                 </button>
                                             )}
@@ -102,6 +191,8 @@ const MyAssets = ({heading}) => {
                         ))}
                     </tbody>
                 </table>
+                {/* pagination */}
+                <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage={itemsPerPage} handleNext={handleNext}></Pagination>
             </div>
         </div>
     );

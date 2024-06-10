@@ -2,17 +2,19 @@
 // import useUserData from "../../../Hooks/useUserData";
 // import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 // import useAuth from "../../../Hooks/useAuth";
-
+import { FaUser } from "react-icons/fa";
+import { GrUserAdmin } from "react-icons/gr";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useEmployeeData from "../../../Hooks/useEmployeeData";
+import Heading from "../../../Components/Heading";
 
 const MyTeam = () => {
    
     const axiosSecure = useAxiosSecure()
     const {userDataEmployee,isLoading} = useEmployeeData()
 
-    const { data: myTeam = [], refetch } = useQuery({
+    const { data: myTeam = [],} = useQuery({
         queryKey: ["myTeam"],
         enabled: !isLoading,
         queryFn: async () => {
@@ -24,9 +26,9 @@ const MyTeam = () => {
     // console.log("my employee", myTeam)
 
     return (
-        <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">My Team</h2>
-
+        <div className="my-24">
+            {/* <h2 className="text-3xl mb-10 text-center text-primary">My Team</h2> */}
+            <Heading heading={"My Team"}></Heading>
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     {/* head */}
@@ -40,31 +42,15 @@ const MyTeam = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* row 1 */}
-                        <tr>
-                            <th>1</th>
-                            <td>
-                                <div className="flex items-center ">
-                                    <div className="avatar">
-                                        <div className="mask mask-squircle w-12 h-12">
-                                            <img src="https://img.daisyui.com/tailwind-css-component-profile-2@56w.png" alt="Avatar Tailwind CSS Component" />
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </td>
-                            <td>mia_maruf</td>
-                            <td>admin</td>
-
-                        </tr>
+                        
                         {
                             myTeam?.map((team, index) => (
                                 <tr key={team._id}>
-                                    <th>{index + 1}</th>
+                                    <th >{index + 1}</th>
                                     <td>
                                         <div className="flex items-center ">
                                             <div className="avatar">
-                                                <div className="mask mask-squircle w-12 h-12">
+                                                <div className="mask  w-20 h-20">
                                                     <img src={team?.profileImage || "https://img.daisyui.com/tailwind-css-component-profile-2@56w.png"} alt="Avatar Tailwind CSS Component" />
                                                 </div>
                                             </div>
@@ -72,7 +58,12 @@ const MyTeam = () => {
                                         </div>
                                     </td>
                                     <td>{team?.name}</td>
-                                    <td>{team?.role}</td>
+                                    <td className="font-bold text-2xl">
+                                        {
+                                            team?.role === "hr" ? <GrUserAdmin className="text-[#FF6347]" />  : <FaUser className="text-[#4682B4]" />
+                                        }
+                                        {/* {team?.role} */}
+                                    </td>
 
                                 </tr>
                             ))

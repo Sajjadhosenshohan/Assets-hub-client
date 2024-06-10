@@ -41,7 +41,7 @@ const Nav = () => {
             </li>
             <li>
                 <NavLink to="/myAssets" className={({ isActive }) => isActive && 'border-b-4 border-primary text-primary rounded-none'}>
-                    My Assets
+                    My Request Assets
                 </NavLink>
             </li>
             <li>

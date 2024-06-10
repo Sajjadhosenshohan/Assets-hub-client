@@ -7,6 +7,9 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import "../../../Components/pagination.css"
 import Pagination from "../../../Components/Pagination";
+import Heading from "../../../Components/Heading";
+import { TiDelete } from "react-icons/ti";
+import { FcApproval } from "react-icons/fc";
 // import Pagination from "../../../Components/pagination";
 const AllRequests = () => {
     const axiosSecure = useAxiosSecure();
@@ -79,8 +82,8 @@ const AllRequests = () => {
     if (isError) return <div>Error: {error.message}</div>;
     return (
         <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">All Requests: {count}</h2>
-
+            {/* <h2 className="text-3xl mb-10 text-center text-primary">All Requests: {count}</h2> */}
+            <Heading heading="All Requests" count={count}></Heading>
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     <thead>
@@ -105,10 +108,19 @@ const AllRequests = () => {
                                 <td>{assetReq.product_type}</td>
                                 <td>{assetReq.requesterEmail}</td>
                                 <td>{assetReq.requesterName}</td>
-                                <td>{assetReq.requestDate}</td>
+                                <td>{assetReq.requestDate || "not found"}</td>
                                 <td>{assetReq.notes}</td>
-                                <td>{assetReq.status}</td>
+
                                 <td>
+                                    <span className={`text-white p-1  rounded-xl ${assetReq.status === 'approved' && 'bg-green-400'}
+                                        ${assetReq.status === 'pending' && 'bg-cyan-400'}
+                                        ${assetReq.status === 'rejected' && 'bg-red-400'}
+                                        `}>
+                                        {assetReq.status}
+                                    </span>
+                                </td>
+                                {/* <td>{assetReq.status}</td> */}
+                                {/* <td>
                                     <button
                                         onClick={() => handleStatus(assetReq._id, "approved")}
                                         className="btn btn-error"
@@ -116,22 +128,35 @@ const AllRequests = () => {
                                     >
                                         Approve
                                     </button>
-                                </td>
+                                </td> */}
                                 <td>
+
                                     <button
-                                        onClick={() => handleStatus(assetReq._id, "rejected")}
-                                        disabled={assetReq.status === "rejected"}
-                                        className="btn bg-primary btn-success"
-                                    >
-                                        Reject
+                                        onClick={() => handleStatus(assetReq._id, "approved")}
+
+                                        className="btn btn-circle btn-outline border-2 border-primary">
+                                        {
+                                            <FcApproval className="text-primary text-2xl" />
+                                        }
+
                                     </button>
                                 </td>
+
+                                <td>
+                                    <button onClick={() => handleStatus(assetReq._id, "rejected")} disabled={assetReq.status === "rejected"} className="btn btn-circle btn-outline border-2 border-[#ec4134]">
+                                        {
+                                            <TiDelete className="text-[#ec4134] text-2xl" />
+                                        }
+
+                                    </button>
+                                </td>
+
                             </tr>
                         ))}
                     </tbody>
                 </table>
 
-                <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage}setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage ={itemsPerPage} handleNext={handleNext}></Pagination>
+                <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage={itemsPerPage} handleNext={handleNext}></Pagination>
 
                 {/* <div className="flex w-full">
                     <div className="pagination justify-center items-center shadow-lg   w-full  inline-flex  rounded-md ">

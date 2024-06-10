@@ -5,23 +5,76 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import useAuth from "../../../Hooks/useAuth";
 import useUserData from "../../../Hooks/useHRData";
+import Spinner from "../../../Components/Spinner";
+import Heading from "../../../Components/Heading";
+import { FaHandPointRight } from "react-icons/fa";
+import { MdPersonAddAlt1 } from "react-icons/md";
+import Pagination from "../../../Components/Pagination";
+
 // todo donot show hr in this page
 const AddAnEmployee = () => {
     const axiosSecure = useAxiosSecure();
-    const { user } = useAuth();
-
-    const { userData } = useUserData();
+    const { loading } = useAuth();
+    const { userData, isLoading } = useUserData();
     const [selectedEmployees, setSelectedEmployees] = useState([]);
 
-    const { data: AddEmployee = [], refetch } = useQuery({
-        queryKey: ["AddEmployee"],
+
+    // pagination
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [numberOfPages, setNumberOfPages] = useState(0);
+
+    // pagination pages array
+    const pages = Array.from({ length: numberOfPages }, (_, i) => i);
+
+
+    const { data, refetch } = useQuery({
+        queryKey: ["AddEmployee", currentPage, itemsPerPage],
+        enabled: !loading && !!userData?.email,
         queryFn: async () => {
-            const { data } = await axiosSecure.get(`/users`);
+            const { data } = await axiosSecure.get(`/get_all_employee`, 
+                {
+                    params: {
+                        page: currentPage,
+                        size: itemsPerPage,
+                    }
+                }
+            );
             return data;
         },
     });
 
+    // console.log(AddEmployee)
+
+
+
+    // pagination function
+    // Update the numberOfPages whenever data changes
+    const { AddEmployee = [], count = 0 } = data || {};
+    const newNumberOfPages = Math.ceil(count / itemsPerPage);
     console.log(AddEmployee)
+    // Update the numberOfPages state when data is fetched
+    if (newNumberOfPages !== numberOfPages) {
+        setNumberOfPages(newNumberOfPages);
+    }
+
+
+    const handleItemPerPage = (e) => {
+        setItemsPerPage(parseInt(e.target.value));
+        setCurrentPage(0);
+    };
+
+    const handlePrevious = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+    const handleNext = () => {
+        if (currentPage < pages.length - 1) {
+            setCurrentPage(currentPage + 1)
+        }
+    }
+
 
 
     const handleAdd = async (id, employeeRole, employeeCompanyName) => {
@@ -55,6 +108,7 @@ const AddAnEmployee = () => {
             console.log(err);
         }
     };
+
 
     const handleSelectEmployee = (id) => {
         setSelectedEmployees((prevSelected) => {
@@ -93,45 +147,75 @@ const AddAnEmployee = () => {
         }
     };
 
-    return (
-        <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">Add Employee</h2>
+    const getPackage = () => {
+        if (userData?.category === 5) {
+            return (
+                <span className="text-2xl  text-left font-bold  flex gap-2 items-center my-4">
+                    <FaHandPointRight className="text-primary" /> 5 Members for <span className="text-primary">$5</span>
+                </span>
+            );
+        }
+        if (userData?.category === 8) {
+            return (
+                <span className=" my-4 text-2xl  text-left font-bold  flex gap-2 items-center">
+                    <FaHandPointRight className="text-primary" /> 10 Members for <span className="text-primary">$8</span>
+                </span>
+            );
+        }
+        if (userData?.category === 15) {
+            return (
+                <span className=" flex items-center my-4 text-2xl  text-left font-bold   gap-2 ">
+                    <FaHandPointRight className="text-primary" /> 20 Members for <span className="text-primary">$15</span>
+                </span>
+            );
+        }
+        return null;
+    };
 
+    if (isLoading && loading) return <Spinner />;
+
+    return (
+        <div className="my-24">
+            {/* <h2 className="text-3xl mb-10 text-center text-primary">Add Employee</h2> */}
+            <Heading heading={"Add an Employee"}></Heading>
             <div className="mb-10 space-y-2">
-                <h2 className="text-2xl text-left font-bold">
-                    Your Employees are <span className="text-primary">{AddEmployee.length}</span>
-                    
-                   
+                <h2 className="text-2xl text-left font-bold  flex gap-2 items-center">
+                    <span className="text-primary"><FaHandPointRight /></span> Your Company has <span className="text-primary">{AddEmployee.length}</span> Employee{AddEmployee.length !== 1 ? 's' : ''}
                 </h2>
 
-                {AddEmployee.length ? (<Link to="/payment">
-                    <button  className="text-2xl p-2 rounded-lg text-left font-bold bg-orange-500">
-                        increase the limit
-                    </button>
-                </Link>) : (<button disabled className="text-2xl p-2 rounded-lg text-left font-bold bg-orange-500">
-                        increase the limit
-                    </button>)
-                }
+                <h2 className="text-2xl  text-left font-bold  flex gap-2 items-center">
+                    {getPackage()}
+                </h2>
 
+                {AddEmployee.length ? (
+                    <Link to="/payment">
+                        <button className="text-2xl p-2 rounded-lg text-left font-bold bg-primary hover:bg-green-800 text-white">
+                            Increase the Limit
+                        </button>
+                    </Link>
+                ) : (
+                    <button disabled className="text-2xl p-2 rounded-lg text-left font-bold bg-gray-400 text-white cursor-not-allowed">
+                        Increase the Limit
+                    </button>
+                )}
             </div>
+
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     <thead>
                         <tr>
-                            <th>Select</th>
                             <th>#</th>
+                            <th>Select</th>
                             <th>Member Image</th>
                             <th>Member Name</th>
-                            {/* for test */}
-                            <th>package</th>
-                            <th>Member Type</th>
-                            <th>Action</th>
+                            <th>Add Employee</th>
                         </tr>
                     </thead>
                     <tbody>
                         {AddEmployee.map((employee, index) => (
                             <tr key={employee._id}>
+                                <td>{index + 1}</td>
                                 <th>
                                     <label>
                                         <input
@@ -142,26 +226,27 @@ const AddAnEmployee = () => {
                                         />
                                     </label>
                                 </th>
-                                <td>{index + 1}</td>
+
                                 <td>
                                     <div className="flex items-center">
                                         <div className="avatar">
-                                            <div className="mask mask-squircle w-20 h-20">
+                                            <div className="w-20 h-20">
                                                 <img src={employee.profileImage} alt="Member" />
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td>{employee.name}</td>
-                                <td>{employee?.category}</td>
-                                <td>{employee.role}</td>
-                                <td>
-                                    <button
-                                        onClick={() => handleAdd(employee._id, employee?.role, employee?.companyName)}
-                                        className="btn bg-primary btn-success"
-                                        disabled={employee?.role === "hr" || employee?.companyName}
-                                    >
-                                        Add to Team
+
+
+                                <td className="font-bold text-2xl">
+
+                                    <button onClick={() => handleAdd(employee._id, employee?.role, employee?.companyName)} className="btn btn-circle btn-outline border-2 border-primary">
+                                        {employee?.role === "employee" && (
+                                            <MdPersonAddAlt1 className="text-primary text-2xl" />
+                                        )}
+
+                                        
                                     </button>
                                 </td>
                             </tr>
@@ -180,6 +265,9 @@ const AddAnEmployee = () => {
                     </button>
                 </div>
             )}
+
+            {/* pagination */}
+            <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage={itemsPerPage} handleNext={handleNext}></Pagination>
         </div>
     );
 };

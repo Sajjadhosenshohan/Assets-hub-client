@@ -1,41 +1,111 @@
 import { RiArrowDropDownLine } from "react-icons/ri";
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
-import {  useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-
+import Heading from "../../../Components/Heading";
+import { MdDelete } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
+import { useState } from "react";
+import useUserData from "../../../Hooks/useHRData";
+import Pagination from "../../../Components/Pagination";
+import Spinner from "../../../Components/Spinner";
 const AssetList = () => {
     const axiosPublic = useAxiosPublic()
     const axiosSecure = useAxiosSecure()
-    const { user, loading } = useAuth();
-    const mail = user?.email;
+    const { loading } = useAuth();
+    const { userData, isLoading} = useUserData();
 
-    const handleFilter = () => {
-        console.log("filter")
-    }
+    // pagination
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [numberOfPages, setNumberOfPages] = useState(0);
 
-    const handleSearch = () => {
-        console.log("filter")
-    }
+    // search
+    const [search, setSearch] = useState('');
+    // filter
+    const [availabilityCheck, setAvailability] = useState('');
 
-    const { data: assets = [] , refetch } = useQuery({
-        queryKey: ["assets"],
-        // enabled: !loading && !!mail && !!localStorage.getItem("access-token"),
+    // sorting
+    const [sortField, setSortField] = useState('product_quantity');
+    const [sortOrder, setSortOrder] = useState(1);
+
+    // pagination pages array
+    const pages = Array.from({ length: numberOfPages }, (_, i) => i);
+
+
+    const { data, refetch } = useQuery({
+        queryKey: ["assets", userData?.email, currentPage, itemsPerPage, search, availabilityCheck],
+        enabled: !loading && !!userData?.email,
         queryFn: async () => {
-            const { data } = await axiosPublic.get(`/assets`);
+            const { data } = await axiosPublic.get(`/all_assets/${userData?.email}`,
+                {
+                    params: {
+                        page: currentPage,
+                        size: itemsPerPage,
+                        search: search,
+                        availabilityCheck: availabilityCheck,
+                        sortField:sortField,
+                        sortOrder: sortOrder
+                    }
+                }
+            );
             return data;
         },
 
     });
 
+    // pagination function
+    // Update the numberOfPages whenever data changes
+    const { assets = [], count = 0 } = data || {};
+    const newNumberOfPages = Math.ceil(count / itemsPerPage);
+    console.log(assets)
+
+    // Update the numberOfPages state when data is fetched
+    if (newNumberOfPages !== numberOfPages) {
+        setNumberOfPages(newNumberOfPages);
+    }
+
+
+    const handleItemPerPage = (e) => {
+        setItemsPerPage(parseInt(e.target.value));
+        setCurrentPage(0);
+    };
+
+    const handlePrevious = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+    const handleNext = () => {
+        if (currentPage < pages.length - 1) {
+            setCurrentPage(currentPage + 1)
+        }
+    }
+    const handleFilter = (filterType, value) => {
+        if (filterType === "status") {
+            setAvailability(value);
+        }
+        if (filterType === "type") {
+            setAvailability(value);
+        }
+
+    };
+
+    const handleSort = (field, order) => {
+        setSortField(field)
+        setSortOrder(order)
+        refetch();
+    }
+
 
 
     // delete items
-    const handleDelete = (id,name) => {
+    const handleDelete = (id, name) => {
         // console.log(id)
-        
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -46,7 +116,7 @@ const AssetList = () => {
             confirmButtonText: "Yes, delete it!"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const res =  await axiosSecure.delete(`/asset/delete/${id}`)
+                const res = await axiosSecure.delete(`/asset/delete/${id}`)
                 // console.log(res.data);
                 if (res.data.deletedCount > 0) {
                     // refetch to update the ui
@@ -65,45 +135,34 @@ const AssetList = () => {
         });
     }
     // console.log(assets)
-
+    if(loading || isLoading) return <Spinner></Spinner>
     return (
-        <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">Asset List</h2>
-
+        <div className="my-24">
+            {/* <h2 className="text-3xl mb-10 text-center text-primary">Asset List</h2> */}
+            <Heading heading="Asset List"></Heading>
             {/* button  */}
 
-            <div className="mt-8 mb-10 flex items-center gap-10 justify-center">
+            <div className="mb-10 flex items-center gap-8 justify-start">
+                {/* search */}
+                <form className="flex gap-2">
+                    <input onChange={(e) => setSearch(e.target.value)} type="text" name="search" className="grow border-primary  border-2 input input-bordered input-success" placeholder="Search items by it’s names" />
+                </form>
 
+                {/* button */}
                 <div className="dropdown">
-                    <div tabIndex={0} role="button" className="btn m-1 font-bold text-white  bg-[#23BE0A]">
+                    <div tabIndex={0} role="button" className="btn hover:bg-green-800 m-1 font-bold text-white  bg-[#23BE0A]">
                         <h2>Filter Assets:</h2>
                         <RiArrowDropDownLine />
                     </div>
 
-
-                    <ul
-                        tabIndex={0}
-                        className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-                    >
-
-                        <li onClick={() => handleFilter('Available')}><a>Available</a></li>
-                        <li onClick={() => handleFilter('Out-of-stock')}><a>Out-of-stock</a></li>
-                        <li onClick={() => handleFilter('Returnable')}><a>Returnable</a></li>
-                        <li onClick={() => handleFilter('Non-returnable')}><a>Non-returnable</a></li>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li onClick={() => handleFilter('status', 'available')}><a>Available</a></li>
+                        <li onClick={() => handleFilter('status', 'out_of_stock')}><a>Out of stock</a></li>
+                        <li onClick={() => handleFilter('type', 'Returnable')}><a>Returnable</a></li>
+                        <li onClick={() => handleFilter('type', 'Non-returnable')}><a>Non-returnable</a></li>
                     </ul>
 
                 </div>
-
-                <form onSubmit={handleSearch} className="flex">
-                    <label className="input border-2 border-green-500 flex items-center gap-2">
-                        <input type="text" name="search" className="grow" placeholder="Search items by it’s names" />
-
-                    </label>
-                    <button type="submit" className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transhtmlForm bg-green-500 rounded-md -ml-1 hover:bg-green-800 focus:outline-none focus:bg-green-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className=" w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
-                    </button>
-                </form>
-
 
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn m-1 font-bold text-white  bg-[#23BE0A]">
@@ -117,14 +176,14 @@ const AssetList = () => {
                         className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                     >
 
-                        <li onClick={() => handleFilter('Non-returnable')}><a>All</a></li>
-                        <li onClick={() => handleFilter('Available')}><a>1 to 10</a></li>
-                        <li onClick={() => handleFilter('Out-of-stock')}><a>11 to 20</a></li>
-                        <li onClick={() => handleFilter('Returnable')}><a>21 to 30</a></li>
+                        <li onClick={() => handleSort('product_quantity', 1)}><a>Low to High</a></li>
+                        <li onClick={() => handleSort("product_quantity", -1)}><a>Hight to Low</a></li>
+                        
                     </ul>
 
                 </div>
             </div>
+
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
@@ -136,6 +195,7 @@ const AssetList = () => {
                             <th>Product Type</th>
                             <th>Product Quantity</th>
                             <th>Date Added</th>
+                            <th>Availability</th>
                             <th>Delete</th>
                             <th>Update</th>
                         </tr>
@@ -148,19 +208,53 @@ const AssetList = () => {
                                 <tr key={asset._id}>
                                     <th>{index + 1}</th>
                                     <td>{asset.product_name}</td>
-                                    <td>{asset.product_type}</td>
+                                    <td>
+
+                                        <span className={`text-white p-1  rounded-xl ${asset?.product_type === 'Non-returnable' && 'bg-cyan-400'}
+                                        ${asset?.product_type === 'Returnable' && 'bg-pink-400'}`}>
+                                            {asset?.product_type}
+                                        </span>
+                                    </td>
                                     <td>{asset.product_quantity}</td>
                                     <td>{new Date(asset.date_added).toLocaleDateString()}</td>
-                                    <td><button className="btn btn-error" onClick={() => handleDelete(asset._id, asset.product_name)}>Delete</button></td>
-                                    <td><Link to={`/update/${asset._id}`}>
-                                    <button className="btn bg-primary btn-success" >Update</button>
-                                    </Link></td>
+
+                                    <td>
+                                        <span className={`text-white p-1  rounded-xl ${asset.availability === 'available' && 'bg-green-400'}
+                                        ${asset.availability === 'out_of_stock' || "Out_of_stock" && 'bg-red-400'}`}>
+                                            {asset?.availability}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button onClick={() => handleDelete(asset._id, asset.product_name)} className="btn btn-circle btn-outline border-2 border-[#ec4134]">
+                                            {
+                                                <MdDelete className="text-[#ec4134] text-2xl" />
+                                            }
+
+                                        </button>
+                                    </td>
+
+                                    <td>
+                                        <Link to={`/update/${asset._id}`}>
+                                            <button
+                                                className="btn btn-circle btn-outline border-2 border-primary">
+                                                {
+                                                    <FiEdit className="text-primary text-2xl" />
+                                                }
+                                            </button>
+                                        </Link>
+
+                                    </td>
+
+
                                 </tr>
                             ))
                         }
 
                     </tbody>
                 </table>
+
+                {/* pagination */}
+                <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage={itemsPerPage} handleNext={handleNext}></Pagination>
             </div>
         </div>
     );
