@@ -47,7 +47,7 @@ const UpdateProfile = () => {
     // console.log(user)
     return (
         <div>
-            <section className=" text-black mb-12 mt-24">
+            <section className=" text-black  mb-12 mt-24">
                 <div className="container flex items-center justify-center  px-6 mx-auto">
                     <form onSubmit={handleUpdate} className="w-full max-w-md  p-6 drop-shadow-xl rounded-xl sm:px-12 bg-[#f2f2f2]">
 

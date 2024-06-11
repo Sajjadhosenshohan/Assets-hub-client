@@ -53,11 +53,11 @@ const AddAnAsset = () => {
         }
     }
     return (
-        <div className="my-24">
+        <div className="mt-24 mb-12">
             {/* <h2 className="text-3xl mt-12 mb-10 text-center text-primary">Add an Assets</h2> */}
 
                 <Heading heading="Add an Asset"></Heading>
-            <div className='flex justify-center items-start min-h-[calc(100vh-306px)] w-full '>
+            <div className='flex justify-center items-start  w-full '>
                 <section className='mb-24 w-full border-primary border-2 p-2 md:p-6 mx-auto  rounded-md shadow-md bg-secondary'>
                     
 

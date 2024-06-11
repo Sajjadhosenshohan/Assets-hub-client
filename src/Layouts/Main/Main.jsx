@@ -9,7 +9,7 @@ const Main = () => {
     return (
         <div>
             <Nav navHide={navHide}></Nav>
-            <div className='max-w-6xl mx-auto'>
+            <div className='max-w-6xl mx-auto p-5'>
                 <Outlet></Outlet>
             </div>
             <Footer></Footer>

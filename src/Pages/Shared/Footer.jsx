@@ -34,7 +34,7 @@ const Footer = () => {
 
                     </Link>
 
-                    <div className="flex flex-wrap justify-center mt-6 -mx-4">
+                    <div className="flex flex-col md:flex-row justify-center mt-6 -mx-4">
                         <Link to="/">
                             <p className="mx-4 text text-gray-800 transition-colors duration-300 hover:text-primary dark:text-gray-800 dark:hover:text-primary" aria-label="Reddit"> Home </p>
                         </Link>

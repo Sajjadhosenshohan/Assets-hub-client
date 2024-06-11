@@ -32,7 +32,7 @@ const AddAnEmployee = () => {
         queryKey: ["AddEmployee", currentPage, itemsPerPage],
         enabled: !loading && !!userData?.email,
         queryFn: async () => {
-            const { data } = await axiosSecure.get(`/get_all_employee`, 
+            const { data } = await axiosSecure.get(`/get_all_employee`,
                 {
                     params: {
                         page: currentPage,
@@ -178,26 +178,47 @@ const AddAnEmployee = () => {
         <div className="my-24">
             {/* <h2 className="text-3xl mb-10 text-center text-primary">Add Employee</h2> */}
             <Heading heading={"Add an Employee"}></Heading>
-            <div className="mb-10 space-y-2">
-                <h2 className="text-2xl text-left font-bold  flex gap-2 items-center">
-                    <span className="text-primary"><FaHandPointRight /></span> Your Company has <span className="text-primary">{AddEmployee.length}</span> Employee{AddEmployee.length !== 1 ? 's' : ''}
-                </h2>
+            <div className="mb-10 flex flex-col gap-3 justify-start">
+                {/* <p className="text-2xl text-center font-bold">
+                    <span className="text-primary"><FaHandPointRight />Your Company has</span>
 
-                <h2 className="text-2xl  text-left font-bold  flex gap-2 items-center">
-                    {getPackage()}
-                </h2>
+                    <span className="text-primary">{AddEmployee.length} Employee {AddEmployee.length !== 1 ? 's' : ''}</span>
 
-                {AddEmployee.length ? (
-                    <Link to="/payment">
-                        <button className="text-2xl p-2 rounded-lg text-left font-bold bg-primary hover:bg-green-800 text-white">
+                </p> */}
+
+                <div>
+                    <p className="text-2xl  text-center font-bold flex flex-col md:flex-row  items-center">
+                        <div className="flex items-center">
+                            <span className="text-primary mr-2"><FaHandPointRight /></span>
+                            <span>Your Company has</span>
+                        </div> <br />
+                        <div className="flex items-center">
+                            <span className="mx-1 text-primary">{AddEmployee.length}</span>
+                            <span>Employees</span>
+                        </div> <br />
+
+                    </p>
+                </div>
+
+                <div className="flex items-center justify-center md:items-start md:justify-start">
+                    <h2 >
+                        {getPackage()}
+                    </h2>
+                </div>
+
+                <div className="flex items-center justify-center md:items-start md:justify-start">
+                    {AddEmployee.length ? (
+                        <Link to="/payment">
+                            <button className="text-2xl p-2 rounded-lg text-center font-bold bg-primary hover:bg-green-800 text-white">
+                                Increase the Limit
+                            </button>
+                        </Link>
+                    ) : (
+                        <button disabled className="text-2xl p-2 rounded-lg text-center  font-bold bg-gray-400 text-white cursor-not-allowed">
                             Increase the Limit
                         </button>
-                    </Link>
-                ) : (
-                    <button disabled className="text-2xl p-2 rounded-lg text-left font-bold bg-gray-400 text-white cursor-not-allowed">
-                        Increase the Limit
-                    </button>
-                )}
+                    )}
+                </div>
             </div>
 
 
@@ -246,28 +267,30 @@ const AddAnEmployee = () => {
                                             <MdPersonAddAlt1 className="text-primary text-2xl" />
                                         )}
 
-                                        
+
                                     </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
 
-            {selectedEmployees.length > 0 && (
-                <div className="mt-6 flex justify-center">
-                    <button
-                        onClick={handleAddSelected}
-                        className="btn bg-primary btn-success"
-                    >
-                        Add Selected Members to the Team
-                    </button>
+                {selectedEmployees.length > 0 && (
+                    <div className="mt-6 flex justify-center">
+                        <button
+                            onClick={handleAddSelected}
+                            className="btn bg-primary btn-success"
+                        >
+                            Add Selected Members to the Team
+                        </button>
+                    </div>
+                )}
+
+                {/* pagination */}
+                <div>
+                    <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage={itemsPerPage} handleNext={handleNext}></Pagination>
                 </div>
-            )}
-
-            {/* pagination */}
-            <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage={itemsPerPage} handleNext={handleNext}></Pagination>
+            </div>
         </div>
     );
 };

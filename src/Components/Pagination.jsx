@@ -2,7 +2,7 @@
 const Pagination = ({ heading_pending,handlePrevious,pages,currentPage,setCurrentPage,handleItemPerPage,itemsPerPage,handleNext}) => {
     return (
         <div className={`flex w-full mt-8 ${heading_pending && "hidden"}`}>
-            <div className="pagination mt-10 my-auto justify-center items-center shadow-lg   w-full  inline-flex  bg-white">
+            <div className="pagination mt-10 my-auto justify-center items-center shadow-lg inline-flex  bg-white">
                 <button type="button" onClick={handlePrevious} className="inline-flex items-center px-2 py-2 text-sm font-semibold  rounded-l-md ">
                     <span className="bg-primary px-2 py-2 rounded-md text-white">Previous</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="w-5 h-5">

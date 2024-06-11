@@ -51,7 +51,7 @@ const Top_five_pending_request = () => {
             <Heading heading="Top Pending Request"></Heading>
 
             <div className="overflow-x-auto">
-                <table className="table table-zebra">
+                <table className="table table-zebra ">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -70,7 +70,7 @@ const Top_five_pending_request = () => {
                             <tr key={assetReq._id}>
                                 <th>{index + 1}</th>
                                 <td>{assetReq.product_name}</td>
-                                <td>{assetReq.product_type}</td>
+                                <td >{assetReq.product_type}</td>
                                 <td>{assetReq.requesterEmail}</td>
                                 <td>{assetReq.requesterName}</td>
                                 <td>

@@ -121,7 +121,9 @@ const RequestForAnAssets = () => {
             requesterEmail: userDataEmployee?.email,
             requesterName: userDataEmployee?.name,
             notes,
-            status: "pending"
+            status: "pending",
+            companyName: userDataEmployee?.companyName,
+            companyLogo: userDataEmployee?.companyLogo,
         };
         const requestData2 = {
             ...selectedAsset2,
@@ -129,7 +131,9 @@ const RequestForAnAssets = () => {
             requesterEmail: userDataEmployee?.email,
             requesterName: userDataEmployee?.name,
             notes,
-            status: "pending"
+            status: "pending",
+            companyName: userDataEmployee?.companyName,
+            companyLogo: userDataEmployee?.companyLogo,
         };
 
         // console.log("req1", requestData)
@@ -160,7 +164,7 @@ const RequestForAnAssets = () => {
         <div className="my-24">
             <Heading heading={'Request For An Asset'}></Heading>
 
-            <div className="mb-10 flex items-center gap-8 justify-start">
+            <div className="mb-10 flex  flex-col md:flex-row items-center gap-5 md:gap-8 justify-start">
                 {/* search */}
                 <form className="flex gap-2">
                     <input onChange={(e) => setSearch(e.target.value)} type="text" name="search" className="grow border-primary  border-2 input input-bordered input-success" placeholder="Search items by it’s names" />
@@ -231,8 +235,8 @@ const RequestForAnAssets = () => {
                                                 asset.availability,
                                                 asset.Item_Added_By,
                                             )}
-                                            className={`className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-orange-400 text-center "  ${asset?.status === "pending" && "cursor-not-allowed"}`}
-                                            disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By || asset?.notes}
+                                            className={`className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-orange-400 text-center " ${asset?.availability === "out_of_stock" && "cursor-not-allowed bg-slate-400"}`}
+                                            disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By || asset?.availability === "out_of_stock"}
 
 
                                         >
@@ -252,12 +256,12 @@ const RequestForAnAssets = () => {
 
                         {/* Modal */}
 
-                        <dialog id="my_modal_5" className="mt-12  rounded-lg bg-secondary modal  w-[70%] mx-auto">
-                            <h1 className="text-2xl dark:text-primary lg:text-3xl font-bold text-center  ">PDF Preview!</h1>
-                            <div className=" w-full md:p-5">
+                        <dialog id="my_modal_5" className="mt-12 py-10 rounded-lg bg-secondary  w-[90%]  md:w-[70%] mx-auto">
+                            <h1 className="text-2xl mb-5 dark:text-primary lg:text-3xl font-bold text-center  ">PDF Preview!</h1>
+                            <div className="w-full md:p-5">
 
 
-                                <form onSubmit={handleForm} style={{ minHeight: '300px', width: '100%', }}>
+                                <form className="mt-0 lg:min-h-[300px]" onSubmit={handleForm} style={{  width: '100%', }}>
                                     <div>
 
                                         <h2>{new Date()?.toLocaleDateString}</h2>

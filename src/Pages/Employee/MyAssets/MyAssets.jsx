@@ -106,6 +106,7 @@ const MyAssets = ({ heading_pending }) => {
     };
 
     const handleReturn = async (asset) => {
+        
         const asset_update = await axiosSecure.patch(`/asset_returned/${asset._id}`);
         if (asset_update.data.modifiedCount > 0) {
             Swal.fire({
@@ -124,7 +125,7 @@ const MyAssets = ({ heading_pending }) => {
         <div className="my-24">
             <Heading heading_pending={heading_pending} heading={"My Requested Assets"}></Heading>
 
-            <div className={`mb-10 flex items-center gap-8 justify-start ${heading_pending && "hidden"}`}>
+            <div className={`mb-10 flex flex-col md:flex-row items-center gap-5 md:gap-8 justify-start ${heading_pending && "hidden"}`}>
                 {/* search */}
                 <form className="flex gap-2">
                     <input onChange={(e) => setSearch(e.target.value)} type="text" name="search" className="grow border-primary  border-2 input input-bordered input-success" placeholder="Search items by it’s names" />

@@ -108,7 +108,7 @@ const AllRequests = () => {
                                 <td>{assetReq.product_type}</td>
                                 <td>{assetReq.requesterEmail}</td>
                                 <td>{assetReq.requesterName}</td>
-                                <td>{new Date(assetReq.requestDate).toLocaleDateString()|| "not found"}</td>
+                                <td>{new Date(assetReq.requestDate).toLocaleDateString() || "not found"}</td>
                                 <td>{assetReq.notes}</td>
 
                                 <td>
@@ -119,10 +119,10 @@ const AllRequests = () => {
                                         {assetReq.status}
                                     </span>
                                 </td>
-                                
-                                <td>
 
+                                <td>
                                     <button
+                                        disabled={assetReq.status === "approved"}
                                         onClick={() => handleStatus(assetReq._id, "approved")}
 
                                         className="btn btn-circle btn-outline border-2 border-primary">

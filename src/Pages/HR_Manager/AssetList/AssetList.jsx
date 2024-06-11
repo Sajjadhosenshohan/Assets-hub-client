@@ -142,7 +142,7 @@ const AssetList = () => {
             <Heading heading="Asset List"></Heading>
             {/* button  */}
 
-            <div className="mb-10 flex items-center gap-8 justify-start">
+            <div className="mb-10 flex flex-col md:flex-row items-center gap-5 md:gap-8 justify-start">
                 {/* search */}
                 <form className="flex gap-2">
                     <input onChange={(e) => setSearch(e.target.value)} type="text" name="search" className="grow border-primary  border-2 input input-bordered input-success" placeholder="Search items by it’s names" />
