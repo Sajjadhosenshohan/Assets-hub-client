@@ -3,13 +3,17 @@ import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useUserData from "../../../Hooks/useHRData";
 import Spinner from "../../../Components/Spinner";
+import Heading from "../../../Components/Heading";
+import Swal from "sweetalert2";
+import { FcApproval } from "react-icons/fc";
+import { TiDelete } from "react-icons/ti";
 
 const Top_five_pending_request = () => {
     const axiosSecure = useAxiosSecure();
-    const { loading: authLoading , } = useAuth();
+    const { loading: authLoading, } = useAuth();
     const { userData, isLoading: userDataLoading } = useUserData();
 
-    const { data: requests = [], isLoading: requestsLoading, isError, error,} = useQuery({
+    const { data: requests = [], isLoading: requestsLoading, isError, error, refetch } = useQuery({
 
         queryKey: ["Top_five_pending_req", userData?.email],
         enabled: !authLoading && !!userData?.email,
@@ -19,31 +23,32 @@ const Top_five_pending_request = () => {
         },
     });
 
-    console.log("top five", requests)
+    // console.log("top five", requests)
+    const handleStatus = async (assetId, asset_status) => {
+        const asset_data = {
+            approvedDate: new Date().toLocaleDateString(),
+            status: asset_status,
+        };
+        const asset_update = await axiosSecure.put(`/asset_status_change/${assetId}`, asset_data);
 
+        if (asset_update.data.modifiedCount > 0) {
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: `Updated successfully`,
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            refetch();
+        }
+    };
 
     if (authLoading || userDataLoading || requestsLoading) return <Spinner />;
     if (isError) return <div>Error: {error.message}</div>;
 
-    const handleSearch = () => {
-        console.log("filter");
-    };
     return (
-        <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">All Requests</h2>
-
-            <div className="mt-8 mb-10 flex items-center gap-10 justify-center">
-                <form onSubmit={handleSearch} className="flex">
-                    <label className="input border-2 border-green-500 flex items-center gap-2">
-                        <input type="text" name="search" className="grow" placeholder="Search items by its names" />
-                    </label>
-                    <button type="submit" className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 bg-green-500 rounded-md -ml-1 hover:bg-green-800 focus:outline-none focus:bg-green-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
-                            <path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" />
-                        </svg>
-                    </button>
-                </form>
-            </div>
+        <div className="my-24">
+            <Heading heading="Top Pending Request"></Heading>
 
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
@@ -55,7 +60,6 @@ const Top_five_pending_request = () => {
                             <th>Email of requester</th>
                             <th>Name of requester</th>
                             <th>Request Date</th>
-                            <th>Additional note</th>
                             <th>Status</th>
                             <th>Approve Button</th>
                             <th>Reject Button</th>
@@ -69,13 +73,39 @@ const Top_five_pending_request = () => {
                                 <td>{assetReq.product_type}</td>
                                 <td>{assetReq.requesterEmail}</td>
                                 <td>{assetReq.requesterName}</td>
-                                <td>{assetReq.requestDate}</td>
-                                <td>{assetReq.notes}</td>
-                                <td>{assetReq.status}</td>
+                                <td>
+                                    {new Date(assetReq.requestDate).toLocaleDateString()}
 
-                                {/* <td><button onClick={() => handleStatus(assetReq._id, "approved")} className="btn btn-error" disabled={assetReq.status === "approved"}>Approve</button></td>
+                                </td>
+                                <td>
+                                    <span className={`text-white p-1  rounded-xl ${assetReq.status === 'approved' && 'bg-green-400'}
+                                        ${assetReq.status === 'pending' && 'bg-cyan-400'}
+                                        ${assetReq.status === 'rejected' && 'bg-red-400'}
+                                        `}>
+                                        {assetReq.status}
+                                    </span>
+                                </td>
 
-                                <td><button onClick={() => handleStatus(assetReq._id, "rejected")} disabled={assetReq.status === "rejected"} className="btn bg-primary btn-success">Reject</button></td> */}
+                                <td>
+
+                                    <button
+                                        onClick={() => handleStatus(assetReq._id, "approved")}
+
+                                        className="btn btn-circle btn-outline border-2 border-primary">
+                                        {
+                                            <FcApproval className="text-primary text-2xl" />
+                                        }
+                                    </button>
+                                </td>
+
+                                <td>
+                                    <button onClick={() => handleStatus(assetReq._id, "rejected")} disabled={assetReq.status === "rejected"} className="btn btn-circle btn-outline border-2 border-[#ec4134]">
+                                        {
+                                            <TiDelete className="text-[#ec4134] text-2xl" />
+                                        }
+
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

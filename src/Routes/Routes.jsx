@@ -7,18 +7,16 @@ import RequestForAnAssets from "../Pages/Employee/RequestForAsset/RequestForAnAs
 import AssetList from "../Pages/HR_Manager/AssetList/AssetList";
 import AddAnAsset from "../Pages/HR_Manager/AddAnAsset/AddAnAsset";
 import AllRequests from "../Pages/HR_Manager/All_Requests/AllRequests";
-import CustomRequestsList from "../Pages/HR_Manager/Custom_Requests_List/CustomRequestsList";
 import MyEmployeeList from "../Pages/HR_Manager/My_Employee_List/MyEmployeeList";
 import AddAnEmployee from "../Pages/HR_Manager/Add_an_Employee/AddAnEmployee";
 import RegisterEmployee from "../Pages/Employee/Join_as_employee/RegisterEmployee";
-import LoginEmployee from "../Pages/Employee/Join_as_employee/LoginEmployee";
 import LoginHR from "../Pages/HR_Manager/LoginHR";
 import RegisterHR from "../Pages/HR_Manager/RegisterHR";
 import Payment from "../Pages/HR_Manager/Payment/Payment";
 import UpdateProfile from "../Pages/UpdateProfile/UpdateProfile";
 import UpdateAsset from "../Pages/HR_Manager/AssetList/UpdateAsset";
 import AssetDetails from "../Pages/Employee/Pdf/AssetDetails";
-
+import PrivateRoutes from "./PrivateRoutes";
 
 const router = createBrowserRouter([
     {
@@ -37,7 +35,7 @@ const router = createBrowserRouter([
             // normal employee
             {
                 path: "/myAssets",
-                element: <MyAssets></MyAssets>
+                element: <PrivateRoutes><MyAssets></MyAssets></PrivateRoutes>
             },
             {
                 path: "/myTeam",
@@ -68,10 +66,6 @@ const router = createBrowserRouter([
             },
 
             {
-                path: "/customRequestList",
-                element: <CustomRequestsList></CustomRequestsList>
-            },
-            {
                 path: "/myEmployeeList",
                 element: <MyEmployeeList></MyEmployeeList>
             },
@@ -94,10 +88,7 @@ const router = createBrowserRouter([
                 path: "/registerEmployee",
                 element: <RegisterEmployee></RegisterEmployee>
             },
-            {
-                path: "/loginEmployee",
-                element: <LoginEmployee></LoginEmployee>
-            },
+            
             // for Hr manager
 
             {
@@ -105,7 +96,7 @@ const router = createBrowserRouter([
                 element: <RegisterHR></RegisterHR>
             },
             {
-                path: "/loginHR",
+                path: "/login",
                 element: <LoginHR></LoginHR>
             },
 

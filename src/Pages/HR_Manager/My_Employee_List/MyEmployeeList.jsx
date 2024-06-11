@@ -12,7 +12,7 @@ import Heading from "../../../Components/Heading";
 
 const MyEmployeeList = () => {
     const axiosSecure = useAxiosSecure()
-    const { userData,} = useUserData()
+    const { userData} = useUserData()
     const {loading} = useAuth()
     // pagination
     const [currentPage, setCurrentPage] = useState(0);
@@ -100,7 +100,7 @@ const MyEmployeeList = () => {
 
 
     return (
-        <div className="mt-12 mb-24">
+        <div className="my-24">
             {/* <h2 className="text-3xl mb-10 text-center text-primary">My Employee List</h2> */}
             <Heading heading="My Employee List"></Heading>
             <div className="overflow-x-auto">

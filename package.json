@@ -29,6 +29,7 @@
     "recharts": "^2.12.7",
     "sort-by": "^1.2.0",
     "sweetalert2": "^11.11.0",
+    "swiper": "^11.1.4",
     "uninstall": "^0.0.0"
   },
   "devDependencies": {

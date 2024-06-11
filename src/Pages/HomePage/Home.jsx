@@ -1,30 +1,69 @@
 import About from "../../Components/About";
-import MyAssets from "../Employee/MyAssets/MyAssets";
-import Top_five_pending_request from "../HR_Manager/All_Requests/Top_five_pending_request";
-import Limited_stock_items from "../HR_Manager/Limited_stock_items/Limited_stock_items";
-import Stats_chart from "../HR_Manager/Stats_chart/Stats_chart";
+import useAuth from "../../Hooks/useAuth";
+import useEmployeeData from "../../Hooks/useEmployeeData";
+import useUserData from "../../Hooks/useHRData";
+import TopFivePendingRequest from "../HR_Manager/All_Requests/Top_five_pending_request";
+import LimitedStockItems from "../HR_Manager/Limited_stock_items/Limited_stock_items";
+import StatsChart from "../HR_Manager/Stats_chart/Stats_chart";
 import TopRequestedItems from "../HR_Manager/TopRequestedItems/TopRequestedItems";
 import Banner from "./Banner";
+import Contact from "./Contact";
+import Feature from "./Feature";
 import MyMonthlyRequests from "./MyMonthlyRequests";
+import MyPendingRequest from "./MyPendingRequest";
+import Newsletter from "./NewsLetter";
 import PackageSection from "./PackageSection";
 
 const Home = () => {
+    const { userData: HR_Manager } = useUserData()
+    const { userDataEmployee } = useEmployeeData()
+    const { user } = useAuth()
+
     return (
         <div>
-            <div className="h-[600px] mt-12 mb-24 overflow-hidden">
-                <Banner></Banner>
-            </div>
-            <About></About>
-            <PackageSection></PackageSection>
-            {/* my pending assets */}
-            <MyAssets heading="My pending requests"></MyAssets>
-            <MyMonthlyRequests></MyMonthlyRequests>
+            {/* If the user is not logged in */}
+            {!user && (
+                <>
+                    <div className="mt-12">
+                        <Banner />
+                    </div>
+                    <About />
+                    <PackageSection />
+                </>
+            )}
 
-            {/* for HR  */}
-            <Top_five_pending_request></Top_five_pending_request>
-            <TopRequestedItems></TopRequestedItems>
-            <Limited_stock_items></Limited_stock_items>
-            <Stats_chart></Stats_chart>
+            {/* If the user is logged in as an Employee */}
+            {user && userDataEmployee && (
+                <>
+                    <MyPendingRequest />
+                    <MyMonthlyRequests />
+                    <Newsletter />
+                </>
+            )}
+
+            {/* If the user is logged in as an HR Manager */}
+            {user && HR_Manager && (
+                <>
+                    <TopFivePendingRequest />
+                    <TopRequestedItems />
+                    <LimitedStockItems />
+                    <StatsChart />
+                    <Feature />
+                    <Contact />
+                </>
+            )}
+
+            {/* If the user is logged in but not associated with any company */}
+            {user && !HR_Manager && !userDataEmployee && (
+                <div className="mt-12">
+                    <Banner />
+                    <About />
+                    <PackageSection />
+                    <div className="mt-6 text-center text-red-600">
+                        Please contact your HR to get affiliated with a company.
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -4,6 +4,9 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import useUserData from '../../../Hooks/useHRData';
 import Spinner from '../../../Components/Spinner';
 import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Heading from '../../../Components/Heading';
 
 const CheckoutForm = () => {
     const axiosSecure = useAxiosSecure();
@@ -13,6 +16,10 @@ const CheckoutForm = () => {
     const [error, setError] = useState('');
     const stripe = useStripe();
     const elements = useElements();
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location?.state?.pathname
+    console.log(from)
 
     const [selectedValue, setSelectedValue] = useState(userData?.category);
 
@@ -37,16 +44,10 @@ const CheckoutForm = () => {
 
         if (packagePrice > 0) {
             try {
-                const res = await axiosSecure.patch(`/payments/change/${userData?.email}`, {category_price: packagePrice});
+                const res = await axiosSecure.patch(`/payments/change/${userData?.email}`, { category_price: packagePrice });
                 console.log('Payment category updated', res.data);
                 if (res.data) {
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: "Package updated successfully",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    toast.success("Package updated successfully")
                 }
             } catch (error) {
                 console.error('Error updating payment category:', error);
@@ -76,7 +77,7 @@ const CheckoutForm = () => {
         if (error) {
             setError(error.message);
         } else {
-            console.log("payment method",paymentMethod)
+            console.log("payment method", paymentMethod)
             setError('');
         }
 
@@ -106,14 +107,16 @@ const CheckoutForm = () => {
 
                 try {
                     const res = await axiosSecure.post('/payments', payment);
-                    if (res.data?.paymentResult?.insertedId) {
+                    console.log(res)
+                    if (res.data?.insertedId) {
                         Swal.fire({
-                            position: "top-end",
+                            position: "center",
                             icon: "success",
                             title: "Payment successful",
                             showConfirmButton: false,
                             timer: 1500
                         });
+                        navigate(from)
                     }
                 } catch (error) {
                     console.error('Error saving payment:', error);
@@ -125,13 +128,14 @@ const CheckoutForm = () => {
     if (isLoading) return <Spinner />;
 
     return (
-        <div className="mb-24">
-            <h2 className="text-3xl mt-12 mb-10 text-center text-primary">Payment here: </h2>
-            <form className='flex flex-col w-1/2 mx-auto mb-20'>
+        <div className="my-24">
+            {/* <h2 className="text-3xl mt-12 mb-10 text-center text-primary">Payment here: </h2> */}
+            <Heading heading="Payment here"></Heading>
+            <form className='flex flex-col w-1/2 mx-auto mb-10'>
                 <select
                     name='product_type'
                     required
-                    className='border p-2 border-primary input input-bordered input-success'
+                    className='border-2 p-2 border-primary input input-bordered input-success'
                     value={selectedValue}
                     onChange={handleChange}
                 >
@@ -159,7 +163,7 @@ const CheckoutForm = () => {
                             },
                         }}
                     />
-                    <div className="flex mt-8">
+                    <div className="flex justify-center mt-8">
                         <button
                             className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center"
                             type="submit"
@@ -168,8 +172,10 @@ const CheckoutForm = () => {
                             Pay
                         </button>
                     </div>
-                    <p className='text-red-500'>{error}</p>
-                    {TransactionId && <p className='text-green-400 font-bold'>Your transaction id: {TransactionId}</p>}
+                    <div className='flex justify-center mt-2'>
+                        <p className='text-red-500 text-center'>{error}</p>
+                        {TransactionId && <p className='text-green-400 font-bold'>Your transaction id: {TransactionId}</p>}
+                    </div>
                 </form>
             </div>
         </div>

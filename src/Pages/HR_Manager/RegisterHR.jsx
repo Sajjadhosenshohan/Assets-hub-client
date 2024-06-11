@@ -1,9 +1,7 @@
-import { Link, useNavigate, } from 'react-router-dom'
-import { FcGoogle } from 'react-icons/fc'
+import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import useAxiosPublic from '../../Hooks/useAxiosPublic'
 import useAuth from '../../Hooks/useAuth'
-// import Spinner from '../../Components/Spinner'
 import axios from 'axios'
 import Spinner from '../../Components/Spinner'
 
@@ -11,7 +9,7 @@ const RegisterHR = () => {
     const axiosPublic = useAxiosPublic()
     const navigate = useNavigate()
 
-    const { createUser, signInWithGoogle, setLoading, loading } = useAuth()
+    const { createUser, setLoading, loading } = useAuth()
 
     const handleSignUp = async (e) => {
         setLoading(true)
@@ -24,34 +22,30 @@ const RegisterHR = () => {
         const category = parseInt(Member_category);
         const date_of_birth = form.date_of_birth.value
         const companyName = form.companyName.value
-        const profileImage = form.profileImage.value
-        
+
         // for company logo
         const companyLogo = form.image.files[0]
         const formData = new FormData()
         formData.append('image', companyLogo)
 
         // for profile pic
-        // const profileImage = form.profileImage.files[0]
-        // const formData2 = new FormData()
-        // formData.append('image', profileImage)
+        const profileImage = form.profileImage.files[0]
+        const formData2 = new FormData()
+        formData2.append('image', profileImage)
 
-        console.log(email, password, name, date_of_birth, category, companyName, companyLogo, profileImage)
-
-        // console.log(import.meta.env.VITE_IMGBB_API_KEY)
+        console.log(import.meta.env.VITE_IMGBB_API_KEY_Three)
 
         try {
             setLoading(true)
-            const { data } = await axios.post(
+            const { data: logoData } = await axios.post(
                 `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
                 formData
             )
 
-            // const { data2 } = await axios.post(
-            //     `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY_TWO}`,
-            //     formData2
-            // )
-            // console.log(data.data.display_url)
+            const { data: profileData } = await axios.post(
+                `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY_Three}`,
+                formData2
+            )
 
             // create user
             await createUser(email, password)
@@ -64,77 +58,37 @@ const RegisterHR = () => {
                         date_of_birth,
                         category,
                         companyName,
-                        companyLogo: data?.data.display_url,
-                        profileImage,
+                        companyLogo: logoData?.data.display_url,
+                        profileImage: profileData?.data.display_url,
                         role: "hr",
-                    
                     }
 
-                     axiosPublic.post("/users", info)
+                    axiosPublic.post("/users", info)
                         .then(res => {
-                            // console.log(res.data)
                             if (res.data.insertedId) {
-                                toast.success('user added to db successfully')
+                                toast.success('User added to database successfully')
                             }
-                            navigate("/")
+                            navigate("/payment")
                             setLoading(false)
                         })
                 })
 
-        }
-        catch (err) {
+        } catch (err) {
             toast.error(err.message)
             setLoading(false)
         }
     }
 
-    // const googleSignUp = async () => {
-    //     await signInWithGoogle()
-    //         .then(result => {
-    //             console.log(result.user);
-    //             const info = {
-    //                 name: result?.user?.displayName,
-    //                 email: result?.user?.email,
-    //                 role: "admin",
-                    
-    //             }
-
-    //             axiosPublic.post("/users", info)
-    //                 .then(res => {
-    //                     // console.log(res.data)
-    //                     if (res.data.insertedId) {
-    //                         toast.success('user added to db successfully')
-    //                         navigate('/')
-    //                     }
-    //                 })
-    //         })
-    //         .catch(error => {
-    //             // console.error(error)
-    //             toast.error(error.message)
-    //         })
-
-    // }
-
-    //     Full Name
-    // ● Company Name
-    // ● Company Logo
-    // ● Email
-    // ● Password
-    // ● Date of Birth
-    // ● Select a package(there will be three packages, details below)
-    if (loading) return <Spinner></Spinner>
+    if (loading) return <Spinner />
 
     return (
-        <div className='flex justify-center items-center my-24'>
-            <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
+        <div className='flex justify-center items-center mb-12 mt-24'>
+            <div className='flex flex-col p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
                 <div className='mb-8 text-center'>
                     <h1 className='my-3 text-4xl font-bold'>Sign Up for HR</h1>
-                    <p className='text-xl text-gray-400'>Join as Employee</p>
                 </div>
-                <form onSubmit={handleSignUp}
-                    className='space-y-6 ng-untouched ng-pristine ng-valid'
-                >
-                    <div className='space-y-4'>
+                <form onSubmit={handleSignUp} className='space-y-6'>
+                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
                         <div>
                             <label htmlFor='fullName' className='block mb-2 text-sm'>
                                 Full Name
@@ -168,7 +122,7 @@ const RegisterHR = () => {
                             <input
                                 type='file'
                                 name='image'
-                                placeholder='Enter Your Company logo Here'
+                                placeholder='Enter Your Company Logo Here'
                                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
                                 data-temp-mail-org='0'
                             />
@@ -176,12 +130,12 @@ const RegisterHR = () => {
 
                         <div>
                             <label htmlFor='profileImage' className='block mb-2 text-sm'>
-                                Profile picture
+                                Profile Picture
                             </label>
                             <input
-                                type='url'
+                                type='file'
                                 name='profileImage'
-                                placeholder='Enter Your Profile picture Here'
+                                placeholder='Enter Your Profile Picture Here'
                                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
                                 data-temp-mail-org='0'
                             />
@@ -194,14 +148,12 @@ const RegisterHR = () => {
                             <input
                                 type='email'
                                 name='email'
-
                                 required
                                 placeholder='Enter Your Email Here'
                                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
                                 data-temp-mail-org='0'
                             />
                         </div>
-
 
                         <div>
                             <div className='flex justify-between'>
@@ -213,74 +165,51 @@ const RegisterHR = () => {
                                 type='password'
                                 name='password'
                                 autoComplete='new-password'
-
                                 required
-                                placeholder='*******'
+                                placeholder='Enter your password'
                                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
                             />
+                        </div>
+
+                        <div>
+                            <label htmlFor='date_of_birth' className='block mb-2 text-sm'>
+                                Date of Birth
+                            </label>
+                            <input
+                                type="date"
+                                name='date_of_birth'
+                                required
+                                placeholder='Enter Your Date of Birth Here'
+                                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
+                                data-temp-mail-org='0'
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor='category' className='block mb-2 text-sm'>
+                                Category
+                            </label>
+                            <select defaultValue="default" name='category' className="select select-bordered w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900">
+                                <option disabled value="default">Select a category</option>
+                                <option value={5}>5 Members for $5</option>
+                                <option value={8}>10 Members for $8</option>
+                                <option value={15}>20 Members for $15</option>
+                            </select>
                         </div>
                     </div>
 
                     <div>
-                        <label htmlFor='Date of birth' className='block mb-2 text-sm'>
-                            Date of birth
-                        </label>
-                        <input
-                            type="date"
-                            name='date_of_birth'
-
-                            required
-                            placeholder='Enter Your Email Here'
-                            className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
-                            data-temp-mail-org='0'
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor='Category' className='block mb-2 text-sm'>
-                            Category
-                        </label>
-
-                        <select defaultValue="default" name='category'
-                            className="select select-bordered w-full">
-                            <option disabled value="default">Select a category</option>
-                            <option value={5}>5 Members for $5</option>
-                            <option value={8}>10 Members for $8</option>
-                            <option value={15}>20 Members for $15</option>
-                        </select>
-                    </div>
-
-
-                    <div>
-                        <button
-                            type='submit'
-                            className='bg-primary w-full rounded-md py-3 text-white'
-                        >
+                        <button type='submit' className='bg-primary w-full rounded-md py-3 text-white'>
                             Sign Up
                         </button>
                     </div>
                 </form>
-                <div className='flex items-center pt-4 space-x-1'>
-                    <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
-                    <p className='px-3 text-sm dark:text-gray-400'>
-                        Sign up with social accounts
-                    </p>
-                    <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
-                </div>
-                <div  className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
-                    <FcGoogle size={32} />
 
-                    <p>Continue with Google</p>
-                </div>
-                <p className='px-6 text-sm text-center text-gray-400'>
+                <p className='px-6 py-5 text-sm text-center text-gray-400'>
                     Already have an account?{' '}
-                    <Link
-                        to='/login'
-                        className='hover:underline hover:text-rose-500 text-gray-600'
-                    >
+                    <Link to='/login' className='hover:underline hover:text-primary text-gray-600'>
                         Login
-                    </Link>
-                    .
+                    </Link>.
                 </p>
             </div>
         </div>

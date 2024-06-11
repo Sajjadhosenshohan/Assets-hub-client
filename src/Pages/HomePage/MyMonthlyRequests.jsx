@@ -3,6 +3,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useEmployeeData from "../../Hooks/useEmployeeData";
 import useAuth from "../../Hooks/useAuth";
 import Spinner from "../../Components/Spinner";
+import Heading from "../../Components/Heading";
 
 const MyMonthlyRequests = () => {
     const axiosSecure = useAxiosSecure();
@@ -12,9 +13,9 @@ const MyMonthlyRequests = () => {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
 
-    console.log(currentMonth,currentYear)
+    console.log(currentMonth, currentYear)
     const { data: monthlyRequests = [], isLoading } = useQuery({
-        queryKey: ["monthlyRequests", userDataEmployee?.email, currentMonth,currentYear],
+        queryKey: ["monthlyRequests", userDataEmployee?.email, currentMonth, currentYear],
         enabled: !authLoading && !!userDataEmployee?.email,
         queryFn: async () => {
             const { data } = await axiosSecure.get(`/requestsByEmail/${userDataEmployee?.email}?month=${currentMonth}&year=${currentYear}`);
@@ -24,11 +25,11 @@ const MyMonthlyRequests = () => {
 
     if (authLoading || userDataLoading || isLoading) return <Spinner />;
 
-    console.log("my month", monthlyRequests);
+    // console.log("my month", monthlyRequests);
 
     return (
-        <div className="mt-12 mb-24">
-            <h2 className="text-3xl mb-10 text-center text-primary">My Monthly Requests</h2>
+        <div className="my-24">
+            <Heading heading="My monthly requests"></Heading>
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     <thead>
@@ -46,10 +47,29 @@ const MyMonthlyRequests = () => {
                             <tr key={request._id}>
                                 <th>{index + 1}</th>
                                 <td>{request.product_name}</td>
-                                <td>{request.product_type}</td>
-                                <td>{request.requestDate}</td>
-                                <td>{request.status === 'approved' ? new Date(request.approvedDate).toLocaleDateString() : ''}</td>
-                                <td>{request.status}</td>
+
+                                <td>
+                                    <span className={`text-white p-1  rounded-xl ${request?.product_type === 'Non-returnable' && 'bg-cyan-400'}
+                                        ${request?.product_type === 'Returnable' && 'bg-pink-400'}`}>
+                                        {request?.product_type}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {new Date(request.requestDate).toLocaleDateString()}
+                                </td>
+                                <td>
+                                    {request.status === 'approved' ? new Date(request.approvedDate).toLocaleDateString() : ''}
+                                </td>
+                                {/* <td>{request.status}</td> */}
+                                <td>
+                                    <span className={`text-white p-1  rounded-xl ${request.status === 'approved' && 'bg-green-400'}
+                                        ${request.status === 'rejected' && 'bg-red-400'}
+                                         ${request.status === 'pending' && 'bg-red-400'} 
+                                        `}>
+                                        {request.status}
+                                    </span>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

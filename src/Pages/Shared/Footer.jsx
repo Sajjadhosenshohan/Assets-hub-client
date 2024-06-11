@@ -1,18 +1,34 @@
 import { Link } from "react-router-dom";
+import useUserData from "../../Hooks/useHRData";
+import useEmployeeData from "../../Hooks/useEmployeeData";
 
 const Footer = () => {
+    // hr hook
+    const { userData: Hr_data } = useUserData();
+    // employee hook
+    const { userDataEmployee } = useEmployeeData();
+
+    const logoUrl = Hr_data?.companyLogo || userDataEmployee?.companyLogo;
+    const renderLogo = () => {
+        if (logoUrl) {
+            return <div className="btn  btn-circle avatar">
+                <div className="w-10 rounded-full">
+                    <img src={logoUrl} alt="User avatar" />
+                </div>
+            </div>
+        }
+    }
     return (
-        <footer className="bg-white dark:bg-gray-900 rounded-lg">
+        <footer className="bg-[#f2f2f2] rounded-lg">
             <div className="container px-6 py-8 mx-auto">
                 <div className="flex flex-col items-center text-center">
                     <Link to='/' className="justify-center flex items-center md:font-bold  ml-1 md:text-3xl ">
 
-                        <div>
-                            <img className="w-16 h-16 " src={'https://i.ibb.co/kytcV01/360-F-505617309-NN1-CW7di-Nm-GXJf-Micp-Y9e-XHKV4sqz-O5-H-removebg-preview-1.png'} alt="" />
-                        </div>
+
+                        {renderLogo()}
 
 
-                        <span className="mt-1 dark:text-primary uppercase">my-assets</span>
+                        <span className="mt-1 dark:text-primary uppercase md:text-2xl md:font-bold">my-assets</span>
 
 
 
@@ -20,16 +36,13 @@ const Footer = () => {
 
                     <div className="flex flex-wrap justify-center mt-6 -mx-4">
                         <Link to="/">
-                            <p className="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400" aria-label="Reddit"> Home </p>
+                            <p className="mx-4 text text-gray-800 transition-colors duration-300 hover:text-primary dark:text-gray-800 dark:hover:text-primary" aria-label="Reddit"> Home </p>
                         </Link>
-                        <Link to="/login">
-                            <p className="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400" aria-label="Reddit"> Login</p>
+                        <Link to="/registerHR ">
+                            <p className="mx-4 text text-gray-800 transition-colors duration-300 hover:text-primary dark:text-gray-800 dark:hover:text-primary" aria-label="Reddit"> Join as Hr Manager</p>
                         </Link>
-                        <Link to="/register">
-                            <p className="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400" aria-label="Reddit"> Register </p>
-                        </Link>
-                        <Link to="/assignments">
-                            <p className="mx-4 text-sm text-gray-600 transition-colors duration-300 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400" aria-label="Reddit"> Assignments </p>
+                        <Link to="/registerEmployee">
+                            <p className="mx-4 text text-gray-800 transition-colors duration-300 hover:text-primary dark:text-gray-800 dark:hover:text-primary" aria-label="Reddit"> Join as Hr Employee</p>
                         </Link>
 
 
@@ -40,7 +53,7 @@ const Footer = () => {
                 <hr className="my-6 border-gray-200 md:my-10 dark:border-gray-700" />
 
                 <div className="flex flex-col items-center sm:flex-row sm:justify-between">
-                    <p className="text-sm text-gray-500 dark:text-gray-300">© Copyright 2021. All Rights Reserved</p>
+                    <p className="text text-gray-800">© Copyright 2021. All Rights Reserved</p>
 
                     <div className="flex -mx-2 mt-4 md:mt-0">
                         <a rel="noopener noreferrer" href="https://www.youtube.com/channel/UCObATaYuFa_PmOynyUoL3CA" title="YouTube" className="flex items-center justify-center w-10 h-10 rounded-full ">

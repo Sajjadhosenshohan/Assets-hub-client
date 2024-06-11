@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import useAuth from "./useAuth";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const axiosSecure = axios.create({
@@ -29,14 +28,14 @@ const useAxiosSecure = () => {
         if (status === 401 || status === 403) {
             await logOut();
             setError(error);
-            toast.error("Unauthorized access detected. Redirecting to login.");
+            // toast.error("Unauthorized access detected. Redirecting to login.");
         }
         return Promise.reject(error);
     });
 
     useEffect(() => {
         if (error) {
-            navigate('/loginHR');
+            navigate('/login');
         }
     }, [error, navigate]);
 

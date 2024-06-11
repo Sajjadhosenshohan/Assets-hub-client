@@ -3,6 +3,7 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import AssetDocument from './AssetDocument';
+import Spinner from "../../../Components/Spinner";
 const AssetDetails = () => {
 
     const { id } = useParams();
@@ -17,7 +18,7 @@ const AssetDetails = () => {
     });
     console.log(asset)
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <Spinner></Spinner>;
     if (error) return <div>Error fetching asset details</div>;
     return (
         <div className="p-8 bg-white rounded-lg shadow-lg border-2 border-primary mt-12 mb-24">

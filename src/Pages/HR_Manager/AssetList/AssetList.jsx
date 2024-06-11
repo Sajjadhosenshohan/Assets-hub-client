@@ -220,7 +220,7 @@ const AssetList = () => {
 
                                     <td>
                                         <span className={`text-white p-1  rounded-xl ${asset.availability === 'available' && 'bg-green-400'}
-                                        ${asset.availability === 'out_of_stock' || "Out_of_stock" && 'bg-red-400'}`}>
+                                        ${asset?.availability === 'out_of_stock' && 'bg-red-400'}`}>
                                             {asset?.availability}
                                         </span>
                                     </td>

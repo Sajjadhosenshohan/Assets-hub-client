@@ -81,7 +81,7 @@ const AllRequests = () => {
     if (authLoading || userDataLoading || requestsLoading) return <Spinner />;
     if (isError) return <div>Error: {error.message}</div>;
     return (
-        <div className="mt-12 mb-24">
+        <div className="my-24">
             {/* <h2 className="text-3xl mb-10 text-center text-primary">All Requests: {count}</h2> */}
             <Heading heading="All Requests" count={count}></Heading>
             <div className="overflow-x-auto">
@@ -108,7 +108,7 @@ const AllRequests = () => {
                                 <td>{assetReq.product_type}</td>
                                 <td>{assetReq.requesterEmail}</td>
                                 <td>{assetReq.requesterName}</td>
-                                <td>{assetReq.requestDate || "not found"}</td>
+                                <td>{new Date(assetReq.requestDate).toLocaleDateString()|| "not found"}</td>
                                 <td>{assetReq.notes}</td>
 
                                 <td>
@@ -119,16 +119,7 @@ const AllRequests = () => {
                                         {assetReq.status}
                                     </span>
                                 </td>
-                                {/* <td>{assetReq.status}</td> */}
-                                {/* <td>
-                                    <button
-                                        onClick={() => handleStatus(assetReq._id, "approved")}
-                                        className="btn btn-error"
-                                        disabled={assetReq.status === "approved"}
-                                    >
-                                        Approve
-                                    </button>
-                                </td> */}
+                                
                                 <td>
 
                                     <button
@@ -138,7 +129,6 @@ const AllRequests = () => {
                                         {
                                             <FcApproval className="text-primary text-2xl" />
                                         }
-
                                     </button>
                                 </td>
 

@@ -252,25 +252,27 @@ const RequestForAnAssets = () => {
 
                         {/* Modal */}
 
-                        <dialog id="my_modal_5" className="mt-12 rounded-lg bg-secondary modal modal-bottom sm:modal-middle border-2 border-red-500 w-[70%] mx-auto">
+                        <dialog id="my_modal_5" className="mt-12  rounded-lg bg-secondary modal  w-[70%] mx-auto">
                             <h1 className="text-2xl dark:text-primary lg:text-3xl font-bold text-center  ">PDF Preview!</h1>
-                            <div className="h-full w-full md:p-5">
+                            <div className=" w-full md:p-5">
 
 
-                                <form onSubmit={handleForm} style={{ minHeight: '300px', width: '100%', border: "2px solid blue" }}>
+                                <form onSubmit={handleForm} style={{ minHeight: '300px', width: '100%', }}>
                                     <div>
 
                                         <h2>{new Date()?.toLocaleDateString}</h2>
-                                        <label className="font-bold" >Quick Notes:</label>
-                                        <textarea name="notes" type="email" className="min-h-[200px] border-primary block w-full px-4 py-2 mt-2  bg-white border-2 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring " />
+                                        <p className="font-bold text-center text-gray-700" >Quick Notes:</p>
+                                        <textarea name="notes" type="email" className="min-h-[200px] border-primary block w-full px-4 py-2 mt-2  bg-white border-2 rounded-md  focus:border-primary focus:ring-primary focus:ring-opacity-40  focus:outline-none focus:ring " />
                                     </div>
 
-                                    <button type="submit" className=" font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg hover:bg-blue-900 bg-primary text-center">Request</button>
+                                    <div className="flex justify-center mt-5">
+                                        <button type="submit" className="text-2xl text-center w-1/4 p-2 rounded-lg  font-bold bg-primary hover:bg-green-800 text-white">Request</button>
+                                    </div>
                                 </form>
 
                                 <div className="modal-action flex justify-center">
                                     <form method="dialog" className="w-full flex justify-center">
-                                        <button className=" font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg hover:bg-blue-900 bg-primary text-center">Close</button>
+                                        <button className="text-2xl p-2 rounded-lg  font-bold bg-[#ec4134] hover:bg-red-800 text-white">Close</button>
                                     </form>
                                 </div>
                             </div>

@@ -1,30 +1,79 @@
-// import { useQuery } from "@tanstack/react-query";
-// import useUserData from "../../../Hooks/useUserData";
-// import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-// import useAuth from "../../../Hooks/useAuth";
+
 import { FaUser } from "react-icons/fa";
 import { GrUserAdmin } from "react-icons/gr";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useEmployeeData from "../../../Hooks/useEmployeeData";
 import Heading from "../../../Components/Heading";
+import useAuth from "../../../Hooks/useAuth";
+import Spinner from "../../../Components/Spinner";
+import { useState } from "react";
+import Pagination from "../../../Components/Pagination";
 
 const MyTeam = () => {
-   
-    const axiosSecure = useAxiosSecure()
-    const {userDataEmployee,isLoading} = useEmployeeData()
 
-    const { data: myTeam = [],} = useQuery({
-        queryKey: ["myTeam"],
-        enabled: !isLoading,
+    const axiosSecure = useAxiosSecure()
+    const { loading } = useAuth()
+    const { userDataEmployee, isLoading } = useEmployeeData()
+
+    console.log(userDataEmployee)
+     // pagination
+     const [currentPage, setCurrentPage] = useState(0);
+     const [itemsPerPage, setItemsPerPage] = useState(10);
+     const [numberOfPages, setNumberOfPages] = useState(0);
+ 
+     // pagination pages array
+     const pages = Array.from({ length: numberOfPages }, (_, i) => i);
+
+
+    const { data} = useQuery({
+        queryKey: ["myTeams", userDataEmployee?.companyName ,currentPage, itemsPerPage],
+        enabled: !loading && !!userDataEmployee?.companyName,
         queryFn: async () => {
-            const { data } = await axiosSecure.get(`/users/company/${userDataEmployee?.companyName}`);
+            const { data } = await axiosSecure.get(`/users_company/${userDataEmployee?.companyName}`,
+                {
+                    params: {
+                        page: currentPage,
+                        size: itemsPerPage,
+                    }
+                }
+            );
             return data;
         },
     });
 
-    // console.log("my employee", myTeam)
+     // pagination function
+    // Update the numberOfPages whenever data changes
+    const { myTeam = [], count = 0 } = data || {};
+    const newNumberOfPages = Math.ceil(count / itemsPerPage);
+    // console.log(myEmployee)
 
+    // Update the numberOfPages state when data is fetched
+    if (newNumberOfPages !== numberOfPages) {
+        setNumberOfPages(newNumberOfPages);
+    }
+
+
+    const handleItemPerPage = (e) => {
+        setItemsPerPage(parseInt(e.target.value));
+        setCurrentPage(0);
+    };
+
+    const handlePrevious = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+    const handleNext = () => {
+        if (currentPage < pages.length - 1) {
+            setCurrentPage(currentPage + 1)
+        }
+    }
+
+
+
+    if (loading || isLoading ) return <Spinner />;
+    console.log("my employee", myTeam)
     return (
         <div className="my-24">
             {/* <h2 className="text-3xl mb-10 text-center text-primary">My Team</h2> */}
@@ -42,7 +91,7 @@ const MyTeam = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        
+
                         {
                             myTeam?.map((team, index) => (
                                 <tr key={team._id}>
@@ -60,7 +109,7 @@ const MyTeam = () => {
                                     <td>{team?.name}</td>
                                     <td className="font-bold text-2xl">
                                         {
-                                            team?.role === "hr" ? <GrUserAdmin className="text-[#FF6347]" />  : <FaUser className="text-[#4682B4]" />
+                                            team?.role === "hr" ? <GrUserAdmin className="text-[#FF6347]" /> : <FaUser className="text-[#4682B4]" />
                                         }
                                         {/* {team?.role} */}
                                     </td>
@@ -71,6 +120,9 @@ const MyTeam = () => {
 
                     </tbody>
                 </table>
+
+                {/* pagination */}
+                <Pagination handlePrevious={handlePrevious} pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} handleItemPerPage={handleItemPerPage} itemsPerPage={itemsPerPage} handleNext={handleNext}></Pagination>
             </div>
         </div>
     );

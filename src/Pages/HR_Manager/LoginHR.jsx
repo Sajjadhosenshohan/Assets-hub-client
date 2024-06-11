@@ -77,13 +77,10 @@ const LoginHR = () => {
     }
 
     return (
-        <div className='flex justify-center items-center min-h-screen'>
+        <div className='flex justify-center items-center mb-12 mt-24'>
             <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
                 <div className='mb-8 text-center'>
                     <h1 className='my-3 text-4xl font-bold'>Log In </h1>
-                    <p className='text-sm text-gray-400'>
-                        Sign in to access your account
-                    </p>
                 </div>
                 <form
                     onSubmit={handleLogin}
@@ -116,7 +113,7 @@ const LoginHR = () => {
                                 autoComplete='current-password'
                                 id='password'
                                 required
-                                placeholder='*******'
+                                placeholder='Enter your password'
                                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
                             />
                         </div>
@@ -131,11 +128,11 @@ const LoginHR = () => {
                         </button>
                     </div>
                 </form>
-                <div className='space-y-1'>
+                {/* <div className='space-y-1'>
                     <button className='text-xs hover:underline hover:text-rose-500 text-gray-400'>
                         Forgot password?
                     </button>
-                </div>
+                </div> */}
                 <div className='flex items-center pt-4 space-x-1'>
                     <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
                     <p className='px-3 text-sm dark:text-gray-400'>
@@ -151,12 +148,12 @@ const LoginHR = () => {
                 <p className='px-6 text-sm text-center text-gray-400'>
                     Don&apos;t have an account yet?{' '}
                     <Link
-                        to='/signup'
-                        className='hover:underline hover:text-rose-500 text-gray-600'
+                        to='/registerEmployee'
+                        className='hover:underline hover:text-primary text-gray-600'
                     >
                         Sign up
                     </Link>
-                    .
+                    
                 </p>
             </div>
         </div>

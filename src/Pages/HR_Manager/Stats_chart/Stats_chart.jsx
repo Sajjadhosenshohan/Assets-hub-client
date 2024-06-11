@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import useUserData from '../../../Hooks/useHRData';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import Heading from '../../../Components/Heading';
 
 const COLORS = ['#0088FE', '#FF8042'];
 
@@ -47,18 +48,21 @@ const StatsChart = () => {
     };
 
     return (
-        <div className="mt-12 mb-24">
-             <h2 className="text-3xl mb-10 text-center text-primary">Total percentage of returnable items <br /> and
-             non-returnable items</h2>
-            <ResponsiveContainer width="100%" height={400}>
-                <PieChart>
+        <div className="my-24">
+            {/* <h2 className="text-3xl mb-10 text-center text-primary">Total percentage of returnable items <br /> and
+             non-returnable items</h2> */}
+            <Heading className="mb-0" heading="Total percentage of returnable items and
+             non-returnable items"></Heading>
+            <ResponsiveContainer  width="100%" height={400}>
+                <PieChart >
                     <Pie
+                        
                         data={pieChartData}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
                         label={renderCustomizedLabel}
-                        outerRadius={80}
+                        outerRadius={150}
                         fill="#8884d8"
                         dataKey="value"
                     >

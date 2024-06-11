@@ -6,7 +6,7 @@ const useEmployeeData = () => {
     const axiosSecure = useAxiosSecure()
     const { user, loading } = useAuth()
 
-    const { data: userDataEmployee = [], isLoading, refetch:refetchEmployee } = useQuery({
+    const { data: userDataEmployee = [], isLoading, refetch: refetchEmployee } = useQuery({
         queryKey: ["userDataEmployee"],
         enabled: !loading && !!user?.email,
         queryFn: async () => {
