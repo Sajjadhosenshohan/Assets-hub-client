@@ -4,7 +4,7 @@ import useAuth from "./useAuth";
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast'
 const axiosSecure = axios.create({
-    baseURL: 'http://localhost:7000'
+    baseURL: 'https://my-assets-server.vercel.app'
 })
 
 const useAxiosSecure = () => {
