@@ -78,6 +78,7 @@ const CheckoutForm = () => {
         if (error) {
             setError(error.message);
         } else {
+            console.log(paymentMethod)
             setError('');
         }
 

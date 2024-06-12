@@ -79,7 +79,8 @@ const LoginHR = () => {
                     name: result?.user?.displayName,
                     email: result?.user?.email,
                     profileImage: result.user?.photoURL,
-                    role: "employee"
+                    role: "employee",
+                    affiliate: "no"
                 }
 
                 console.log(info)
@@ -89,7 +90,7 @@ const LoginHR = () => {
                         // console.log(res.data)
                         if (res.data.insertedId) {
                             toast.success('user added to db successfully')
-                            navigate('/payment')
+                            navigate('/')
                         }
                     })
             })
