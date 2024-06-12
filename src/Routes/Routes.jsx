@@ -74,7 +74,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/addAnEmployee",
-                element: <HrRoute><AddAnEmployee></AddAnEmployee></HrRoute>,
+                element: <HrRoute><AddAnEmployee></AddAnEmployee></HrRoute>
             },
             {
                 path: "/payment",

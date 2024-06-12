@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import useAuth from "./useAuth";
 import { useNavigate } from "react-router-dom";
-import toast from 'react-hot-toast'
+// import toast from 'react-hot-toast'
 const axiosSecure = axios.create({
     baseURL: 'https://my-assets-server.vercel.app'
 })
@@ -28,7 +28,7 @@ const useAxiosSecure = () => {
         if (status === 401 || status === 403) {
             await logOut();
             setError(error);
-            toast.error("Unauthorized access detected. Redirecting to login.");
+            // toast.error("Unauthorized access detected. Redirecting to login.");
         }
         return Promise.reject(error);
     });

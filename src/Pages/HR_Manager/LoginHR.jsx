@@ -1,4 +1,4 @@
-import { Link, useNavigate, } from 'react-router-dom'
+import { Link, useLocation, useNavigate, } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import toast from 'react-hot-toast'
 import useAxiosPublic from '../../Hooks/useAxiosPublic'
@@ -10,7 +10,8 @@ import Swal from 'sweetalert2'
 
 const LoginHR = () => {
     const axiosPublic = useAxiosPublic()
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const location = useLocation();
     const { signIn, signInWithGoogle } = useAuth()
 
     const handleLogin = async (event) => {
@@ -20,8 +21,9 @@ const LoginHR = () => {
         const password = form.password.value;
         console.log(email, password);
 
-         // Validation
-         if (password.length < 6) {
+
+        // Validation
+        if (password.length < 6) {
             Swal.fire({
                 icon: "error",
                 title: "Please Enter A Password Of At Least 6 Characters",
@@ -52,18 +54,21 @@ const LoginHR = () => {
                         email: result?.user?.email,
                         profileImage: result.user?.photoURL,
                         role: "employee",
-                        affiliate: "no"
+                        affiliate: "no",
+
                     }
                     axiosPublic.post("/users", info)
                         .then(res => {
                             // console.log(res.data)
                             if (res.data.insertedId) {
-                                toast.success('user added to db successfully')
-                                navigate('/')
+                                toast.success('successfully login')
+
+                                // navigate('/')
                             }
+
+                            navigate(location?.state?.from || "/");
                         })
-                    toast.success('successfully login')
-                    // navigate();
+
                 })
         }
         catch (err) {
@@ -80,7 +85,8 @@ const LoginHR = () => {
                     email: result?.user?.email,
                     profileImage: result.user?.photoURL,
                     role: "employee",
-                    affiliate: "no"
+                    affiliate: "no",
+
                 }
 
                 console.log(info)
@@ -89,13 +95,12 @@ const LoginHR = () => {
                     .then(res => {
                         // console.log(res.data)
                         if (res.data.insertedId) {
-                            toast.success('user added to db successfully')
-                            navigate('/')
+                            toast.success('successfully login')
                         }
+                        navigate(location?.state?.from || "/");
                     })
             })
             .catch(error => {
-
                 toast.error(error.message)
             })
 
@@ -107,7 +112,7 @@ const LoginHR = () => {
             <Helmet>
                 <title>Login</title>
             </Helmet>
-            
+
             <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
                 <div className='mb-8 text-center'>
                     <h1 className='my-3 text-4xl font-bold'>Log In </h1>

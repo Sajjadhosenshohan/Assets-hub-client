@@ -1,26 +1,33 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation} from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
 import useUserData from "../Hooks/useHRData";
 import Spinner from "../Components/Spinner";
 
+
 const HrRoute = ({ children }) => {
+
     const { user, loading } = useAuth();
     const { userData } = useUserData();
     const location = useLocation();
+
 
     if (loading) {
         return <Spinner />;
     }
 
-    if (user && userData) {
-        if (userData.payment === "yes") {
-            return children;
-        } else {
-            return <Navigate to="/payment" state={{ from: location.pathname }} />;
-        }
+    if (!user) {
+        return <Navigate to="/login" state={location?.pathname} />;
     }
 
-    return <Navigate to="/registerHR" state={{ from: location.pathname }} />;
+    if (user && userData?.payment === "yes") {
+        return children;
+    }
+
+    if (user && userData?.payment === "no") {
+        return <Navigate to="/payment" state={location?.pathname} />;
+    }
+
+    return null
 };
 
 export default HrRoute;

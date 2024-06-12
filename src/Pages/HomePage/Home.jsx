@@ -17,17 +17,18 @@ import PackageSection from "./PackageSection";
 import PrivateRoutes from "../../Routes/PrivateRoutes";
 
 const Home = () => {
-    const { userData: HR_Manager } = useUserData();
+    const { userData} = useUserData();
     const { userDataEmployee } = useEmployeeData();
     const { user } = useAuth();
 
-    console.log(userDataEmployee);
+    console.log(userData);
 
     return (
         <div>
             <Helmet>
                 <title>Home</title>
             </Helmet>
+
 
             {!user && (
                 <>
@@ -39,13 +40,13 @@ const Home = () => {
                 </>
             )}
 
-            {user && !HR_Manager && userDataEmployee?.affiliate === "no" && (
+            {user && !userData && userDataEmployee?.affiliate === "no" && (
                 <div className="my-52 text-center text-3xl text-red-600">
                     Please contact your HR to get affiliated with a company.
                 </div>
             )}
 
-            {user && !HR_Manager && userDataEmployee?.affiliate === "yes" && (
+            {user && !userData && userDataEmployee?.affiliate === "yes" && (
                 <>
                     <PrivateRoutes><MyPendingRequest /></PrivateRoutes>
                     <PrivateRoutes><MyMonthlyRequests /></PrivateRoutes>
@@ -53,7 +54,7 @@ const Home = () => {
                 </>
             )}
 
-            {user && HR_Manager?.payment === "yes" && (
+            {user && userData?.payment === "yes" && (
                 <>
                     <PrivateRoutes><TopFivePendingRequest /></PrivateRoutes>
                     <PrivateRoutes><TopRequestedItems /></PrivateRoutes>
@@ -64,9 +65,15 @@ const Home = () => {
                 </>
             )}
 
-            {user && HR_Manager && HR_Manager?.payment !== "yes" && (
+            {user && userData && userData?.payment !== "yes" && (
                 <div className="my-52 text-center text-3xl text-red-600">
                     Please buy your package.
+                </div>
+            )}
+
+            {user && !userData && !userDataEmployee && (
+                <div className="my-52 text-center text-3xl text-red-600">
+                    Join as a Employee first
                 </div>
             )}
         </div>

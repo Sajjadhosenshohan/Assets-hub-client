@@ -25,19 +25,17 @@ const LoginEmployee = () => {
             name: result?.user?.displayName,
             email: result?.user?.email,
             role: "employee",
-            affiliate: false,
+            affiliate: "no",
           }
 
           axiosPublic.post("/users", info)
             .then(res => {
-              // console.log(res.data)
               if (res.data.insertedId) {
                 toast.success('user added to db successfully')
-                navigate('/')
               }
             })
           toast.success('successfully login')
-          // navigate();
+          navigate('/')
         })
     }
     catch (err) {
@@ -61,8 +59,8 @@ const LoginEmployee = () => {
             // console.log(res.data)
             if (res.data.insertedId) {
               toast.success('user added to db successfully')
-              navigate('/')
             }
+            navigate('/')
           })
       })
       .catch(error => {

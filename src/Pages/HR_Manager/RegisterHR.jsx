@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import useAxiosPublic from '../../Hooks/useAxiosPublic'
 import useAuth from '../../Hooks/useAuth'
@@ -9,8 +9,9 @@ import Swal from 'sweetalert2'
 
 const RegisterHR = () => {
     const axiosPublic = useAxiosPublic()
-    const navigate = useNavigate()
-
+    // const navigate = useNavigate()
+    const navigate = useNavigate();
+    const location = useLocation();
     const { createUser, setLoading, loading } = useAuth()
 
     const handleSignUp = async (e) => {
@@ -24,9 +25,9 @@ const RegisterHR = () => {
         const category = parseInt(Member_category);
         const date_of_birth = form.date_of_birth.value
         const companyName = form.companyName.value
-        
-         // Validation
-         if (password.length < 6) {
+
+        // Validation
+        if (password.length < 6) {
             Swal.fire({
                 icon: "error",
                 title: "Please Enter A Password Of At Least 6 Characters",
@@ -83,15 +84,17 @@ const RegisterHR = () => {
                         companyLogo: logoData?.data.display_url,
                         profileImage: profileData?.data.display_url,
                         role: "hr",
+                        payment: "no"
                     }
 
                     axiosPublic.post("/users", info)
                         .then(res => {
                             if (res.data.insertedId) {
-                                toast.success('User added to database successfully')
+                                toast.success('Successfully register')
                             }
-                            navigate("/payment")
-                            setLoading(false)
+                            navigate(location?.state?.from || "/");
+                            // navigate("/payment")
+                            // setLoading(false)
                         })
                 })
 

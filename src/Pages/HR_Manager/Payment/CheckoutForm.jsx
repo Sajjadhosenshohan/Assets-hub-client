@@ -3,25 +3,25 @@ import { useEffect, useState } from 'react';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import useUserData from '../../../Hooks/useHRData';
 import Spinner from '../../../Components/Spinner';
-import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import Heading from '../../../Components/Heading';
 import { Helmet } from 'react-helmet-async';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+// import { useLocation, useNavigate } from 'react-router-dom';
+
 const CheckoutForm = () => {
     const axiosSecure = useAxiosSecure();
     const [clientSecret, setClientSecret] = useState("");
     const [TransactionId, setTransactionId] = useState("");
-    const { userData, isLoading } = useUserData();
+    const { userData, isLoading, } = useUserData();
     const [error, setError] = useState('');
     const stripe = useStripe();
     const elements = useElements();
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from || "/"; 
-    console.log(location.state?.from)
 
+    console.log(location?.state)
     const [selectedValue, setSelectedValue] = useState(userData?.category || '');
 
     useEffect(() => {
@@ -29,6 +29,12 @@ const CheckoutForm = () => {
             setSelectedValue(userData.category);
         }
     }, [userData]);
+
+    if (TransactionId) {
+        setTimeout(() => {
+            navigate(location?.state?.from || "/");
+        }, 1000)
+    }
 
     useEffect(() => {
         if (selectedValue > 0) {
@@ -98,28 +104,35 @@ const CheckoutForm = () => {
             if (paymentIntent.status === 'succeeded') {
                 setTransactionId(paymentIntent.id);
 
-                const payment = {
-                    email: userData?.email,
-                    price: selectedValue,
-                    transactionId: paymentIntent.id,
-                    date: new Date().toLocaleDateString(),
-                    payment_status: "paid"
-                };
+                // const payment = {
+                //     email: userData?.email,
+                //     price: selectedValue,
+                //     transactionId: paymentIntent.id,
+                //     date: new Date().toLocaleDateString(),
+                //     payment: "yes"
+                // };
 
-                try {
-                    const res = await axiosSecure.post('/payments', payment);
-                    if (res.data?.insertedId) {
-                        Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "Payment successful",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        navigate(from);
-                    }
-                } catch (error) {
-                    console.error('Error saving payment:', error);
+                // try {
+                //     const res = await axiosSecure.patch('/payment_status', {payment: "yes"});
+                //     if (res.data?.insertedId) {
+                //         Swal.fire({
+                //             position: "center",
+                //             icon: "success",
+                //             title: "Payment successful",
+                //             showConfirmButton: false,
+                //             timer: 1500
+                //         });
+                //         navigate(from);
+                //     }
+                // } catch (error) {
+                //     console.error('Error saving payment:', error);
+                // }
+                const res = await axiosSecure.patch(`/payment_status/${userData?.email}`, { payment: "yes" });
+                if (res.data?.paymentResult?.insertedId) {
+                    //     setTimeout(() => {
+                    //     navigate(location?.state?.from || "/assetList");
+                    // }, 2000); 
+
                 }
             }
         }
@@ -177,6 +190,8 @@ const CheckoutForm = () => {
                     <div className='flex justify-center mt-2'>
                         <p className='text-red-500 text-center'>{error}</p>
                         {TransactionId && <p className='text-green-400 font-bold'>Your transaction id: {TransactionId}</p>}
+
+
                     </div>
                 </form>
             </div>

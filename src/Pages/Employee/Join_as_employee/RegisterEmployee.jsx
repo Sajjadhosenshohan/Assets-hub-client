@@ -1,4 +1,4 @@
-import { Link, useNavigate, } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import useAxiosPublic from '../../../Hooks/useAxiosPublic'
 import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../../Hooks/useAuth'
@@ -10,7 +10,9 @@ import Swal from 'sweetalert2'
 const RegisterEmployee = () => {
 
     const axiosPublic = useAxiosPublic()
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const { createUser, signInWithGoogle } = useAuth()
 
@@ -23,8 +25,8 @@ const RegisterEmployee = () => {
         const date_of_birth = form.date_of_birth.value
 
 
-         // Validation
-         if (password.length < 6) {
+        // Validation
+        if (password.length < 6) {
             Swal.fire({
                 icon: "error",
                 title: "Please Enter A Password Of At Least 6 Characters",
@@ -72,9 +74,10 @@ const RegisterEmployee = () => {
                     .then(res => {
                         // console.log(res.data)
                         if (res.data.insertedId) {
-                            toast.success('user added to db successfully')
+                            toast.success('successfully register')
                         }
-                        navigate("/")
+                        navigate(location?.state?.from || "/");
+                        // navigate("/")
                     })
             })
             .catch(error => console.log(error.message))
@@ -95,9 +98,9 @@ const RegisterEmployee = () => {
                     .then(res => {
                         // console.log(res.data)
                         if (res.data.insertedId) {
-                            toast.success('user added to db successfully')
-                            navigate('/')
+                            toast.success('Successfully register')
                         }
+                        navigate(location?.state?.from || "/");
                     })
             })
             .catch(error => {
@@ -179,22 +182,22 @@ const RegisterEmployee = () => {
                             />
                         </div>
 
-                        
+
                     </div>
                     <div>
-                            <label htmlFor='Date of birth' className='block mb-2 text-sm'>
-                                Date of birth
-                            </label>
-                            <input
-                                type="date"
-                                name='date_of_birth'
+                        <label htmlFor='Date of birth' className='block mb-2 text-sm'>
+                            Date of birth
+                        </label>
+                        <input
+                            type="date"
+                            name='date_of_birth'
 
-                                required
-                                placeholder='Enter Your Email Here'
-                                className=' w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
-                                data-temp-mail-org='0'
-                            />
-                        </div>
+                            required
+                            placeholder='Enter Your Email Here'
+                            className=' w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-primary bg-gray-200 text-gray-900'
+                            data-temp-mail-org='0'
+                        />
+                    </div>
                     <div>
                         <button
                             type='submit'
