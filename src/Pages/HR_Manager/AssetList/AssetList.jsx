@@ -11,6 +11,7 @@ import { useState } from "react";
 import useUserData from "../../../Hooks/useHRData";
 import Pagination from "../../../Components/Pagination";
 import Spinner from "../../../Components/Spinner";
+import { Helmet } from "react-helmet-async";
 const AssetList = () => {
     const axiosSecure = useAxiosSecure()
     const { loading } = useAuth();
@@ -131,6 +132,9 @@ const AssetList = () => {
     if (loading || isLoading) return <Spinner></Spinner>
     return (
         <div className="my-24">
+            <Helmet>
+                <title>Asset List</title>
+            </Helmet>
             <Heading heading="Asset List"></Heading>
             {/* button  */}
 

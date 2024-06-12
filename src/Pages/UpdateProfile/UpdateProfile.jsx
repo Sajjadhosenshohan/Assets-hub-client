@@ -4,6 +4,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useEmployeeData from "../../Hooks/useEmployeeData";
 import useUserData from "../../Hooks/useHRData";
 import Spinner from "../../Components/Spinner";
+import { Helmet } from "react-helmet-async";
 
 const UpdateProfile = () => {
     const { user, loading, setUser, updateUserProfile } = useAuth();
@@ -48,6 +49,9 @@ const UpdateProfile = () => {
     return (
         <div>
             <section className=" text-black  mb-12 mt-24">
+                <Helmet>
+                    <title>Update Profile</title>
+                </Helmet>
                 <div className="container flex items-center justify-center  px-6 mx-auto">
                     <form onSubmit={handleUpdate} className="w-full max-w-md  p-6 drop-shadow-xl rounded-xl sm:px-12 bg-[#f2f2f2]">
 

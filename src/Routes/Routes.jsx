@@ -17,11 +17,13 @@ import UpdateProfile from "../Pages/UpdateProfile/UpdateProfile";
 import UpdateAsset from "../Pages/HR_Manager/AssetList/UpdateAsset";
 import AssetDetails from "../Pages/Employee/Pdf/AssetDetails";
 import PrivateRoutes from "./PrivateRoutes";
+import ErrorPage from "../Pages/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
                 path: "/",

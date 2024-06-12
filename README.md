@@ -1,8 +1,35 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# assignment_category_0007
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# MY-ASSETS
+
+## Live Site
+-[https://job-word.web.app](https://job-word.web.app).
+
+
+
+## Features
+- User authentication (login, registration)
+- Create Assets for Employee
+- Filter Assets by name, order
+- View Pending Assets
+- Add an Employee
+- Assets list
+- My Employee List etc
+
+## Technologies Used
+- MongoDB
+- Express.js
+- React
+- Node.js
+- Firebase (for authentication)
+
+##  Npm Package Name list:
+- React Helmet,
+- React Spinner,
+- React router,
+
+
+## License
+This project is licensed under the License.

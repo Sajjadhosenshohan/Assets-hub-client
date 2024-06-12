@@ -4,6 +4,7 @@ import useAxiosPublic from '../../Hooks/useAxiosPublic'
 import useAuth from '../../Hooks/useAuth'
 import axios from 'axios'
 import Spinner from '../../Components/Spinner'
+import { Helmet } from 'react-helmet-async'
 
 const RegisterHR = () => {
     const axiosPublic = useAxiosPublic()
@@ -83,6 +84,10 @@ const RegisterHR = () => {
 
     return (
         <div className='flex justify-center items-center mb-12 mt-24'>
+
+            <Helmet>
+                <title>Register Hr</title>
+            </Helmet>
             <div className='flex flex-col p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
                 <div className='mb-8 text-center'>
                     <h1 className='my-3 text-4xl font-bold'>Sign Up for HR</h1>

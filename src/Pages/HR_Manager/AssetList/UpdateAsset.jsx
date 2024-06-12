@@ -4,6 +4,7 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useLoaderData } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const UpdateAsset = () => {
     const { _id,product_name, product_quantity, product_type, date_added: loadDate } = useLoaderData();
@@ -55,6 +56,9 @@ const UpdateAsset = () => {
     return (
         <div>
             <h2 className="text-3xl mt-12 mb-10 text-center text-primary">Update Asset</h2>
+            <Helmet>
+                <title>Asset Update</title>
+            </Helmet>
             <div className='flex justify-center items-start min-h-[calc(100vh-306px)] w-full '>
                 <section className='mb-24 w-full border-primary border-2 p-2 md:p-6 mx-auto  rounded-md shadow-md bg-secondary'>
 

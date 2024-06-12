@@ -9,6 +9,7 @@ import { useState } from "react";
 import Pagination from "../../../Components/Pagination";
 import useAuth from "../../../Hooks/useAuth";
 import Heading from "../../../Components/Heading";
+import { Helmet } from "react-helmet-async";
 
 const MyEmployeeList = () => {
     const axiosSecure = useAxiosSecure()
@@ -96,6 +97,9 @@ const MyEmployeeList = () => {
 
     return (
         <div className="my-24">
+            <Helmet>
+                <title>MY Employee List</title>
+            </Helmet>
             {/* <h2 className="text-3xl mb-10 text-center text-primary">My Employee List</h2> */}
             <Heading heading="My Employee List"></Heading>
             <div className="overflow-x-auto ">

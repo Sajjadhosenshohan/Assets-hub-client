@@ -9,6 +9,7 @@ import useAuth from "../../../Hooks/useAuth";
 import Spinner from "../../../Components/Spinner";
 import { useState } from "react";
 import Pagination from "../../../Components/Pagination";
+import { Helmet } from "react-helmet-async";
 
 const MyTeam = () => {
 
@@ -76,6 +77,9 @@ const MyTeam = () => {
     console.log("my employee", myTeam)
     return (
         <div className="my-24">
+            <Helmet>
+                <title>MY Team</title>
+            </Helmet>
             {/* <h2 className="text-3xl mb-10 text-center text-primary">My Team</h2> */}
             <Heading heading={"My Team"}></Heading>
             <div className="overflow-x-auto">

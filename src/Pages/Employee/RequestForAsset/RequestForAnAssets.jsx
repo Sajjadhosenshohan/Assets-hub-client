@@ -9,6 +9,7 @@ import useAuth from "../../../Hooks/useAuth";
 import Pagination from "../../../Components/Pagination";
 import Heading from "../../../Components/Heading";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import { Helmet } from "react-helmet-async";
 
 const RequestForAnAssets = () => {
     const axiosSecure = useAxiosSecure();
@@ -159,6 +160,9 @@ const RequestForAnAssets = () => {
     if (isLoading && loading) return <Spinner />;
     return (
         <div className="my-24">
+            <Helmet>
+                <title>Request For An Asset</title>
+            </Helmet>
             <Heading heading={'Request For An Asset'}></Heading>
 
             <div className="mb-10 flex  flex-col md:flex-row items-center gap-5 md:gap-8 justify-start">

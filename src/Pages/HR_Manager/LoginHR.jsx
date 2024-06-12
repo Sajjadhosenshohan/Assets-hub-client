@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import toast from 'react-hot-toast'
 import useAxiosPublic from '../../Hooks/useAxiosPublic'
 import useAuth from '../../Hooks/useAuth'
+import { Helmet } from 'react-helmet-async'
 
 
 
@@ -70,7 +71,7 @@ const LoginHR = () => {
                     })
             })
             .catch(error => {
-                // console.error(error)
+
                 toast.error(error.message)
             })
 
@@ -78,6 +79,11 @@ const LoginHR = () => {
 
     return (
         <div className='flex justify-center items-center mb-12 mt-24'>
+
+            <Helmet>
+                <title>Login</title>
+            </Helmet>
+            
             <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
                 <div className='mb-8 text-center'>
                     <h1 className='my-3 text-4xl font-bold'>Log In </h1>
@@ -153,7 +159,7 @@ const LoginHR = () => {
                     >
                         Sign up
                     </Link>
-                    
+
                 </p>
             </div>
         </div>

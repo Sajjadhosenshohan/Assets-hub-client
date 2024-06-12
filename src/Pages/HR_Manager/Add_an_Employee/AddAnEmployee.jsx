@@ -11,6 +11,7 @@ import { FaHandPointRight } from "react-icons/fa";
 import { MdPersonAddAlt1 } from "react-icons/md";
 import Pagination from "../../../Components/Pagination";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 // todo donot show hr in this page
 const AddAnEmployee = () => {
@@ -172,6 +173,9 @@ const AddAnEmployee = () => {
 
     return (
         <div className="my-24">
+            <Helmet>
+                <title>Add An Employee</title>
+            </Helmet>
             <Heading heading={"Add an Employee"}></Heading>
             <div className="mb-10 flex flex-col gap-3 justify-start">
 

@@ -11,6 +11,7 @@ import Heading from "../../../Components/Heading";
 import Pagination from "../../../Components/Pagination";
 import { useState } from "react";
 import { TiDelete } from "react-icons/ti";
+import { Helmet } from "react-helmet-async";
 
 const MyAssets = ({ heading_pending }) => {
     const axiosSecure = useAxiosSecure();
@@ -123,6 +124,9 @@ const MyAssets = ({ heading_pending }) => {
     if (authLoading || EmployeeLoading) return <Spinner />;
     return (
         <div className="my-24">
+            <Helmet>
+                <title>My Assets</title>
+            </Helmet>
             <Heading heading_pending={heading_pending} heading={"My Requested Assets"}></Heading>
 
             <div className={`mb-10 flex flex-col md:flex-row items-center gap-5 md:gap-8 justify-start ${heading_pending && "hidden"}`}>

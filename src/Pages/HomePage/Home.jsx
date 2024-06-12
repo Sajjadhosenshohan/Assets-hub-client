@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import About from "../../Components/About";
 import useAuth from "../../Hooks/useAuth";
 import useEmployeeData from "../../Hooks/useEmployeeData";
@@ -21,6 +22,11 @@ const Home = () => {
 
     return (
         <div>
+
+            <Helmet>
+                <title>Home</title>
+            </Helmet>
+
             {/* If the user is not logged in */}
             {!user && (
                 <>

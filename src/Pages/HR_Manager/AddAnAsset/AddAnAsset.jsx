@@ -8,10 +8,11 @@ import useUserData from "../../../Hooks/useHRData";
 import Heading from "../../../Components/Heading";
 import Spinner from "../../../Components/Spinner";
 import useAuth from "../../../Hooks/useAuth";
+import { Helmet } from "react-helmet-async";
 const AddAnAsset = () => {
-    const {userData,isLoading} = useUserData()
+    const { userData, isLoading } = useUserData()
     console.log(userData?.email)
-    const {loading}= useAuth()
+    const { loading } = useAuth()
     const axiosSecure = useAxiosSecure()
     const [startDate, setStartDate] = useState(new Date());
 
@@ -55,15 +56,17 @@ const AddAnAsset = () => {
             console.log(err)
         }
     }
-    if(isLoading || loading) return <Spinner></Spinner>
+    if (isLoading || loading) return <Spinner></Spinner>
     return (
         <div className="mt-24 mb-12">
             {/* <h2 className="text-3xl mt-12 mb-10 text-center text-primary">Add an Assets</h2> */}
-
-                <Heading heading="Add an Asset"></Heading>
+            <Helmet>
+                <title>Add An Asset</title>
+            </Helmet>
+            <Heading heading="Add an Asset"></Heading>
             <div className='flex justify-center items-start  w-full '>
                 <section className='mb-24 w-full border-primary border-2 p-2 md:p-6 mx-auto  rounded-md shadow-md bg-secondary'>
-                    
+
 
                     <form onSubmit={handleFormSubmit}>
                         <div className='grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2'>

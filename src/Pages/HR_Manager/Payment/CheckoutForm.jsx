@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import Heading from '../../../Components/Heading';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const CheckoutForm = () => {
     const axiosSecure = useAxiosSecure();
@@ -127,6 +128,9 @@ const CheckoutForm = () => {
 
     return (
         <div className="my-24">
+            <Helmet>
+                <title>Payment || Checkout form</title>
+            </Helmet>
             <Heading heading="Payment here"></Heading>
             <form className='flex flex-col w-1/2 mx-auto mb-10'>
                 <select

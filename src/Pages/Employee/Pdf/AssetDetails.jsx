@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../../Components/Spinner";
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import AssetDocument from './AssetDocument';
+import { Helmet } from "react-helmet-async";
 const AssetDetails = () => {
     const { id } = useParams();
     const axiosSecure = useAxiosSecure();
@@ -22,6 +23,9 @@ const AssetDetails = () => {
 
     return (
         <div className="max-w-4xl mt-24 mb-12 mx-auto my-8 px-4">
+            <Helmet>
+                <title>Asset Details</title>
+            </Helmet>
             <div className="page">
                 {/* Company Information */}
                 <div className="bg-gray-100 p-4 mb-8">

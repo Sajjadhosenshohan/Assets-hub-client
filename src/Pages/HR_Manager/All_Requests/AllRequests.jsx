@@ -10,6 +10,7 @@ import Pagination from "../../../Components/Pagination";
 import Heading from "../../../Components/Heading";
 import { TiDelete } from "react-icons/ti";
 import { FcApproval } from "react-icons/fc";
+import { Helmet } from "react-helmet-async";
 // import Pagination from "../../../Components/pagination";
 const AllRequests = () => {
     const axiosSecure = useAxiosSecure();
@@ -84,6 +85,9 @@ const AllRequests = () => {
     if (isError) return <div>Error: {error.message}</div>;
     return (
         <div className="my-24">
+            <Helmet>
+                <title>All Pending Request</title>
+            </Helmet>
             {/* <h2 className="text-3xl mb-10 text-center text-primary">All Requests: {count}</h2> */}
             <Heading heading="All Requests" count={count}></Heading>
             <div className="overflow-x-auto">
