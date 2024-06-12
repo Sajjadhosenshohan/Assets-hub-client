@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import useAxiosPublic from '../../Hooks/useAxiosPublic'
 import useAuth from '../../Hooks/useAuth'
 import { Helmet } from 'react-helmet-async'
+import Swal from 'sweetalert2'
 
 
 
@@ -19,6 +20,27 @@ const LoginHR = () => {
         const password = form.password.value;
         console.log(email, password);
 
+         // Validation
+         if (password.length < 6) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 6 Characters",
+            });
+            return;
+        } else if (!/[A-Z]/.test(password)) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 1 Uppercase Character",
+            });
+            return;
+        } else if (!/[a-z]/.test(password)) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 1 Lowercase Character",
+            });
+            return;
+        }
+
         try {
             await signIn(email, password)
                 .then(result => {
@@ -29,7 +51,8 @@ const LoginHR = () => {
                         name: result?.user?.displayName,
                         email: result?.user?.email,
                         profileImage: result.user?.photoURL,
-                        role: "employee"
+                        role: "employee",
+                        affiliate: "no"
                     }
                     axiosPublic.post("/users", info)
                         .then(res => {

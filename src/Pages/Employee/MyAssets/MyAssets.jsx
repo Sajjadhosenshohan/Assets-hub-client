@@ -16,7 +16,7 @@ import { Helmet } from "react-helmet-async";
 const MyAssets = ({ heading_pending }) => {
     const axiosSecure = useAxiosSecure();
     const { userDataEmployee, isLoading: EmployeeLoading } = useEmployeeData();
-    const { loading: authLoading } = useAuth();
+    const {loading: authLoading } = useAuth();
 
     // pagination
     const [currentPage, setCurrentPage] = useState(0);
@@ -54,7 +54,7 @@ const MyAssets = ({ heading_pending }) => {
     // Update the numberOfPages whenever data changes
     const { assetByEmail = [], count = 0 } = data || {};
     const newNumberOfPages = Math.ceil(count / itemsPerPage);
-    console.log(assetByEmail)
+    // console.log(assetByEmail)
     // Update the numberOfPages state when data is fetched
     if (newNumberOfPages !== numberOfPages) {
         setNumberOfPages(newNumberOfPages);
@@ -107,7 +107,7 @@ const MyAssets = ({ heading_pending }) => {
     };
 
     const handleReturn = async (asset) => {
-        
+
         const asset_update = await axiosSecure.patch(`/asset_returned/${asset._id}`);
         if (asset_update.data.modifiedCount > 0) {
             Swal.fire({
@@ -122,6 +122,7 @@ const MyAssets = ({ heading_pending }) => {
     };
 
     if (authLoading || EmployeeLoading) return <Spinner />;
+    
     return (
         <div className="my-24">
             <Helmet>

@@ -5,6 +5,7 @@ import useAuth from '../../../Hooks/useAuth'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { Helmet } from 'react-helmet-async'
+import Swal from 'sweetalert2'
 
 const RegisterEmployee = () => {
 
@@ -21,8 +22,27 @@ const RegisterEmployee = () => {
         const password = form.password.value
         const date_of_birth = form.date_of_birth.value
 
-        // const profileImage = form.Profile_picture.value
 
+         // Validation
+         if (password.length < 6) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 6 Characters",
+            });
+            return;
+        } else if (!/[A-Z]/.test(password)) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 1 Uppercase Character",
+            });
+            return;
+        } else if (!/[a-z]/.test(password)) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 1 Lowercase Character",
+            });
+            return;
+        }
         // for company logo
         const profile_Image = form.Profile_picture.files[0]
         const formData3 = new FormData()
@@ -48,42 +68,6 @@ const RegisterEmployee = () => {
                     profileImage: data?.data.display_url,
 
                 }
-                // updateUserProfile(name, PhotoURL)
-                //     .then(() => {
-                //         console.log("user update")
-
-                //         const info = {
-                //             name,
-                //             email
-                //         }
-                //         axiosPublic.post("/users", info)
-                //             .then(res => {
-                //                 // console.log(res.data)
-                //                 if (res.data.insertedId) {
-                //                     Swal.fire({
-                //                         title: "User updated successfully",
-                //                         showClass: {
-                //                             popup: `
-                //                         animate__animated
-                //                         animate__fadeInUp
-                //                         animate__faster
-                //                       `
-                //                         },
-                //                         hideClass: {
-                //                             popup: `
-                //                         animate__animated
-                //                         animate__fadeOutDown
-                //                         animate__faster
-                //                       `
-                //                         }
-                //                     });
-                //                 }
-                //                 navigate("/")
-                //             })
-                //     })
-                //     .catch((error) => {
-                //         console.log(error.message)
-                //     });
                 axiosPublic.post("/users", info)
                     .then(res => {
                         // console.log(res.data)

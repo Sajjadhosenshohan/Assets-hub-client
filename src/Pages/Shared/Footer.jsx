@@ -8,7 +8,7 @@ const Footer = () => {
     // employee hook
     const { userDataEmployee } = useEmployeeData();
 
-    const logoUrl = Hr_data?.companyLogo || userDataEmployee?.companyLogo;
+    const logoUrl = Hr_data?.companyLogo || userDataEmployee?.companyLogo || "https://i.ibb.co/xJx3G7J/th.jpg";
     const renderLogo = () => {
         if (logoUrl) {
             return <div className="btn  btn-circle avatar">

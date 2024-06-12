@@ -5,6 +5,7 @@ import useAuth from '../../Hooks/useAuth'
 import axios from 'axios'
 import Spinner from '../../Components/Spinner'
 import { Helmet } from 'react-helmet-async'
+import Swal from 'sweetalert2'
 
 const RegisterHR = () => {
     const axiosPublic = useAxiosPublic()
@@ -23,7 +24,27 @@ const RegisterHR = () => {
         const category = parseInt(Member_category);
         const date_of_birth = form.date_of_birth.value
         const companyName = form.companyName.value
-
+        
+         // Validation
+         if (password.length < 6) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 6 Characters",
+            });
+            return;
+        } else if (!/[A-Z]/.test(password)) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 1 Uppercase Character",
+            });
+            return;
+        } else if (!/[a-z]/.test(password)) {
+            Swal.fire({
+                icon: "error",
+                title: "Please Enter A Password Of At Least 1 Lowercase Character",
+            });
+            return;
+        }
         // for company logo
         const companyLogo = form.image.files[0]
         const formData = new FormData()

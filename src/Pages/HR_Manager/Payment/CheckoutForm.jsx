@@ -6,8 +6,8 @@ import Spinner from '../../../Components/Spinner';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import Heading from '../../../Components/Heading';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const CheckoutForm = () => {
     const axiosSecure = useAxiosSecure();
@@ -17,10 +17,10 @@ const CheckoutForm = () => {
     const [error, setError] = useState('');
     const stripe = useStripe();
     const elements = useElements();
-    const navigate = useNavigate()
-    const location = useLocation()
-    const from = location?.state?.pathname
-    console.log(from)
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from || "/"; 
+    console.log(location.state?.from)
 
     const [selectedValue, setSelectedValue] = useState(userData?.category || '');
 
@@ -48,7 +48,7 @@ const CheckoutForm = () => {
 
         if (packagePrice > 0) {
             try {
-                const res = await axiosSecure.patch(`/payments/change/${userData?.email}`, { category_price: packagePrice });
+                const res = await axiosSecure.patch(`/payments/change/${userData?.email}`, { category_price: packagePrice, payment: "yes" });
                 if (res.data) {
                     toast.success("Package updated successfully");
                 }
@@ -115,7 +115,7 @@ const CheckoutForm = () => {
                             showConfirmButton: false,
                             timer: 1500
                         });
-                        navigate(from)
+                        navigate(from);
                     }
                 } catch (error) {
                     console.error('Error saving payment:', error);

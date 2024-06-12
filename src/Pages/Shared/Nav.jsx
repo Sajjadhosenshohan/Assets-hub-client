@@ -7,9 +7,9 @@ import { Puff } from "react-loader-spinner";
 const Nav = () => {
     const { loading, user, logOut } = useAuth();
     // hr hook
-    const { userData: Hr_data, isLoading: isHRLoading } = useUserData();
+    const { userData: Hr_data, } = useUserData();
     // employee hook
-    const { userDataEmployee, isLoading: isEmployeeLoading } = useEmployeeData();
+    const { userDataEmployee, } = useEmployeeData();
 
     const renderNormalLinks = () => (
         <>
@@ -182,7 +182,7 @@ const Nav = () => {
     };
 
     const renderLogo = () => {
-        const logoUrl = Hr_data?.companyLogo || userDataEmployee?.companyLogo;
+        const logoUrl = Hr_data?.companyLogo || userDataEmployee?.companyLogo || "https://i.ibb.co/xJx3G7J/th.jpg";
         if (logoUrl) {
             return <div className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">

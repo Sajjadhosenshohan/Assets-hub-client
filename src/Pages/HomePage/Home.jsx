@@ -15,14 +15,16 @@ import MyPendingRequest from "./MyPendingRequest";
 import Newsletter from "./NewsLetter";
 import PackageSection from "./PackageSection";
 import PrivateRoutes from "../../Routes/PrivateRoutes";
+
 const Home = () => {
-    const { userData: HR_Manager } = useUserData()
-    const { userDataEmployee } = useEmployeeData()
-    const { user } = useAuth()
+    const { userData: HR_Manager } = useUserData();
+    const { userDataEmployee } = useEmployeeData();
+    const { user } = useAuth();
+
+    console.log(userDataEmployee);
 
     return (
         <div>
-
             <Helmet>
                 <title>Home</title>
             </Helmet>
@@ -38,8 +40,15 @@ const Home = () => {
                 </>
             )}
 
-            {/* If the user is logged in as an Employee */}
-            {user && userDataEmployee && (
+            {/* If the user is logged in as an Employee and not affiliated */}
+            {user && !HR_Manager && userDataEmployee?.affiliate === "no" && (
+                <div className="my-52 text-center text-3xl text-red-600">
+                    Please contact your HR to get affiliated with a company.
+                </div>
+            )}
+
+            {/* If the user is logged in as an Employee and affiliated */}
+            {user && !HR_Manager && userDataEmployee?.affiliate === "yes" && (
                 <>
                     <PrivateRoutes><MyPendingRequest /></PrivateRoutes>
                     <PrivateRoutes><MyMonthlyRequests /></PrivateRoutes>
@@ -47,8 +56,8 @@ const Home = () => {
                 </>
             )}
 
-            {/* If the user is logged in as an HR Manager */}
-            {user && HR_Manager && (
+            {/* If the user is logged in as an HR Manager and has paid */}
+            {user && HR_Manager?.payment === "yes" && (
                 <>
                     <PrivateRoutes><TopFivePendingRequest /></PrivateRoutes>
                     <PrivateRoutes><TopRequestedItems /></PrivateRoutes>
@@ -59,15 +68,10 @@ const Home = () => {
                 </>
             )}
 
-            {/* If the user is logged in but not associated with any company */}
-            {user && !HR_Manager && !userDataEmployee && (
-                <div className="mt-12">
-                    <Banner />
-                    <About />
-                    <PackageSection />
-                    <div className="mt-6 text-center text-red-600">
-                        Please contact your HR to get affiliated with a company.
-                    </div>
+            {/* If the user is logged in as an HR Manager and has not paid */}
+            {user && HR_Manager && HR_Manager?.payment !== "yes" && (
+                <div className="my-52 text-center text-3xl text-red-600">
+                    Please buy your package.
                 </div>
             )}
         </div>

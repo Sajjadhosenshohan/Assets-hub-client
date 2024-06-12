@@ -1,19 +1,33 @@
 import { Navigate, useLocation } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
+import useEmployeeData from "../Hooks/useEmployeeData";
 import Spinner from "../Components/Spinner";
+// import useUserData from "../Hooks/useHRData";
 
-const PrivateRoutes = ({children}) => {
+
+const PrivateRoutes = ({ children }) => {
     const { user, loading } = useAuth();
+    const { userDataEmployee } = useEmployeeData();
+    // const { userData } = useUserData();
     const location = useLocation();
-    console.log(location?.state?.pathName)
+
     if (loading) {
-        return <Spinner></Spinner>
+        return <Spinner />;
     }
 
-    if (user) {
-        return children;
+    if (!user) {
+        return <Navigate to="/login" state={location?.state?.pathname} />;
     }
-    return <Navigate to="/login" state={location?.state?.pathName}></Navigate>
+
+    if (user && userDataEmployee?.affiliate === "no") {
+        return (
+            <div className="my-52 text-center text-3xl text-red-600">
+                Please contact your HR to get affiliated with a company.
+            </div>
+        );
+    }
+    
+    return children;
 };
 
 export default PrivateRoutes;
