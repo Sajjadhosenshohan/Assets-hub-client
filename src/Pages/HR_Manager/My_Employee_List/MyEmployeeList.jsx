@@ -39,14 +39,9 @@ const MyEmployeeList = () => {
     });
     // console.log(userData)
 
-
-    // pagination function
-    // Update the numberOfPages whenever data changes
     const { myEmployee = [], count = 0 } = data || {};
     const newNumberOfPages = Math.ceil(count / itemsPerPage);
-    // console.log(myEmployee)
 
-    // Update the numberOfPages state when data is fetched
     if (newNumberOfPages !== numberOfPages) {
         setNumberOfPages(newNumberOfPages);
     }
@@ -142,7 +137,7 @@ const MyEmployeeList = () => {
                                         }
                                         {/* {team?.role} */}
                                     </td>
-                                    {/* <td><button onClick={() => handleRemove(employee._id)} className="btn btn-error" disabled={employee?.role === 'hr'}>Remove</button></td> */}
+                                    
 
                                     <td className="font-bold text-2xl">
                                         {

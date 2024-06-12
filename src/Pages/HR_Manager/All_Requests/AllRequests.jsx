@@ -43,6 +43,8 @@ const AllRequests = () => {
         setNumberOfPages(newNumberOfPages);
     }
 
+    console.log(requests)
+
 
     const handleItemPerPage = (e) => {
         setItemsPerPage(parseInt(e.target.value));

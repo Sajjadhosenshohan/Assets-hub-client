@@ -97,7 +97,7 @@ const MyAssets = ({ heading_pending }) => {
             Swal.fire({
                 position: "center",
                 icon: "success",
-                title: `updated successfully`,
+                title: `Rejected successfully`,
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -176,7 +176,7 @@ const MyAssets = ({ heading_pending }) => {
                                 </td>
 
                                 <td>{new Date(asset.requestDate).toLocaleDateString()}</td>
-                                <td>{asset.status === 'approved' ? asset?.approvedDate : ''}</td>
+                                <td>{asset?.approvedDate}</td>
                                 {/* <td>{asset.status}</td> */}
 
                                 <td>

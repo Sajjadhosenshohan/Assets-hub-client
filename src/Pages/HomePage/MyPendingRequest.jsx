@@ -13,19 +13,6 @@ const MyPendingRequest = () => {
     const { userDataEmployee, isLoading: EmployeeLoading } = useEmployeeData();
     const { loading: authLoading } = useAuth();
 
-    // // pagination
-    // const [currentPage, setCurrentPage] = useState(0);
-    // const [itemsPerPage, setItemsPerPage] = useState(10);
-    // const [numberOfPages, setNumberOfPages] = useState(0);
-
-    // // search
-    // const [search, setSearch] = useState('');
-    // // filter
-    // const [availabilityCheck, setAvailability] = useState('');
-    // // pagination pages array
-    // const pages = Array.from({ length: numberOfPages }, (_, i) => i);
-
-
     const { data: allPending = [], refetch } = useQuery({
         queryKey: ["my_pending_request", userDataEmployee?.email],
         enabled: !authLoading && !!userDataEmployee?.email,
@@ -71,7 +58,7 @@ const MyPendingRequest = () => {
     if (authLoading || EmployeeLoading) return <Spinner />;
     return (
         <div className="my-24">
-            <Heading  heading={"My Requested Assets"}></Heading>
+            <Heading  heading={"My pending requests"}></Heading>
             {/* search filter */}
             <div className="overflow-x-auto">
                 <table className="table table-zebra">

@@ -1,5 +1,4 @@
 import { RiArrowDropDownLine } from "react-icons/ri";
-import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
@@ -13,10 +12,9 @@ import useUserData from "../../../Hooks/useHRData";
 import Pagination from "../../../Components/Pagination";
 import Spinner from "../../../Components/Spinner";
 const AssetList = () => {
-    const axiosPublic = useAxiosPublic()
     const axiosSecure = useAxiosSecure()
     const { loading } = useAuth();
-    const { userData, isLoading} = useUserData();
+    const { userData, isLoading } = useUserData();
 
     // pagination
     const [currentPage, setCurrentPage] = useState(0);
@@ -38,16 +36,16 @@ const AssetList = () => {
 
     const { data, refetch } = useQuery({
         queryKey: ["assets", userData?.email, currentPage, itemsPerPage, search, availabilityCheck],
-        enabled: !loading && !!userData?.email,
+        enabled: !loading && !!userData?.email && !!localStorage.getItem("access-token"),
         queryFn: async () => {
-            const { data } = await axiosPublic.get(`/all_assets/${userData?.email}`,
+            const { data } = await axiosSecure.get(`/all_assets/${userData?.email}`,
                 {
                     params: {
                         page: currentPage,
                         size: itemsPerPage,
                         search: search,
                         availabilityCheck: availabilityCheck,
-                        sortField:sortField,
+                        sortField: sortField,
                         sortOrder: sortOrder
                     }
                 }
@@ -100,12 +98,7 @@ const AssetList = () => {
         refetch();
     }
 
-
-
-    // delete items
     const handleDelete = (id, name) => {
-        // console.log(id)
-
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -135,10 +128,9 @@ const AssetList = () => {
         });
     }
     // console.log(assets)
-    if(loading || isLoading) return <Spinner></Spinner>
+    if (loading || isLoading) return <Spinner></Spinner>
     return (
         <div className="my-24">
-            {/* <h2 className="text-3xl mb-10 text-center text-primary">Asset List</h2> */}
             <Heading heading="Asset List"></Heading>
             {/* button  */}
 
@@ -178,7 +170,7 @@ const AssetList = () => {
 
                         <li onClick={() => handleSort('product_quantity', 1)}><a>Low to High</a></li>
                         <li onClick={() => handleSort("product_quantity", -1)}><a>Hight to Low</a></li>
-                        
+
                     </ul>
 
                 </div>

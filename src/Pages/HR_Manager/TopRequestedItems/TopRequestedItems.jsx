@@ -56,12 +56,7 @@ const TopRequestedItems = () => {
                                 <td>{assetReq?.requestCount}</td>
                                 <td>{assetReq?.requesterEmail}</td>
                                 <td>{assetReq?.Item_Added_By}</td>
-                                {/* <td>{assetReq.notes}</td>
-                                <td>{assetReq.status}</td> */}
-
-                                {/* <td><button onClick={() => handleStatus(assetReq._id, "approved")} className="btn btn-error" disabled={assetReq.status === "approved"}>Approve</button></td>
-
-                                <td><button onClick={() => handleStatus(assetReq._id, "rejected")} disabled={assetReq.status === "rejected"} className="btn bg-primary btn-success">Reject</button></td> */}
+                               
                             </tr>
                         ))}
                     </tbody>

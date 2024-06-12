@@ -5,8 +5,8 @@ import useUserData from '../../../Hooks/useHRData';
 import Spinner from '../../../Components/Spinner';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
-import { useLocation, useNavigate } from 'react-router-dom';
 import Heading from '../../../Components/Heading';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const CheckoutForm = () => {
     const axiosSecure = useAxiosSecure();
@@ -21,14 +21,19 @@ const CheckoutForm = () => {
     const from = location?.state?.pathname
     console.log(from)
 
-    const [selectedValue, setSelectedValue] = useState(userData?.category);
+    const [selectedValue, setSelectedValue] = useState(userData?.category || '');
+
+    useEffect(() => {
+        if (userData?.category) {
+            setSelectedValue(userData.category);
+        }
+    }, [userData]);
 
     useEffect(() => {
         if (selectedValue > 0) {
             axiosSecure.post('/create-payment-intent', { category_price: selectedValue })
                 .then(res => {
                     setClientSecret(res?.data.clientSecret);
-                    // console.log(res?.data.clientSecret)
                 })
                 .catch(error => {
                     console.error('Error creating payment intent:', error);
@@ -36,26 +41,21 @@ const CheckoutForm = () => {
         }
     }, [axiosSecure, selectedValue]);
 
-
     const handleChange = async (event) => {
         const packagePrice = event.target.value;
-        // console.log(parseInt(selectedValue))
         setSelectedValue(packagePrice);
 
         if (packagePrice > 0) {
             try {
                 const res = await axiosSecure.patch(`/payments/change/${userData?.email}`, { category_price: packagePrice });
-                console.log('Payment category updated', res.data);
                 if (res.data) {
-                    toast.success("Package updated successfully")
+                    toast.success("Package updated successfully");
                 }
             } catch (error) {
                 console.error('Error updating payment category:', error);
             }
         }
     };
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -77,7 +77,6 @@ const CheckoutForm = () => {
         if (error) {
             setError(error.message);
         } else {
-            console.log("payment method", paymentMethod)
             setError('');
         }
 
@@ -107,7 +106,6 @@ const CheckoutForm = () => {
 
                 try {
                     const res = await axiosSecure.post('/payments', payment);
-                    console.log(res)
                     if (res.data?.insertedId) {
                         Swal.fire({
                             position: "center",
@@ -129,7 +127,6 @@ const CheckoutForm = () => {
 
     return (
         <div className="my-24">
-            {/* <h2 className="text-3xl mt-12 mb-10 text-center text-primary">Payment here: </h2> */}
             <Heading heading="Payment here"></Heading>
             <form className='flex flex-col w-1/2 mx-auto mb-10'>
                 <select
@@ -139,7 +136,7 @@ const CheckoutForm = () => {
                     value={selectedValue}
                     onChange={handleChange}
                 >
-                    <option value={5} disabled>Our packages</option>
+                    <option value='' disabled>Select a package</option>
                     <option value={5}>5 members for $5</option>
                     <option value={8}>10 members for $8</option>
                     <option value={15}>20 members for $15</option>
@@ -165,7 +162,7 @@ const CheckoutForm = () => {
                     />
                     <div className="flex justify-center mt-8">
                         <button
-                            className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center"
+                            className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center cursor-pointer"
                             type="submit"
                             disabled={!stripe || !clientSecret}
                         >

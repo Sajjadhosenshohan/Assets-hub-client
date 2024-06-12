@@ -65,7 +65,7 @@ const LoginHR = () => {
                         // console.log(res.data)
                         if (res.data.insertedId) {
                             toast.success('user added to db successfully')
-                            navigate('/')
+                            navigate('/payment')
                         }
                     })
             })

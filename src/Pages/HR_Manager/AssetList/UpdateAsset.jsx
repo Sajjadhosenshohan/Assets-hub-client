@@ -38,10 +38,11 @@ const UpdateAsset = () => {
             if (asset_update.data.modifiedCount > 0) {
                 // show success popup
                 // reset();
+                // console.log(product_name)
                 Swal.fire({
                     position: "center",
                     icon: "success",
-                    title: `${product_name.name} is updated to the menu.`,
+                    title: `${createData?.product_name} is updated to the menu.`,
                     showConfirmButton: false,
                     timer: 1500
                 });

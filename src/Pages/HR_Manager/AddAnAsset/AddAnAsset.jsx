@@ -6,9 +6,12 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useUserData from "../../../Hooks/useHRData";
 import Heading from "../../../Components/Heading";
+import Spinner from "../../../Components/Spinner";
+import useAuth from "../../../Hooks/useAuth";
 const AddAnAsset = () => {
     const {userData,isLoading} = useUserData()
     console.log(userData?.email)
+    const {loading}= useAuth()
     const axiosSecure = useAxiosSecure()
     const [startDate, setStartDate] = useState(new Date());
 
@@ -52,6 +55,7 @@ const AddAnAsset = () => {
             console.log(err)
         }
     }
+    if(isLoading || loading) return <Spinner></Spinner>
     return (
         <div className="mt-24 mb-12">
             {/* <h2 className="text-3xl mt-12 mb-10 text-center text-primary">Add an Assets</h2> */}
@@ -73,7 +77,7 @@ const AddAnAsset = () => {
                                     name='product_name'
                                     type='text'
                                     required
-                                    className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring'
+                                    className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-primary focus:ring-primary focus:ring-opacity-40  focus:outline-none focus:ring'
                                 />
                             </div>
 
@@ -89,7 +93,7 @@ const AddAnAsset = () => {
                                     name='product_quantity'
                                     type='number'
                                     required
-                                    className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring'
+                                    className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-primary focus:ring-primary focus:ring-opacity-40  focus:outline-none focus:ring'
                                 />
                             </div>
 

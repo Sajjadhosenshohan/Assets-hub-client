@@ -1,5 +1,4 @@
 import { RiArrowDropDownLine } from "react-icons/ri";
-import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
@@ -9,9 +8,10 @@ import Spinner from "../../../Components/Spinner";
 import useAuth from "../../../Hooks/useAuth";
 import Pagination from "../../../Components/Pagination";
 import Heading from "../../../Components/Heading";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 const RequestForAnAssets = () => {
-    const axiosPublic = useAxiosPublic();
+    const axiosSecure = useAxiosSecure();
     const { loading } = useAuth();
     const { userDataEmployee, isLoading } = useEmployeeData();
     console.log(userDataEmployee)
@@ -34,29 +34,26 @@ const RequestForAnAssets = () => {
 
     // fetch data with react-query
     const { data, refetch } = useQuery({
-        queryKey: ["assets", userDataEmployee, currentPage, itemsPerPage, search, availabilityCheck],
-        enabled: !loading && !!userDataEmployee?.email,
+        queryKey: ["assets_get", userDataEmployee?.email, currentPage, itemsPerPage, search, availabilityCheck],
+        enabled: !loading && !!userDataEmployee?.email && !!localStorage.getItem("access-token"),
         queryFn: async () => {
-            const { data } = await axiosPublic.get(`/assets`, {
+            const { data } = await axiosSecure.get(`/assets_get`, {
                 params: {
                     page: currentPage,
                     size: itemsPerPage,
                     search: search,
                     availabilityCheck: availabilityCheck,
                 }
-            } || "/all_assets");
+            });
             return data;
         },
     });
 
 
-
-    // pagination function
-    // Update the numberOfPages whenever data changes
     const { allAssets = [], count = 0 } = data || {};
     const newNumberOfPages = Math.ceil(count / itemsPerPage);
 
-    // Update the numberOfPages state when data is fetched
+
     if (newNumberOfPages !== numberOfPages) {
         setNumberOfPages(newNumberOfPages);
     }
@@ -89,7 +86,7 @@ const RequestForAnAssets = () => {
 
 
 
-    if (isLoading && loading) return <Spinner />;
+
     const handleRequest = (id, asset_product_name,
         asset_product_quantity,
         asset_product_type,
@@ -144,12 +141,12 @@ const RequestForAnAssets = () => {
             console.log("hi", matchingAsset)
             if (matchingAsset) {
                 // Update existing asset
-                await axiosPublic.put(`/assets/${selectedAsset}`, requestData);
+                await axiosSecure.put(`/assets/${selectedAsset}`, requestData);
                 toast.success('Request submitted successfully');
                 document.getElementById('my_modal_5').close();
             } else {
                 // Create a new asset
-                await axiosPublic.post(`/addAssetsByEmployee`, requestData2);
+                await axiosSecure.post(`/addAssetsByEmployee`, requestData2);
                 toast.success('New asset created successfully');
                 document.getElementById('my_modal_5').close();
             }
@@ -159,7 +156,7 @@ const RequestForAnAssets = () => {
         }
     };
 
-
+    if (isLoading && loading) return <Spinner />;
     return (
         <div className="my-24">
             <Heading heading={'Request For An Asset'}></Heading>
@@ -236,7 +233,11 @@ const RequestForAnAssets = () => {
                                                 asset.Item_Added_By,
                                             )}
                                             className={`className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-orange-400 text-center " ${asset?.availability === "out_of_stock" && "cursor-not-allowed bg-slate-400"}`}
-                                            disabled={asset?.Item_Added_By !== userDataEmployee?.Added_By || asset?.availability === "out_of_stock"}
+                                            disabled={asset?.availability === "out_of_stock"
+
+                                            }
+
+                                        // asset?.Item_Added_By !== userDataEmployee?.Added_By ||
 
 
                                         >
@@ -261,7 +262,7 @@ const RequestForAnAssets = () => {
                             <div className="w-full md:p-5">
 
 
-                                <form className="mt-0 lg:min-h-[300px]" onSubmit={handleForm} style={{  width: '100%', }}>
+                                <form className="mt-0 lg:min-h-[300px]" onSubmit={handleForm} style={{ width: '100%', }}>
                                     <div>
 
                                         <h2>{new Date()?.toLocaleDateString}</h2>

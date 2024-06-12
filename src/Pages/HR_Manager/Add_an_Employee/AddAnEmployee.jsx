@@ -10,6 +10,7 @@ import Heading from "../../../Components/Heading";
 import { FaHandPointRight } from "react-icons/fa";
 import { MdPersonAddAlt1 } from "react-icons/md";
 import Pagination from "../../../Components/Pagination";
+import toast from "react-hot-toast";
 
 // todo donot show hr in this page
 const AddAnEmployee = () => {
@@ -44,12 +45,7 @@ const AddAnEmployee = () => {
         },
     });
 
-    // console.log(AddEmployee)
 
-
-
-    // pagination function
-    // Update the numberOfPages whenever data changes
     const { AddEmployee = [], count = 0 } = data || {};
     const newNumberOfPages = Math.ceil(count / itemsPerPage);
     console.log(AddEmployee)
@@ -80,10 +76,10 @@ const AddAnEmployee = () => {
     const handleAdd = async (id, employeeRole, employeeCompanyName) => {
 
         if (employeeRole === "hr") {
-            return alert("you can't add an Hr_manager")
+            return toast.error("you can't add an Hr_manager")
         }
         if (employeeCompanyName) {
-            return alert("Already join in another company")
+            return toast.error("Already join in another company")
         }
         const createData = {
             companyName: userData?.companyName,
@@ -176,15 +172,8 @@ const AddAnEmployee = () => {
 
     return (
         <div className="my-24">
-            {/* <h2 className="text-3xl mb-10 text-center text-primary">Add Employee</h2> */}
             <Heading heading={"Add an Employee"}></Heading>
             <div className="mb-10 flex flex-col gap-3 justify-start">
-                {/* <p className="text-2xl text-center font-bold">
-                    <span className="text-primary"><FaHandPointRight />Your Company has</span>
-
-                    <span className="text-primary">{AddEmployee.length} Employee {AddEmployee.length !== 1 ? 's' : ''}</span>
-
-                </p> */}
 
                 <div>
                     <p className="text-2xl  text-center font-bold flex flex-col md:flex-row  items-center">
@@ -263,11 +252,7 @@ const AddAnEmployee = () => {
                                 <td className="font-bold text-2xl">
 
                                     <button onClick={() => handleAdd(employee._id, employee?.role, employee?.companyName)} className="btn btn-circle btn-outline border-2 border-primary">
-                                        {employee?.role === "employee" && (
-                                            <MdPersonAddAlt1 className="text-primary text-2xl" />
-                                        )}
-
-
+                                        <MdPersonAddAlt1 className="text-primary text-2xl" />
                                     </button>
                                 </td>
                             </tr>
