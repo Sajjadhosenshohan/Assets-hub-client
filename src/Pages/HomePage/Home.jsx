@@ -14,7 +14,7 @@ import MyMonthlyRequests from "./MyMonthlyRequests";
 import MyPendingRequest from "./MyPendingRequest";
 import Newsletter from "./NewsLetter";
 import PackageSection from "./PackageSection";
-
+import PrivateRoutes from "../../Routes/PrivateRoutes";
 const Home = () => {
     const { userData: HR_Manager } = useUserData()
     const { userDataEmployee } = useEmployeeData()
@@ -41,20 +41,20 @@ const Home = () => {
             {/* If the user is logged in as an Employee */}
             {user && userDataEmployee && (
                 <>
-                    <MyPendingRequest />
-                    <MyMonthlyRequests />
-                    <Newsletter />
+                    <PrivateRoutes><MyPendingRequest /></PrivateRoutes>
+                    <PrivateRoutes><MyMonthlyRequests /></PrivateRoutes>
+                    <PrivateRoutes><Newsletter /></PrivateRoutes>
                 </>
             )}
 
             {/* If the user is logged in as an HR Manager */}
             {user && HR_Manager && (
                 <>
-                    <TopFivePendingRequest />
-                    <TopRequestedItems />
-                    <LimitedStockItems />
-                    <StatsChart />
-                    <Feature />
+                    <PrivateRoutes><TopFivePendingRequest /></PrivateRoutes>
+                    <PrivateRoutes><TopRequestedItems /></PrivateRoutes>
+                    <PrivateRoutes><LimitedStockItems /></PrivateRoutes>
+                    <PrivateRoutes><StatsChart /></PrivateRoutes>
+                    <PrivateRoutes><Feature /></PrivateRoutes>
                     <Contact />
                 </>
             )}

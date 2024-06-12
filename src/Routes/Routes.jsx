@@ -18,6 +18,7 @@ import UpdateAsset from "../Pages/HR_Manager/AssetList/UpdateAsset";
 import AssetDetails from "../Pages/Employee/Pdf/AssetDetails";
 import PrivateRoutes from "./PrivateRoutes";
 import ErrorPage from "../Pages/ErrorPage";
+import HrRoute from "./HrRoute";
 
 const router = createBrowserRouter([
     {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/profile",
-                element: <UpdateProfile></UpdateProfile>
+                element: <PrivateRoutes><UpdateProfile></UpdateProfile></PrivateRoutes>
             },
 
             // normal employee
@@ -41,39 +42,39 @@ const router = createBrowserRouter([
             },
             {
                 path: "/myTeam",
-                element: <MyTeam></MyTeam>
+                element: <PrivateRoutes><MyTeam></MyTeam></PrivateRoutes>
             },
             {
                 path: "/requestForAssets",
-                element: <RequestForAnAssets></RequestForAnAssets>
+                element:<PrivateRoutes><RequestForAnAssets></RequestForAnAssets> </PrivateRoutes>
             },
             {
                 path: '/asset/:id',
-                element: <AssetDetails></AssetDetails>,
+                element: <PrivateRoutes><AssetDetails></AssetDetails></PrivateRoutes> 
               },
 
             // for hr manager
 
             {
                 path: "/assetList",
-                element: <AssetList></AssetList>
+                element: <HrRoute><AssetList></AssetList></HrRoute>
             },
             {
                 path: "/addAnAsset",
-                element: <AddAnAsset></AddAnAsset>
+                element: <HrRoute><AddAnAsset></AddAnAsset></HrRoute>
             },
             {
                 path: "/allRequests",
-                element: <AllRequests></AllRequests>
+                element: <HrRoute><AllRequests></AllRequests></HrRoute>
             },
 
             {
                 path: "/myEmployeeList",
-                element: <MyEmployeeList></MyEmployeeList>
+                element: <HrRoute><MyEmployeeList></MyEmployeeList></HrRoute>,
             },
             {
                 path: "/addAnEmployee",
-                element: <AddAnEmployee></AddAnEmployee>
+                element: <HrRoute><AddAnEmployee></AddAnEmployee></HrRoute>,
             },
             {
                 path: "/payment",
@@ -81,7 +82,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/update/:id",
-                element: <UpdateAsset></UpdateAsset>,
+                element: <HrRoute><UpdateAsset></UpdateAsset></HrRoute>,
                 loader: async ({ params }) => await fetch(`http://localhost:7000/assetOne/${params.id}`)
             },
 
