@@ -29,7 +29,6 @@ const Home = () => {
                 <title>Home</title>
             </Helmet>
 
-            {/* If the user is not logged in */}
             {!user && (
                 <>
                     <div className="mt-12">
@@ -40,14 +39,12 @@ const Home = () => {
                 </>
             )}
 
-            {/* If the user is logged in as an Employee and not affiliated */}
             {user && !HR_Manager && userDataEmployee?.affiliate === "no" && (
                 <div className="my-52 text-center text-3xl text-red-600">
                     Please contact your HR to get affiliated with a company.
                 </div>
             )}
 
-            {/* If the user is logged in as an Employee and affiliated */}
             {user && !HR_Manager && userDataEmployee?.affiliate === "yes" && (
                 <>
                     <PrivateRoutes><MyPendingRequest /></PrivateRoutes>
@@ -56,7 +53,6 @@ const Home = () => {
                 </>
             )}
 
-            {/* If the user is logged in as an HR Manager and has paid */}
             {user && HR_Manager?.payment === "yes" && (
                 <>
                     <PrivateRoutes><TopFivePendingRequest /></PrivateRoutes>
@@ -68,7 +64,6 @@ const Home = () => {
                 </>
             )}
 
-            {/* If the user is logged in as an HR Manager and has not paid */}
             {user && HR_Manager && HR_Manager?.payment !== "yes" && (
                 <div className="my-52 text-center text-3xl text-red-600">
                     Please buy your package.

@@ -2,13 +2,13 @@ import { Navigate, useLocation } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
 import useEmployeeData from "../Hooks/useEmployeeData";
 import Spinner from "../Components/Spinner";
-// import useUserData from "../Hooks/useHRData";
+
 
 
 const PrivateRoutes = ({ children }) => {
     const { user, loading } = useAuth();
     const { userDataEmployee } = useEmployeeData();
-    // const { userData } = useUserData();
+
     const location = useLocation();
 
     if (loading) {

@@ -3,7 +3,6 @@ import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from './CheckoutForm';
 import { Helmet } from 'react-helmet-async';
 
-// recreating the `Stripe` object on every render.
 const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_GATEWAY_PK);
 
 const Payment = () => {
