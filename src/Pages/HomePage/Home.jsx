@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
+import { useNavigate} from "react-router-dom";
 import About from "../../Components/About";
 import useAuth from "../../Hooks/useAuth";
 import useEmployeeData from "../../Hooks/useEmployeeData";
@@ -17,18 +19,24 @@ import PackageSection from "./PackageSection";
 import PrivateRoutes from "../../Routes/PrivateRoutes";
 
 const Home = () => {
-    const { userData} = useUserData();
+    const { userData } = useUserData();
     const { userDataEmployee } = useEmployeeData();
     const { user } = useAuth();
+    const navigate = useNavigate();
+    // const location = useLocation();
+    // console.log(userData?.payment)
 
-    console.log(userData);
+    useEffect(() => {
+        if (user && userData?.payment === "no") {
+            navigate("/payment");
+        }
+    }, [user, userData, navigate]);
 
     return (
         <div>
             <Helmet>
                 <title>Home</title>
             </Helmet>
-
 
             {!user && (
                 <>
@@ -63,12 +71,6 @@ const Home = () => {
                     <PrivateRoutes><Feature /></PrivateRoutes>
                     <Contact />
                 </>
-            )}
-
-            {user && userData && userData?.payment !== "yes" && (
-                <div className="my-52 text-center text-3xl text-red-600">
-                    Please buy your package.
-                </div>
             )}
 
             {user && !userData && !userDataEmployee && (

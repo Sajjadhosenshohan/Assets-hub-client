@@ -159,7 +159,7 @@ const AddAnEmployee = () => {
                 </span>
             );
         }
-        if (userData?.category === 15) {
+        if (userData?.category === 15){
             return (
                 <span className=" flex items-center my-4 text-2xl  text-left font-bold   gap-2 ">
                     <FaHandPointRight className="text-primary" /> 20 Members for <span className="text-primary">$15</span>

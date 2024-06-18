@@ -13,7 +13,7 @@ const RegisterEmployee = () => {
     // const navigate = useNavigate()
     const navigate = useNavigate();
     const location = useLocation();
-
+    const from = location.state?.from?.pathname || "/";
     const { createUser, signInWithGoogle } = useAuth()
 
     const handleSignUp = async (e) => {
@@ -76,7 +76,7 @@ const RegisterEmployee = () => {
                         if (res.data.insertedId) {
                             toast.success('successfully register')
                         }
-                        navigate(location?.state?.from || "/");
+                        navigate(from);
                         // navigate("/")
                     })
             })
@@ -100,7 +100,7 @@ const RegisterEmployee = () => {
                         if (res.data.insertedId) {
                             toast.success('Successfully register')
                         }
-                        navigate(location?.state?.from || "/");
+                        navigate(from);
                     })
             })
             .catch(error => {

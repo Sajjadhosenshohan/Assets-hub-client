@@ -7,21 +7,24 @@ import toast from 'react-hot-toast';
 import Heading from '../../../Components/Heading';
 import { Helmet } from 'react-helmet-async';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-// import { useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '../../../Hooks/useAuth';
 
 const CheckoutForm = () => {
+
     const axiosSecure = useAxiosSecure();
     const [clientSecret, setClientSecret] = useState("");
     const [TransactionId, setTransactionId] = useState("");
-    const { userData, isLoading, } = useUserData();
+    // const [routes, setRoute] = useState(false);
+    const { userData, isLoading, refetchHR } = useUserData();
+    console.log(userData)
     const [error, setError] = useState('');
     const stripe = useStripe();
+    const { loading } = useAuth()
     const elements = useElements();
     const navigate = useNavigate();
     const location = useLocation();
-
-    console.log(location?.state)
+    const from = location.state?.from?.pathname || "/myEmployeeList";
+    console.log(from)
     const [selectedValue, setSelectedValue] = useState(userData?.category || '');
 
     useEffect(() => {
@@ -29,12 +32,6 @@ const CheckoutForm = () => {
             setSelectedValue(userData.category);
         }
     }, [userData]);
-
-    if (TransactionId) {
-        setTimeout(() => {
-            navigate(location?.state?.from || "/");
-        }, 1000)
-    }
 
     useEffect(() => {
         if (selectedValue > 0) {
@@ -84,7 +81,7 @@ const CheckoutForm = () => {
         if (error) {
             setError(error.message);
         } else {
-            console.log(paymentMethod)
+            console.log(paymentMethod);
             setError('');
         }
 
@@ -103,42 +100,20 @@ const CheckoutForm = () => {
         } else {
             if (paymentIntent.status === 'succeeded') {
                 setTransactionId(paymentIntent.id);
-
-                // const payment = {
-                //     email: userData?.email,
-                //     price: selectedValue,
-                //     transactionId: paymentIntent.id,
-                //     date: new Date().toLocaleDateString(),
-                //     payment: "yes"
-                // };
-
-                // try {
-                //     const res = await axiosSecure.patch('/payment_status', {payment: "yes"});
-                //     if (res.data?.insertedId) {
-                //         Swal.fire({
-                //             position: "center",
-                //             icon: "success",
-                //             title: "Payment successful",
-                //             showConfirmButton: false,
-                //             timer: 1500
-                //         });
-                //         navigate(from);
-                //     }
-                // } catch (error) {
-                //     console.error('Error saving payment:', error);
-                // }
                 const res = await axiosSecure.patch(`/payment_status/${userData?.email}`, { payment: "yes" });
-                if (res.data?.paymentResult?.insertedId) {
-                    //     setTimeout(() => {
-                    //     navigate(location?.state?.from || "/assetList");
-                    // }, 2000); 
-
+                
+                if (res.data?.modifiedCount) {
+                    toast.success("Payment successful!");
+                    setTimeout(()=>{
+                        navigate(from)
+                    },1000)
                 }
             }
         }
     };
 
-    if (isLoading) return <Spinner />;
+
+    if (isLoading || loading) return <Spinner />;
 
     return (
         <div className="my-24">
@@ -190,8 +165,6 @@ const CheckoutForm = () => {
                     <div className='flex justify-center mt-2'>
                         <p className='text-red-500 text-center'>{error}</p>
                         {TransactionId && <p className='text-green-400 font-bold'>Your transaction id: {TransactionId}</p>}
-
-
                     </div>
                 </form>
             </div>

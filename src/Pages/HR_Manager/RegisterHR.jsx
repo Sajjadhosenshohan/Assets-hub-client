@@ -12,6 +12,7 @@ const RegisterHR = () => {
     // const navigate = useNavigate()
     const navigate = useNavigate();
     const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
     const { createUser, setLoading, loading } = useAuth()
 
     const handleSignUp = async (e) => {
@@ -92,7 +93,7 @@ const RegisterHR = () => {
                             if (res.data.insertedId) {
                                 toast.success('Successfully register')
                             }
-                            navigate(location?.state?.from || "/");
+                            navigate(from);
                             // navigate("/payment")
                             // setLoading(false)
                         })

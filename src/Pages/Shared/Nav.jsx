@@ -1,10 +1,11 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import useEmployeeData from "../../Hooks/useEmployeeData";
 import useUserData from "../../Hooks/useHRData";
 import { Puff } from "react-loader-spinner";
 // import { Puff } from 'react-loader-spinner'
 const Nav = () => {
+    const navigate = useNavigate()
     const { loading, user, logOut } = useAuth();
     // hr hook
     const { userData: Hr_data, } = useUserData();
@@ -165,7 +166,7 @@ const Nav = () => {
                             <img src={user?.photoURL || Hr_data?.profileImage || userDataEmployee?.profileImage || "https://i.ibb.co/fYRGNg6/profile.jpg"} alt="User avatar" />
                         </div>
                     </div>
-                    <button onClick={logOut} className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center">
+                    <button onClick={handlelogOut} className="font-medium text-white text-base md:text-xl md:pb-2 md:px-4 py-1 px-1 rounded-lg bg-primary text-center">
                         Logout
                     </button>
                 </>
@@ -192,6 +193,10 @@ const Nav = () => {
         }
     };
 
+    const handlelogOut = ()=>{
+        logOut()
+        navigate("/login")
+    }
 
 
     return (

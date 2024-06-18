@@ -12,6 +12,8 @@ const LoginHR = () => {
     const axiosPublic = useAxiosPublic()
     const navigate = useNavigate();
     const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
     const { signIn, signInWithGoogle } = useAuth()
 
     const handleLogin = async (event) => {
@@ -20,6 +22,7 @@ const LoginHR = () => {
         const email = form.email.value;
         const password = form.password.value;
         console.log(email, password);
+        console.log(location)
 
 
         // Validation
@@ -55,6 +58,7 @@ const LoginHR = () => {
                         profileImage: result.user?.photoURL,
                         role: "employee",
                         affiliate: "no",
+                        payment: "no"
 
                     }
                     axiosPublic.post("/users", info)
@@ -66,7 +70,7 @@ const LoginHR = () => {
                                 // navigate('/')
                             }
 
-                            navigate(location?.state?.from || "/");
+                            navigate(from);
                         })
 
                 })
@@ -86,6 +90,7 @@ const LoginHR = () => {
                     profileImage: result.user?.photoURL,
                     role: "employee",
                     affiliate: "no",
+                    payment: "no"
 
                 }
 
@@ -97,7 +102,7 @@ const LoginHR = () => {
                         if (res.data.insertedId) {
                             toast.success('successfully login')
                         }
-                        navigate(location?.state?.from || "/");
+                        navigate(from);
                     })
             })
             .catch(error => {

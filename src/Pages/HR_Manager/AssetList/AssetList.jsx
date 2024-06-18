@@ -3,11 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import Heading from "../../../Components/Heading";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { useState } from "react";
+import {useState } from "react";
 import useUserData from "../../../Hooks/useHRData";
 import Pagination from "../../../Components/Pagination";
 import Spinner from "../../../Components/Spinner";
@@ -16,6 +16,7 @@ const AssetList = () => {
     const axiosSecure = useAxiosSecure()
     const { loading } = useAuth();
     const { userData, isLoading } = useUserData();
+
 
     // pagination
     const [currentPage, setCurrentPage] = useState(0);
@@ -33,7 +34,6 @@ const AssetList = () => {
 
     // pagination pages array
     const pages = Array.from({ length: numberOfPages }, (_, i) => i);
-
 
     const { data, refetch } = useQuery({
         queryKey: ["assets", userData?.email, currentPage, itemsPerPage, search, availabilityCheck],
@@ -130,6 +130,8 @@ const AssetList = () => {
     }
     // console.log(assets)
     if (loading || isLoading) return <Spinner></Spinner>
+
+    
     return (
         <div className="my-24">
             <Helmet>

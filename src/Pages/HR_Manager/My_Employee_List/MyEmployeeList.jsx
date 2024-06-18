@@ -5,23 +5,25 @@ import Swal from "sweetalert2";
 import { GrUserAdmin } from "react-icons/gr";
 import { FaUser } from "react-icons/fa";
 import { MdGroupRemove } from "react-icons/md";
-import { useState } from "react";
+import {  useState } from "react";
 import Pagination from "../../../Components/Pagination";
 import useAuth from "../../../Hooks/useAuth";
 import Heading from "../../../Components/Heading";
 import { Helmet } from "react-helmet-async";
 
+
 const MyEmployeeList = () => {
     const axiosSecure = useAxiosSecure()
     const { userData } = useUserData()
     const { loading } = useAuth()
+
     // pagination
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [numberOfPages, setNumberOfPages] = useState(0);
-
     // pagination pages array
     const pages = Array.from({ length: numberOfPages }, (_, i) => i);
+
 
     const { data, refetch } = useQuery({
         queryKey: ["myEmployee", userData?.companyName, currentPage, itemsPerPage],
