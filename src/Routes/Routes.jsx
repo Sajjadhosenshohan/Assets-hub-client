@@ -83,7 +83,7 @@ const router = createBrowserRouter([
             {
                 path: "/update/:id",
                 element: <HrRoute><UpdateAsset></UpdateAsset></HrRoute>,
-                loader: async ({ params }) => await fetch(`https://my-assets-server.vercel.app/assetOne/${params.id}`)
+                loader: async ({ params }) => await fetch(`http://localhost:7000/assetOne/${params.id}`)
             },
 
             // for employee

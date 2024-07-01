@@ -1,13 +1,13 @@
 
 import { FaUser } from "react-icons/fa";
 import { GrUserAdmin } from "react-icons/gr";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useEmployeeData from "../../../Hooks/useEmployeeData";
 import Heading from "../../../Components/Heading";
 import useAuth from "../../../Hooks/useAuth";
 import Spinner from "../../../Components/Spinner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Pagination from "../../../Components/Pagination";
 import { Helmet } from "react-helmet-async";
 
@@ -16,44 +16,82 @@ const MyTeam = () => {
     const axiosSecure = useAxiosSecure()
     const { loading } = useAuth()
     const { userDataEmployee, isLoading } = useEmployeeData()
-
-    console.log(userDataEmployee)
-     // pagination
-     const [currentPage, setCurrentPage] = useState(0);
-     const [itemsPerPage, setItemsPerPage] = useState(10);
-     const [numberOfPages, setNumberOfPages] = useState(0);
+    const [myTeam, setMyTeam] = useState([]);
  
-     // pagination pages array
-     const pages = Array.from({ length: numberOfPages }, (_, i) => i);
+    const [itemsPerPage, setItemsPerPage] = useState(4)
+    const [currentPage, setCurrentPage] = useState(0)
+    const [count, setCount] = useState(0)
+   
+
+    // Fetch user count
+    // const { data: count } = useQuery({
+    //     queryKey: ["myTeams_count", userDataEmployee?.companyName],
+    //     enabled: !loading && !!userDataEmployee?.companyName && !!localStorage.getItem("access-token"),
+    //     queryFn: async () => {
+    //         const { data } = await axiosSecure.get(`/userCount/${userDataEmployee?.companyName}`);
+    //         return data.count;
+    //     },
+    // });
+
+    // for count
+    useEffect(() => {
+        const myTeamCount = async () => {
+            try {
+                const { data } = await axiosSecure.get(`/userCount/${userDataEmployee?.companyName}`, { withCredentials: true });
+                setCount(data.count)
+
+            } catch (error) {
+                console.log(error.message)
+            }
+        };
+
+        myTeamCount();
+    }, [userDataEmployee?.companyName, axiosSecure]);
+
+    // for data
+    useEffect(() => {
+        const myTeam = async () => {
+            try {
+                const { data } = await axiosSecure.get(`/usersCompany/${userDataEmployee?.companyName}`,
+                    {
+                        params: {
+                            page: currentPage,
+                            size: itemsPerPage,
+                        }
+                    }, { withCredentials: true });
+                setMyTeam(data)
+
+            } catch (error) {
+                console.log(error.message)
+            }
+        };
+
+        myTeam();
+    }, [userDataEmployee?.companyName, currentPage, itemsPerPage, axiosSecure]);
+
+    console.log(count, myTeam)
+    // const { data: myTeam = [] } = useQuery({
+    //     queryKey: ["myTeams", userDataEmployee?.companyName, currentPage, itemsPerPage],
+    //     enabled: !loading && !!userDataEmployee?.companyName,
+    //     queryFn: async () => {
+    //         const { data } = await axiosSecure.get(`/usersCompany/${userDataEmployee?.companyName}`,
+    //             {
+    //                 params: {
+    //                     page: currentPage,
+    //                     size: itemsPerPage,
+    //                 }
+    //             }
+    //         );
+    //         return data;
+    //     },
+    // });
 
 
-    const { data} = useQuery({
-        queryKey: ["myTeams", userDataEmployee?.companyName ,currentPage, itemsPerPage],
-        enabled: !loading && !!userDataEmployee?.companyName,
-        queryFn: async () => {
-            const { data } = await axiosSecure.get(`/users_company/${userDataEmployee?.companyName}`,
-                {
-                    params: {
-                        page: currentPage,
-                        size: itemsPerPage,
-                    }
-                }
-            );
-            return data;
-        },
-    });
-
-     // pagination function
+    // pagination function
     // Update the numberOfPages whenever data changes
-    const { myTeam = [], count = 0 } = data || {};
-    const newNumberOfPages = Math.ceil(count / itemsPerPage);
-    // console.log(myEmployee)
-
-    // Update the numberOfPages state when data is fetched
-    if (newNumberOfPages !== numberOfPages) {
-        setNumberOfPages(newNumberOfPages);
-    }
-
+    // const { myTeam = [], count = 0 } = data || {};
+    const numberOfPages = Math.ceil(count / itemsPerPage);
+    const pages = Array.from({ length: numberOfPages }, (_, i) => i);
 
     const handleItemPerPage = (e) => {
         setItemsPerPage(parseInt(e.target.value));
@@ -73,8 +111,8 @@ const MyTeam = () => {
 
 
 
-    if (loading || isLoading ) return <Spinner />;
-    console.log("my employee", myTeam)
+    if (loading || isLoading) return <Spinner />;
+    // console.log("my employee", myTeam)
     return (
         <div className="my-24">
             <Helmet>

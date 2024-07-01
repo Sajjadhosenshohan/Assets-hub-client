@@ -1,7 +1,7 @@
 import axios from "axios";
-// https://my-assets-server.vercel.app
+// http://localhost:7000
 const axiosPublic = axios.create({
-    baseURL: 'https://my-assets-server.vercel.app'
+    baseURL: 'http://localhost:7000'
 })
 const useAxiosPublic = () => {
     return axiosPublic;

@@ -139,7 +139,7 @@ const RequestForAnAssets = () => {
         try {
             const matchingAsset = allAssets.find(asset => asset?.requesterEmail === userDataEmployee?.email);
 
-            console.log("hi", matchingAsset)
+            console.log(matchingAsset)
             if (matchingAsset) {
                 // Update existing asset
                 await axiosSecure.put(`/assets/${selectedAsset}`, requestData);

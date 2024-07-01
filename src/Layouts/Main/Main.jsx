@@ -9,7 +9,7 @@ const Main = () => {
     return (
         <div>
             <Nav navHide={navHide}></Nav>
-            <div className='max-w-6xl mx-auto p-5'>
+            <div className='max-w-6xl mx-auto p-5 min-h-[calc(100vh-80px)]'>
                 <Outlet></Outlet>
             </div>
             <Footer></Footer>
