@@ -15,9 +15,10 @@ XYZ is developing a web application aimed at facilitating asset and product mana
 
 ## Technologies
 
-- Frontend: React, React Router Dom, TailwindCSS, Daisy ui, Vite
+- Frontend: Html,TailwindCSS, Daisy ui, React, React Router Dom, Vite
 
 - Backend: Node.js, Express, MongoDB, stripe, jsonwebtoken
+
 - Authentication: Firebase
 
 ## Features
