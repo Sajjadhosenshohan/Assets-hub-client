@@ -13,6 +13,14 @@ The **Assets-hub** is aimed at facilitating asset and product management for bus
 
 ---
 
+
+### 🔐 Admin Credentials
+| Username       | Email                    | Password |
+| -------------- | ------------------------ | -------- |
+| **Sajjad**   | **hr@gmail.com** | **1234Asdf** |
+
+> ⚠️ **Note**: Please ensure these credentials are used responsibly.
+
   ## 🛠 Technologies
 
 - 🌐 **Frontend**: React, React Router Dom, TailwindCSS, Daisy UI, Vite
@@ -56,7 +64,7 @@ npm run dev
 
 ## 🌍 Environment Variables
 
-- `SERVER_URL`= your_server_uri
+- `SERVER_URL`= "http://localhost:8000"
 - `FIREBASE_API_KEY`= your_firebase_api_key
 - `FIREBASE_AUTH_DOMAIN`= your_firebase_auth_domain
 - `FIREBASE_PROJECT_ID`= your_firebase_project_id
