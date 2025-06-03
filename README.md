@@ -12,7 +12,6 @@ The **Assets-hub** is aimed at facilitating asset and product management for bus
 
 ---
 
-
 ### 🔐 Admin Credentials
 | Username       | Email                    | Password |
 | -------------- | ------------------------ | -------- |
