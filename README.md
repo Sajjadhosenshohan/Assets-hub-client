@@ -11,7 +11,6 @@
 The **Assets-hub** is aimed at facilitating asset and product management for businesses subscribing to the service. The primary focus is to assist HR Managers in monitoring the usage of company assets, categorized into Returnable (e.g., laptops, chairs) and Non-returnable (e.g., pens, paper).
 
 ---
-
 ### 🔐 Admin Credentials
 | Username       | Email                    | Password |
 | -------------- | ------------------------ | -------- |
